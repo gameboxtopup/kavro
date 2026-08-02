@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kavro Admin | Product Items</title>
+
+    <link rel="stylesheet" href="assets/css/admin-panels.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <h2>KAVRO</h2>
+            <span>ADMIN PANEL</span>
+
+        </div>
+
+        <ul>
+
+            <li onclick="location.href='admin-dashboard.html'">
+                📊 Dashboard
+            </li>
+
+            <li onclick="location.href='admin-products.html'">
+                📦 Products
+            </li>
+
+            <li class="active">
+                📋 Product Items
+            </li>
+
+            <li onclick="location.href='admin-orders.html'">
+                🛒 Orders
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <main class="content">
+
+        <div class="topbar">
+
+            <h1>Product Items Management</h1>
+
+            <button id="addProduct">
+
+                + Add Product Item
+
+            </button>
+
+        </div>
+
+        <div class="searchBox">
+
+            <input
+                type="text"
+                placeholder="Search products..."
+            >
+
+        </div>
+
+        <div class="productTable">
+
+            <table>
+
+                <thead>
+
+                <tr>
+
+                    <th>Image</th>
+
+                    <th>Product</th>
+
+                    <th>Item</th>
+
+                    <th>Price</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+                </thead>
+
+                <tbody id="products">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- Add Product Modal -->
+
+<div class="modal" id="productModal">
+
+    <div class="modal-content">
+
+        <span class="close">&times;</span>
+
+        <h2 id="modalTitle">Add Product Item</h2>
+
+<form id="productForm">
+
+<select id="product" required>
+
+<option value="">Select Product</option>
+
+</select>
+
+<input type="text" id="name" placeholder="Item Name" required>
+
+<input type="number" id="price" placeholder="Price" required>
+
+<input type="number" id="discountPrice" placeholder="Discount Price">
+
+<input type="text" id="image" placeholder="Image URL">
+
+<textarea id="description" placeholder="Description"></textarea>
+
+<input type="number" id="stock" placeholder="Stock" value="999">
+
+<label>
+
+<input type="checkbox" id="active" checked>
+
+Active
+
+</label>
+
+<button type="submit" id="saveBtn">
+    Save Item
+</button>
+
+</form>
+
+    </div>
+
+</div>
+
+<script src="assets/js/admin-product-items.js"></script>
+
+</body>
+
+</html>
