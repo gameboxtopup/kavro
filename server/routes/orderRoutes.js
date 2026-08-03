@@ -14,12 +14,24 @@ router.post("/", async (req, res) => {
             product: req.body.product,
             package: req.body.package,
             price: req.body.price,
-            uid: req.body.uid,
-            email: req.body.email,
-            paymentMethod: req.body.paymentMethod,
-            transactionId: req.body.transactionId,
-            screenshot: req.body.screenshot,
-            note: req.body.note
+
+            uid: req.body.uid || "",
+
+            email: req.body.email || "",
+
+            customerName: req.body.customerName || "",
+
+            phone: req.body.phone || "",
+
+            paymentMethod: req.body.paymentMethod || req.body.payment || "",
+
+            transactionId: req.body.transactionId || "",
+
+            screenshot: req.body.screenshot || "",
+
+            note: req.body.note || "",
+
+            type: req.body.type || "game"
 
         });
 
@@ -60,15 +72,23 @@ router.post("/", async (req, res) => {
                         <td style="padding-left:15px;">${order.price}</td>
                     </tr>
 
+                    ${
+                    order.type === "subscription"
+                    ?
+                    `
                     <tr>
-                        <td><strong>🆔 UID</strong></td>
-                        <td style="padding-left:15px;">${order.uid}</td>
+                    <td><strong>📧 Email</strong></td>
+                    <td style="padding-left:15px;">${order.email}</td>
                     </tr>
-
+                    `
+                    :
+                    `
                     <tr>
-                        <td><strong>📧 Customer Email</strong></td>
-                        <td style="padding-left:15px;">${order.email}</td>
+                    <td><strong>🆔 UID</strong></td>
+                    <td style="padding-left:15px;">${order.uid}</td>
                     </tr>
+                    `
+                    }
 
                     <tr>
                         <td><strong>💳 Payment</strong></td>
@@ -248,7 +268,7 @@ router.patch("/:id", async (req, res) => {
 
         // Send delivery email
 
-if (req.body.status === "Delivered") {
+if (req.body.status === "Delivered" && order.email) {
 console.log("Sending delivery email to:", order.email);
 
     await transporter.sendMail({
@@ -273,19 +293,32 @@ console.log("Sending delivery email to:", order.email);
             <table style="border-collapse:collapse;">
 
                 <tr>
-                    <td><strong>🎮 Game</strong></td>
+                    <td><strong>Product</strong></td>
                     <td style="padding-left:15px;">${order.product}</td>
                 </tr>
 
                 <tr>
-                    <td><strong>💎 Package</strong></td>
+                    <td><strong>Package</strong></td>
                     <td style="padding-left:15px;">${order.package}</td>
                 </tr>
 
+                ${
+                order.type === "subscription"
+                ?
+                `
                 <tr>
-                    <td><strong>🆔 UID</strong></td>
-                    <td style="padding-left:15px;">${order.uid}</td>
+                <td><strong>Email</strong></td>
+                <td style="padding-left:15px;">${order.email}</td>
                 </tr>
+                `
+                :
+                `
+                <tr>
+                <td><strong>UID</strong></td>
+                <td style="padding-left:15px;">${order.uid}</td>
+                </tr>
+                `
+                }
 
                 <tr>
                     <td><strong>💰 Price</strong></td>

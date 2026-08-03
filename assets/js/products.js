@@ -12,6 +12,27 @@ async function loadProducts() {
 
         if (!product.active) return;
 
+        // Decide which page to open
+        let link = "#";
+
+        if (product.category === "Subscriptions") {
+
+            link = `subscription.html?slug=${product.slug}`;
+
+        } else if (product.slug === "ff") {
+
+            link = "freefire.html";
+
+        } else if (product.slug === "pubg") {
+
+            link = "pubg.html";
+
+        } else if (product.slug === "roblox") {
+
+            link = "roblox.html";
+
+        }
+
         grid.innerHTML += `
 
         <div class="product-card">
@@ -28,7 +49,7 @@ async function loadProducts() {
 
             </div>
 
-            <a href="${product.slug}.html" class="btn-primary">
+            <a href="${link}" class="btn-primary">
 
                 View Products
 
