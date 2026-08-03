@@ -6,6 +6,8 @@ const controller = require("../controllers/productItemController");
 
 router.get("/", controller.getItems);
 
+router.get("/product/:productId", controller.getItemsByProduct);
+
 router.get("/:id", controller.getItem);
 
 router.post("/", controller.createItem);

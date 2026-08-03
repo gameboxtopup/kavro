@@ -107,3 +107,41 @@ exports.getItem = async (req, res) => {
     }
 
 };
+
+// ============================
+// GET ITEMS BY PRODUCT ID
+// ============================
+
+exports.getItemsByProduct = async (req, res) => {
+
+    try {
+
+        const items = await ProductItem.find({
+
+            product: req.params.productId,
+
+            active: true
+
+        }).sort({
+
+            price: 1
+
+        });
+
+        res.json(items);
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+        res.status(500).json({
+
+            message:"Server Error"
+
+        });
+
+    }
+
+};
