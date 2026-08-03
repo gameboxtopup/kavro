@@ -6,6 +6,7 @@ const {
     addProduct,
     getProducts,
     getProduct,
+    getProductBySlug,
     updateProduct,
     deleteProduct
 
@@ -26,6 +27,8 @@ router.get("/", getProducts);
 // =======================
 // GET SINGLE PRODUCT
 // =======================
+
+router.get("/slug/:slug", getProductBySlug);
 
 router.get("/:id", getProduct);
 
