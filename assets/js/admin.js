@@ -7,7 +7,7 @@
 // ----------------------
 
 const token = localStorage.getItem("adminToken");
-const socket = io("http://localhost:5000");
+const socket = io("https://kavro-api.onrender.com");
 
 socket.on("connect", () => {
     console.log("🟢 Dashboard Connected");
@@ -57,7 +57,7 @@ async function loadOrders() {
 
     try {
 
-        const response = await fetch("http://localhost:5000/api/orders", {
+        const response = await fetch("https://kavro-api.onrender.com/api/orders", {
 
     headers: {
         Authorization: "Bearer " + token

@@ -27,7 +27,7 @@ window.onclick = (e) => {
 // Load Product Dropdown
 async function loadProductDropdown() {
 
-    const res = await fetch("http://localhost:5000/api/products");
+    const res = await fetch("https://kavro-api.onrender.com/api/products");
     const products = await res.json();
 
     const select = document.getElementById("product");
@@ -49,7 +49,7 @@ async function loadProductDropdown() {
 // Load Items
 async function loadProducts() {
 
-    const res = await fetch("http://localhost:5000/api/product-items");
+    const res = await fetch("https://kavro-api.onrender.com/api/product-items");
 
     const items = await res.json();
 
@@ -118,7 +118,7 @@ form.addEventListener("submit", async (e) => {
 
     };
 
-    let url = "http://localhost:5000/api/product-items";
+    let url = "https://kavro-api.onrender.com/api/product-items";
 
     let method = "POST";
 
@@ -157,7 +157,7 @@ async function deleteItem(id) {
 
     if (!confirm("Delete this item?")) return;
 
-    await fetch(`http://localhost:5000/api/product-items/${id}`, {
+    await fetch(`https://kavro-api.onrender.com/api/product-items/${id}`, {
 
         method: "DELETE"
 
@@ -170,7 +170,7 @@ async function deleteItem(id) {
 // Edit
 async function editItem(id) {
 
-    const res = await fetch(`http://localhost:5000/api/product-items/${id}`);
+    const res = await fetch(`https://kavro-api.onrender.com/api/product-items/${id}`);
     const item = await res.json();
 
     editingItemId = item._id;

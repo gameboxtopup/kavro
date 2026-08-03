@@ -46,7 +46,7 @@ document.getElementById("checkoutForm").addEventListener("submit", async functio
 
     try {
 
-        const res = await fetch("http://localhost:5000/api/orders", {
+        const res = await fetch("https://kavro-api.onrender.com/api/orders", {
 
             method: "POST",
 

@@ -2,7 +2,7 @@ async function loadPackages() {
 
     try {
 
-        const res = await fetch("http://localhost:5000/api/product-items");
+        const res = await fetch("https://kavro-api.onrender.com/api/product-items");
         const items = await res.json();
 
         const diamond = document.getElementById("diamond");

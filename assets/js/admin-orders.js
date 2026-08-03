@@ -28,7 +28,7 @@ if ("Notification" in window && Notification.permission !== "granted") {
 
 }
 
-const socket = io("http://localhost:5000");
+const socket = io("https://kavro-api.onrender.com");
 
 socket.on("connect", () => {
 
@@ -64,7 +64,7 @@ async function loadOrders(){
 
     try{
 
-        const res = await fetch("http://localhost:5000/api/orders",{
+        const res = await fetch("https://kavro-api.onrender.com/api/orders",{
 
             headers:{
                 Authorization:"Bearer " + token
@@ -251,7 +251,7 @@ async function deliverOrder(id) {
     try {
 
         const res = await fetch(
-            "http://localhost:5000/api/orders/" + id,
+            "https://kavro-api.onrender.com/api/orders/" + id,
             {
                 method: "PATCH",
                 headers: {
@@ -302,7 +302,7 @@ async function deleteOrder(id) {
     try {
 
         const res = await fetch(
-            "http://localhost:5000/api/orders/" + id,
+            "https://kavro-api.onrender.com/api/orders/" + id,
             {
                 method: "DELETE",
                 headers: {

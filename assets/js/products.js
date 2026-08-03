@@ -2,7 +2,7 @@ const grid = document.getElementById("productGrid");
 
 async function loadProducts() {
 
-    const res = await fetch("http://localhost:5000/api/products");
+    const res = await fetch("https://kavro-api.onrender.com/api/products");
 
     const products = await res.json();
 

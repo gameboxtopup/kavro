@@ -51,7 +51,7 @@ async function loadProducts() {
 
     try {
 
-        const res = await fetch("http://localhost:5000/api/products");
+        const res = await fetch("https://kavro-api.onrender.com/api/products");
 
         const products = await res.json();
 
@@ -130,12 +130,12 @@ form.addEventListener("submit", async function (e) {
 
     };
 
-    let url = "http://localhost:5000/api/products";
+    let url = "https://kavro-api.onrender.com/api/products";
     let method = "POST";
 
     if (editingProductId) {
 
-        url = `http://localhost:5000/api/products/${editingProductId}`;
+        url = `https://kavro-api.onrender.com/api/products/${editingProductId}`;
         method = "PUT";
 
     }
@@ -188,7 +188,7 @@ async function deleteProduct(id) {
 
     try {
 
-        const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+        const res = await fetch(`https://kavro-api.onrender.com/api/products/${id}`, {
 
             method: "DELETE"
 
@@ -216,7 +216,7 @@ async function editProduct(id) {
 
     try {
 
-        const res = await fetch(`http://localhost:5000/api/products/${id}`);
+        const res = await fetch(`https://kavro-api.onrender.com/api/products/${id}`);
 
         const product = await res.json();
 
