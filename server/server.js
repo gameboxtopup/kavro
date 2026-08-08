@@ -7,6 +7,8 @@ const orderRoutes = require("./routes/orderRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const productRoutes = require("./routes/productRoutes");
 const productItemRoutes = require("./routes/productItemRoutes");
+const authRoutes = require("./routes/authRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 
 const app = express();
 
@@ -33,9 +35,11 @@ app.use(cors({
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api/orders", orderRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/product-items", productItemRoutes);
+app.use("/api/chat", chatRoutes);
 
 
 // Connect to MongoDB
