@@ -17,13 +17,19 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
 
-    // For Games
+    // =========================
+    // GAME ORDERS
+    // =========================
+
     uid: {
         type: String,
         default: ""
     },
 
-    // For Subscriptions
+    // =========================
+    // SUBSCRIPTION ORDERS
+    // =========================
+
     email: {
         type: String,
         default: ""
@@ -69,8 +75,8 @@ const orderSchema = new mongoose.Schema({
         default: "Pending"
     }
 
-},{
-    timestamps:true
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model("Order", orderSchema);

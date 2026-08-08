@@ -5,47 +5,115 @@ const router = express.Router();
 const Order = require("../models/Order");
 
 // Create New Order
+// Create New Order
 router.post("/", async (req, res) => {
 
     try {
 
+        const orderType = req.body.type || "game";
+
+        const transactionId =
+            req.body.transactionId || "";
+
+        // =========================================
+        // SUBSCRIPTION ONLY
+        // CHECK DUPLICATE TRANSACTION ID
+        // =========================================
+
+        if (
+            orderType === "subscription" &&
+            transactionId.trim() !== ""
+        ) {
+
+            const existingOrder = await Order.findOne({
+                transactionId: transactionId.trim(),
+                type: "subscription"
+            });
+
+            if (existingOrder) {
+
+                return res.status(409).json({
+                    success: false,
+                    message:
+                        "This transaction ID has already been used. Please check your transaction ID."
+                });
+
+            }
+
+        }
+
+        // =========================================
+        // CREATE ORDER
+        // =========================================
+
         const order = new Order({
 
-            product: req.body.product,
-            package: req.body.package,
-            price: req.body.price,
+            product:
+                req.body.product,
 
-            uid: req.body.uid || "",
+            package:
+                req.body.package,
 
-            email: req.body.email || "",
+            price:
+                req.body.price,
 
-            customerName: req.body.customerName || "",
+            uid:
+                req.body.uid || "",
 
-            phone: req.body.phone || "",
+            email:
+                req.body.email || "",
 
-            paymentMethod: req.body.paymentMethod || req.body.payment || "",
+            customerName:
+                req.body.customerName || "",
 
-            transactionId: req.body.transactionId || "",
+            phone:
+                req.body.phone || "",
 
-            screenshot: req.body.screenshot || "",
+            paymentMethod:
+                req.body.paymentMethod ||
+                req.body.payment ||
+                "",
 
-            note: req.body.note || "",
+            transactionId:
+                transactionId,
 
-            type: req.body.type || "game"
+            screenshot:
+                req.body.screenshot || "",
+
+            note:
+                req.body.note || "",
+
+            type:
+                orderType
 
         });
 
         await order.save();
+
+        // =========================================
+        // SOCKET NOTIFICATION
+        // =========================================
+
         const io = req.app.get("io");
 
-        io.emit("newOrder", order);
+        if (io) {
+            io.emit("newOrder", order);
+        }
+
+        // =========================================
+        // EMAIL
+        // =========================================
+
         await transporter.sendMail({
 
-            from: `"Kavro Nepal" <${process.env.EMAIL_USER}>`,
+            from:
+                `"Kavro Nepal" <${process.env.EMAIL_USER}>`,
 
-            to: process.env.EMAIL_USER,
+            to:
+                process.env.EMAIL_USER,
 
-            subject: `🛒 New Order - ${order.product}`,
+            subject:
+                `🛒 New Order - ${order.product}`,
 
             html: `
 
@@ -58,46 +126,81 @@ router.post("/", async (req, res) => {
                 <table style="border-collapse:collapse;">
 
                     <tr>
-                        <td><strong>🎮 Product</strong></td>
-                        <td style="padding-left:15px;">${order.product}</td>
+                        <td>
+                            <strong>🎮 Product</strong>
+                        </td>
+
+                        <td style="padding-left:15px;">
+                            ${order.product}
+                        </td>
                     </tr>
 
                     <tr>
-                        <td><strong>💎 Package</strong></td>
-                        <td style="padding-left:15px;">${order.package}</td>
+                        <td>
+                            <strong>💎 Package</strong>
+                        </td>
+
+                        <td style="padding-left:15px;">
+                            ${order.package}
+                        </td>
                     </tr>
 
                     <tr>
-                        <td><strong>💰 Price</strong></td>
-                        <td style="padding-left:15px;">${order.price}</td>
+                        <td>
+                            <strong>💰 Price</strong>
+                        </td>
+
+                        <td style="padding-left:15px;">
+                            ${order.price}
+                        </td>
                     </tr>
 
                     ${
-                    order.type === "subscription"
-                    ?
-                    `
-                    <tr>
-                    <td><strong>📧 Email</strong></td>
-                    <td style="padding-left:15px;">${order.email}</td>
-                    </tr>
-                    `
-                    :
-                    `
-                    <tr>
-                    <td><strong>🆔 UID</strong></td>
-                    <td style="padding-left:15px;">${order.uid}</td>
-                    </tr>
-                    `
+                        order.type === "subscription"
+                        ?
+                        `
+                        <tr>
+                            <td>
+                                <strong>📧 Email</strong>
+                            </td>
+
+                            <td style="padding-left:15px;">
+                                ${order.email}
+                            </td>
+                        </tr>
+                        `
+                        :
+                        `
+                        <tr>
+                            <td>
+                                <strong>🆔 UID</strong>
+                            </td>
+
+                            <td style="padding-left:15px;">
+                                ${order.uid}
+                            </td>
+                        </tr>
+                        `
                     }
 
                     <tr>
-                        <td><strong>💳 Payment</strong></td>
-                        <td style="padding-left:15px;">${order.paymentMethod}</td>
+                        <td>
+                            <strong>💳 Payment</strong>
+                        </td>
+
+                        <td style="padding-left:15px;">
+                            ${order.paymentMethod}
+                        </td>
                     </tr>
 
                     <tr>
-                        <td><strong>🧾 Transaction ID</strong></td>
-                        <td style="padding-left:15px;">${order.transactionId}</td>
+                        <td>
+                            <strong>🧾 Transaction ID</strong>
+                        </td>
+
+                        <td style="padding-left:15px;">
+                            ${order.transactionId}
+                        </td>
                     </tr>
 
                 </table>
@@ -109,7 +212,10 @@ router.post("/", async (req, res) => {
                 </p>
 
                 <p>
-                    <a href="${order.screenshot}" target="_blank">
+                    <a
+                        href="${order.screenshot}"
+                        target="_blank"
+                    >
                         View Screenshot
                     </a>
                 </p>
@@ -117,7 +223,8 @@ router.post("/", async (req, res) => {
                 <br>
 
                 <p>
-                    <strong>Customer Note:</strong><br>
+                    <strong>Customer Note:</strong>
+                    <br>
                     ${order.note || "No note"}
                 </p>
 
@@ -127,10 +234,17 @@ router.post("/", async (req, res) => {
 
         });
 
-        res.status(201).json({
+        // =========================================
+        // SUCCESS
+        // =========================================
+
+        return res.status(201).json({
 
             success: true,
-            message: "Order placed successfully.",
+
+            message:
+                "Order placed successfully.",
+
             order
 
         });
@@ -139,14 +253,42 @@ router.post("/", async (req, res) => {
 
     catch (err) {
 
-    console.error("ORDER SAVE ERROR:", err);
+        console.error(
+            "ORDER SAVE ERROR:",
+            err
+        );
 
-    res.status(500).json({
-        success: false,
-        message: err.message
-    });
+        // =========================================
+        // DUPLICATE KEY SAFETY
+        // SUBSCRIPTION ONLY
+        // =========================================
 
-}
+        if (
+            err.code === 11000 &&
+            req.body.type === "subscription"
+        ) {
+
+            return res.status(409).json({
+
+                success: false,
+
+                message:
+                    "This transaction ID has already been used. Please check your transaction ID."
+
+            });
+
+        }
+
+        return res.status(500).json({
+
+            success: false,
+
+            message:
+                "Failed to place order. Please try again."
+
+        });
+
+    }
 
 });
 
