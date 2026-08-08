@@ -1,50 +1,104 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
+
 const router = express.Router();
 
 const Order = require("../models/Order");
 
-// Create New Order
-// Create New Order
+
+// =====================================================
+// EMAIL TRANSPORTER
+// =====================================================
+
+const transporter = nodemailer.createTransport({
+
+    service: "gmail",
+
+    auth: {
+
+        user: process.env.EMAIL_USER,
+
+        pass: process.env.EMAIL_PASS
+
+    }
+
+});
+
+
+// Check Gmail
+transporter.verify(function (error) {
+
+    if (error) {
+
+        console.log("❌ Gmail Error:");
+        console.log(error);
+
+    } else {
+
+        console.log("✅ Gmail Ready");
+
+    }
+
+});
+
+
+// =====================================================
+// CREATE NEW ORDER
+// =====================================================
+
 router.post("/", async (req, res) => {
 
     try {
 
-        const orderType = req.body.type || "game";
+        const orderType =
+            req.body.type || "game";
 
         const transactionId =
-            req.body.transactionId || "";
+            (req.body.transactionId || "").trim();
 
-        // =========================================
+
+        // =================================================
         // SUBSCRIPTION ONLY
-        // CHECK DUPLICATE TRANSACTION ID
-        // =========================================
+        // DUPLICATE TRANSACTION CHECK
+        // =================================================
 
         if (
             orderType === "subscription" &&
-            transactionId.trim() !== ""
+            transactionId !== ""
         ) {
 
-            const existingOrder = await Order.findOne({
-                transactionId: transactionId.trim(),
-                type: "subscription"
-            });
+            const existingOrder =
+                await Order.findOne({
+
+                    transactionId:
+                        transactionId,
+
+                    type:
+                        "subscription"
+
+                });
+
 
             if (existingOrder) {
 
                 return res.status(409).json({
+
                     success: false,
+
                     message:
                         "This transaction ID has already been used. Please check your transaction ID."
+
                 });
 
             }
 
         }
 
-        // =========================================
+
+        // =================================================
         // CREATE ORDER
-        // =========================================
+        // =================================================
 
         const order = new Order({
 
@@ -57,9 +111,11 @@ router.post("/", async (req, res) => {
             price:
                 req.body.price,
 
+            // Game orders
             uid:
                 req.body.uid || "",
 
+            // Subscription orders
             email:
                 req.body.email || "",
 
@@ -88,23 +144,41 @@ router.post("/", async (req, res) => {
 
         });
 
+
+        // =================================================
+        // SAVE TO DATABASE
+        // =================================================
+
         await order.save();
 
-        // =========================================
-        // SOCKET NOTIFICATION
-        // =========================================
 
-        const io = req.app.get("io");
+        // =================================================
+        // SOCKET NOTIFICATION
+        // =================================================
+
+        const io =
+            req.app.get("io");
 
         if (io) {
-            io.emit("newOrder", order);
+
+            io.emit(
+                "newOrder",
+                order
+            );
+
         }
 
-        // =========================================
-        // EMAIL
-        // =========================================
 
-        await transporter.sendMail({
+        // =================================================
+        // SEND EMAIL
+        //
+        // IMPORTANT:
+        // DO NOT USE "await" HERE.
+        //
+        // This prevents Gmail from blocking the customer.
+        // =================================================
+
+        transporter.sendMail({
 
             from:
                 `"Kavro Nepal" <${process.env.EMAIL_USER}>`,
@@ -117,130 +191,259 @@ router.post("/", async (req, res) => {
 
             html: `
 
-            <div style="font-family:Arial,sans-serif;padding:20px;">
+            <div
+                style="
+                    font-family:Arial,sans-serif;
+                    padding:20px;
+                "
+            >
 
-                <h2 style="color:#2563eb;">
+                <h2
+                    style="
+                        color:#2563eb;
+                    "
+                >
                     New Order Received
                 </h2>
 
-                <table style="border-collapse:collapse;">
+
+                <table
+                    style="
+                        border-collapse:collapse;
+                    "
+                >
 
                     <tr>
+
                         <td>
                             <strong>🎮 Product</strong>
                         </td>
 
-                        <td style="padding-left:15px;">
+                        <td
+                            style="
+                                padding-left:15px;
+                            "
+                        >
                             ${order.product}
                         </td>
+
                     </tr>
 
+
                     <tr>
+
                         <td>
                             <strong>💎 Package</strong>
                         </td>
 
-                        <td style="padding-left:15px;">
+                        <td
+                            style="
+                                padding-left:15px;
+                            "
+                        >
                             ${order.package}
                         </td>
+
                     </tr>
 
+
                     <tr>
+
                         <td>
                             <strong>💰 Price</strong>
                         </td>
 
-                        <td style="padding-left:15px;">
+                        <td
+                            style="
+                                padding-left:15px;
+                            "
+                        >
                             ${order.price}
                         </td>
+
                     </tr>
+
 
                     ${
                         order.type === "subscription"
                         ?
                         `
                         <tr>
+
                             <td>
                                 <strong>📧 Email</strong>
                             </td>
 
-                            <td style="padding-left:15px;">
+                            <td
+                                style="
+                                    padding-left:15px;
+                                "
+                            >
                                 ${order.email}
                             </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>
+                                <strong>👤 Customer</strong>
+                            </td>
+
+                            <td
+                                style="
+                                    padding-left:15px;
+                                "
+                            >
+                                ${order.customerName}
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>
+                                <strong>📱 Phone</strong>
+                            </td>
+
+                            <td
+                                style="
+                                    padding-left:15px;
+                                "
+                            >
+                                ${order.phone}
+                            </td>
+
                         </tr>
                         `
                         :
                         `
                         <tr>
+
                             <td>
                                 <strong>🆔 UID</strong>
                             </td>
 
-                            <td style="padding-left:15px;">
+                            <td
+                                style="
+                                    padding-left:15px;
+                                "
+                            >
                                 ${order.uid}
                             </td>
+
                         </tr>
                         `
                     }
 
+
                     <tr>
+
                         <td>
                             <strong>💳 Payment</strong>
                         </td>
 
-                        <td style="padding-left:15px;">
+                        <td
+                            style="
+                                padding-left:15px;
+                            "
+                        >
                             ${order.paymentMethod}
                         </td>
+
                     </tr>
 
+
                     <tr>
+
                         <td>
                             <strong>🧾 Transaction ID</strong>
                         </td>
 
-                        <td style="padding-left:15px;">
-                            ${order.transactionId}
+                        <td
+                            style="
+                                padding-left:15px;
+                            "
+                        >
+                            ${order.transactionId || "N/A"}
                         </td>
+
                     </tr>
 
                 </table>
 
+
                 <br>
 
-                <p>
-                    <strong>Payment Screenshot</strong>
-                </p>
 
                 <p>
+
+                    <strong>
+                        Payment Screenshot
+                    </strong>
+
+                </p>
+
+
+                <p>
+
                     <a
                         href="${order.screenshot}"
                         target="_blank"
                     >
                         View Screenshot
                     </a>
+
                 </p>
+
 
                 <br>
 
+
                 <p>
-                    <strong>Customer Note:</strong>
+
+                    <strong>
+                        Customer Note:
+                    </strong>
+
                     <br>
+
                     ${order.note || "No note"}
+
                 </p>
 
             </div>
 
             `
 
+        })
+
+        .then(() => {
+
+            console.log(
+                "✅ New order email sent."
+            );
+
+        })
+
+        .catch((error) => {
+
+            console.error(
+                "❌ New order email failed:",
+                error.message
+            );
+
         });
 
-        // =========================================
-        // SUCCESS
-        // =========================================
+
+        // =================================================
+        // RETURN SUCCESS IMMEDIATELY
+        // =================================================
 
         return res.status(201).json({
 
-            success: true,
+            success:
+                true,
 
             message:
                 "Order placed successfully.",
@@ -251,6 +454,7 @@ router.post("/", async (req, res) => {
 
     }
 
+
     catch (err) {
 
         console.error(
@@ -258,10 +462,11 @@ router.post("/", async (req, res) => {
             err
         );
 
-        // =========================================
+
+        // =================================================
         // DUPLICATE KEY SAFETY
         // SUBSCRIPTION ONLY
-        // =========================================
+        // =================================================
 
         if (
             err.code === 11000 &&
@@ -270,7 +475,8 @@ router.post("/", async (req, res) => {
 
             return res.status(409).json({
 
-                success: false,
+                success:
+                    false,
 
                 message:
                     "This transaction ID has already been used. Please check your transaction ID."
@@ -279,9 +485,11 @@ router.post("/", async (req, res) => {
 
         }
 
+
         return res.status(500).json({
 
-            success: false,
+            success:
+                false,
 
             message:
                 "Failed to place order. Please try again."
@@ -292,71 +500,71 @@ router.post("/", async (req, res) => {
 
 });
 
-const jwt = require("jsonwebtoken");
 
-const transporter = nodemailer.createTransport({
-
-    service: "gmail",
-
-    auth: {
-
-        user: process.env.EMAIL_USER,
-
-        pass: process.env.EMAIL_PASS
-
-    }
-
-});
-
-transporter.verify(function (error, success) {
-
-    if (error) {
-
-        console.log("❌ Gmail Error:");
-        console.log(error);
-
-    } else {
-
-        console.log("✅ Gmail Ready");
-
-    }
-
-});
-
-// Get All Orders (Protected)
+// =====================================================
+// GET ALL ORDERS
+// PROTECTED
+// =====================================================
 
 router.get("/", async (req, res) => {
 
     try {
 
-        const authHeader = req.headers.authorization;
+        const authHeader =
+            req.headers.authorization;
+
 
         if (!authHeader) {
 
             return res.status(401).json({
-                success: false,
-                message: "No token provided."
+
+                success:
+                    false,
+
+                message:
+                    "No token provided."
+
             });
 
         }
 
-        const token = authHeader.split(" ")[1];
 
-        jwt.verify(token, process.env.JWT_SECRET);
+        const token =
+            authHeader.split(" ")[1];
 
-        const orders = await Order.find().sort({ createdAt: -1 });
+
+        jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        );
+
+
+        const orders =
+            await Order
+                .find()
+                .sort({
+                    createdAt: -1
+                });
+
 
         res.json(orders);
 
     }
 
+
     catch (err) {
 
         console.error(err);
 
+
         res.status(401).json({
-            success: false,
-            message: "Unauthorized."
+
+            success:
+                false,
+
+            message:
+                "Unauthorized."
+
         });
 
     }
@@ -364,149 +572,328 @@ router.get("/", async (req, res) => {
 });
 
 
-// Update Order Status
+// =====================================================
+// UPDATE ORDER STATUS
+// =====================================================
 
 router.patch("/:id", async (req, res) => {
 
     try {
 
-        const authHeader = req.headers.authorization;
+        const authHeader =
+            req.headers.authorization;
+
 
         if (!authHeader) {
 
             return res.status(401).json({
-                success: false,
-                message: "No token provided."
+
+                success:
+                    false,
+
+                message:
+                    "No token provided."
+
             });
 
         }
 
-        const token = authHeader.split(" ")[1];
 
-        jwt.verify(token, process.env.JWT_SECRET);
+        const token =
+            authHeader.split(" ")[1];
 
-        const order = await Order.findByIdAndUpdate(
 
-            req.params.id,
-
-            {
-                status: req.body.status
-            },
-
-            {
-                new: true
-            }
-
+        jwt.verify(
+            token,
+            process.env.JWT_SECRET
         );
+
+
+        const order =
+            await Order.findByIdAndUpdate(
+
+                req.params.id,
+
+                {
+                    status:
+                        req.body.status
+                },
+
+                {
+                    new:
+                        true
+                }
+
+            );
+
 
         if (!order) {
 
             return res.status(404).json({
-                success: false,
-                message: "Order not found."
+
+                success:
+                    false,
+
+                message:
+                    "Order not found."
+
             });
 
         }
 
-        // Send delivery email
 
-if (req.body.status === "Delivered" && order.email) {
-console.log("Sending delivery email to:", order.email);
+        // =================================================
+        // DELIVERY EMAIL
+        // =================================================
 
-    await transporter.sendMail({
+        if (
+            req.body.status === "Delivered" &&
+            order.email
+        ) {
 
-        from: `"Kavro Nepal" <${process.env.EMAIL_USER}>`,
+            console.log(
+                "Sending delivery email to:",
+                order.email
+            );
 
-        to: order.email,
 
-        subject: "🎉 Your Kavro Order Has Been Delivered!",
+            transporter.sendMail({
 
-        html: `
-        <div style="font-family:Arial,sans-serif;padding:20px;">
+                from:
+                    `"Kavro Nepal" <${process.env.EMAIL_USER}>`,
 
-            <h2 style="color:#2563eb;">
-                Your Order is Delivered!
-            </h2>
+                to:
+                    order.email,
 
-            <p>Hello,</p>
+                subject:
+                    "🎉 Your Kavro Order Has Been Delivered!",
 
-            <p>Your order has been successfully delivered.</p>
+                html: `
 
-            <table style="border-collapse:collapse;">
+                <div
+                    style="
+                        font-family:Arial,sans-serif;
+                        padding:20px;
+                    "
+                >
 
-                <tr>
-                    <td><strong>Product</strong></td>
-                    <td style="padding-left:15px;">${order.product}</td>
-                </tr>
+                    <h2
+                        style="
+                            color:#2563eb;
+                        "
+                    >
+                        Your Order is Delivered!
+                    </h2>
 
-                <tr>
-                    <td><strong>Package</strong></td>
-                    <td style="padding-left:15px;">${order.package}</td>
-                </tr>
 
-                ${
-                order.type === "subscription"
-                ?
+                    <p>
+                        Hello,
+                    </p>
+
+
+                    <p>
+                        Your order has been successfully delivered.
+                    </p>
+
+
+                    <table
+                        style="
+                            border-collapse:collapse;
+                        "
+                    >
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    Product
+                                </strong>
+                            </td>
+
+                            <td
+                                style="
+                                    padding-left:15px;
+                                "
+                            >
+                                ${order.product}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    Package
+                                </strong>
+                            </td>
+
+                            <td
+                                style="
+                                    padding-left:15px;
+                                "
+                            >
+                                ${order.package}
+                            </td>
+
+                        </tr>
+
+
+                        ${
+                            order.type === "subscription"
+                            ?
+                            `
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        Email
+                                    </strong>
+                                </td>
+
+                                <td
+                                    style="
+                                        padding-left:15px;
+                                    "
+                                >
+                                    ${order.email}
+                                </td>
+
+                            </tr>
+                            `
+                            :
+                            `
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        UID
+                                    </strong>
+                                </td>
+
+                                <td
+                                    style="
+                                        padding-left:15px;
+                                    "
+                                >
+                                    ${order.uid}
+                                </td>
+
+                            </tr>
+                            `
+                        }
+
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    💰 Price
+                                </strong>
+                            </td>
+
+                            <td
+                                style="
+                                    padding-left:15px;
+                                "
+                            >
+                                ${order.price}
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+
+                    <br>
+
+
+                    <p>
+
+                        Thank you for choosing
+                        <strong>Kavro</strong>.
+
+                    </p>
+
+
+                    <p>
+
+                        We hope to serve you again!
+
+                    </p>
+
+                </div>
+
                 `
-                <tr>
-                <td><strong>Email</strong></td>
-                <td style="padding-left:15px;">${order.email}</td>
-                </tr>
-                `
-                :
-                `
-                <tr>
-                <td><strong>UID</strong></td>
-                <td style="padding-left:15px;">${order.uid}</td>
-                </tr>
-                `
-                }
 
-                <tr>
-                    <td><strong>💰 Price</strong></td>
-                    <td style="padding-left:15px;">${order.price}</td>
-                </tr>
+            })
 
-            </table>
+            .then(() => {
 
-            <br>
+                console.log(
+                    "✅ Delivery email sent successfully."
+                );
 
-            <p>
-                Thank you for choosing <strong>Kavro</strong>.
-            </p>
+            })
 
-            <p>
-                We hope to serve you again!
-            </p>
+            .catch((err) => {
 
-        </div>
-        `
+                console.error(
+                    "❌ Delivery email failed:",
+                    err.message
+                );
 
-    });
-    console.log("✅ Delivery email sent successfully.");
+            });
 
-}
+        }
 
-        const io = req.app.get("io");
-        io.emit("orderUpdated", order);
-        res.json({
 
-            success: true,
-            message: "Order updated successfully.",
+        // =================================================
+        // SOCKET UPDATE
+        // =================================================
+
+        const io =
+            req.app.get("io");
+
+
+        if (io) {
+
+            io.emit(
+                "orderUpdated",
+                order
+            );
+
+        }
+
+
+        return res.json({
+
+            success:
+                true,
+
+            message:
+                "Order updated successfully.",
+
             order
 
         });
 
     }
 
+
     catch (err) {
 
         console.error(err);
 
+
         res.status(500).json({
 
-            success: false,
-            message: "Failed to update order."
+            success:
+                false,
+
+            message:
+                "Failed to update order."
 
         });
 
@@ -514,42 +901,80 @@ console.log("Sending delivery email to:", order.email);
 
 });
 
-// Delete Order
+
+// =====================================================
+// DELETE ORDER
+// =====================================================
+
 router.delete("/:id", async (req, res) => {
 
     try {
 
-        const authHeader = req.headers.authorization;
+        const authHeader =
+            req.headers.authorization;
+
 
         if (!authHeader) {
+
             return res.status(401).json({
-                success: false,
-                message: "No token."
+
+                success:
+                    false,
+
+                message:
+                    "No token."
+
             });
+
         }
 
-        const token = authHeader.split(" ")[1];
 
-        jwt.verify(token, process.env.JWT_SECRET);
+        const token =
+            authHeader.split(" ")[1];
 
-        await Order.findByIdAndDelete(req.params.id);
+
+        jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        );
+
+
+        await Order.findByIdAndDelete(
+            req.params.id
+        );
+
 
         res.json({
-            success: true,
-            message: "Order deleted."
+
+            success:
+                true,
+
+            message:
+                "Order deleted."
+
         });
 
-    } catch (err) {
+    }
+
+
+    catch (err) {
 
         console.log(err);
 
+
         res.status(500).json({
-            success: false,
-            message: "Delete failed."
+
+            success:
+                false,
+
+            message:
+                "Delete failed."
+
         });
 
     }
 
 });
+
 
 module.exports = router;

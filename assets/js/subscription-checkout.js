@@ -1,19 +1,9 @@
-const item =
-    JSON.parse(localStorage.getItem("selectedProduct"));
-
-
-// =========================================
-// CHECK SELECTED PRODUCT
-// =========================================
+const item = JSON.parse(localStorage.getItem("selectedProduct"));
 
 if (!item) {
-
     alert("No subscription selected.");
-
     window.location.href = "products.html";
-
     throw new Error("No subscription selected");
-
 }
 
 
@@ -32,7 +22,7 @@ document.getElementById("checkoutPrice").textContent =
 
 
 // =========================================
-// COMPRESS PAYMENT SCREENSHOT
+// COMPRESS SCREENSHOT
 // =========================================
 
 async function compressImage(file) {
@@ -41,38 +31,30 @@ async function compressImage(file) {
 
         const reader = new FileReader();
 
-        reader.onload = function(event) {
+        reader.onload = function (event) {
 
             const img = new Image();
 
-            img.onload = function() {
+            img.onload = function () {
 
-                const canvas =
-                    document.createElement("canvas");
+                const canvas = document.createElement("canvas");
 
                 const maxWidth = 1200;
 
                 let width = img.width;
                 let height = img.height;
 
-
                 if (width > maxWidth) {
 
-                    height =
-                        height * (maxWidth / width);
-
+                    height = height * (maxWidth / width);
                     width = maxWidth;
 
                 }
 
-
                 canvas.width = width;
                 canvas.height = height;
 
-
-                const ctx =
-                    canvas.getContext("2d");
-
+                const ctx = canvas.getContext("2d");
 
                 ctx.drawImage(
                     img,
@@ -82,27 +64,26 @@ async function compressImage(file) {
                     height
                 );
 
-
-                const compressed =
+                resolve(
                     canvas.toDataURL(
                         "image/jpeg",
-                        0.75
-                    );
-
-
-                resolve(compressed);
+                        0.7
+                    )
+                );
 
             };
 
-
-            img.onerror = reject;
+            img.onerror = function () {
+                reject(new Error("Could not read screenshot."));
+            };
 
             img.src = event.target.result;
 
         };
 
-
-        reader.onerror = reject;
+        reader.onerror = function () {
+            reject(new Error("Could not read screenshot."));
+        };
 
         reader.readAsDataURL(file);
 
@@ -117,40 +98,33 @@ async function compressImage(file) {
 
 document
     .getElementById("checkoutForm")
-    .addEventListener("submit", async function(e) {
+    .addEventListener("submit", async function (e) {
 
         e.preventDefault();
 
-
         const submitButton =
-            document.querySelector(
-                "#checkoutForm .btn-primary"
-            );
+            document.querySelector("#checkoutForm .btn-primary");
 
 
-        // Prevent multiple clicks
         if (submitButton.disabled) {
-
             return;
-
         }
 
 
         // =========================================
-        // CHECK SCREENSHOT FIRST
+        // SCREENSHOT
         // =========================================
 
+        const screenshotInput =
+            document.getElementById("screenshot");
+
         const screenshotFile =
-            document
-                .getElementById("screenshot")
-                .files[0];
+            screenshotInput.files[0];
 
 
         if (!screenshotFile) {
 
-            alert(
-                "Please upload your payment screenshot."
-            );
+            alert("Please upload your payment screenshot.");
 
             return;
 
@@ -163,69 +137,67 @@ document
 
         submitButton.disabled = true;
 
-        let dots = 0;
-
-
-        const loadingText =
-            setInterval(() => {
-
-                dots++;
-
-                if (dots > 3) {
-
-                    dots = 1;
-
-                }
-
-
-                submitButton.textContent =
-                    "Placing your order" +
-                    ".".repeat(dots);
-
-            }, 400);
+        submitButton.textContent = "Placing your order...";
 
 
         try {
 
             // =========================================
-            // COMPRESS SCREENSHOT
+            // COMPRESS IMAGE
             // =========================================
+
+            submitButton.textContent =
+                "Preparing your order...";
 
             const screenshot =
-                await compressImage(
-                    screenshotFile
+                await compressImage(screenshotFile);
+
+
+            // =========================================
+            // GET VALUES
+            // =========================================
+
+            const transactionId =
+                document
+                    .getElementById("transactionId")
+                    .value
+                    .trim();
+
+
+            if (!transactionId) {
+
+                throw new Error(
+                    "Please enter your transaction ID."
                 );
 
+            }
 
-            // =========================================
-            // GET FORM VALUES
-            // =========================================
 
             const order = {
 
-                product:
-                    item.product,
+                product: item.product,
 
-                package:
-                    item.package,
+                package: item.package,
 
-                price:
-                    item.price,
+                price: item.price,
 
                 email:
                     document
                         .getElementById("email")
-                        .value,
+                        .value
+                        .trim(),
 
                 customerName:
                     document
                         .getElementById("customerName")
-                        .value,
+                        .value
+                        .trim(),
 
                 phone:
                     document
                         .getElementById("phone")
-                        .value,
+                        .value
+                        .trim(),
 
                 payment:
                     document
@@ -233,9 +205,7 @@ document
                         .value,
 
                 transactionId:
-                    document
-                        .getElementById("transactionId")
-                        .value,
+                    transactionId,
 
                 screenshot:
                     screenshot,
@@ -243,7 +213,8 @@ document
                 note:
                     document
                         .getElementById("note")
-                        ?.value || "",
+                        ?.value
+                        .trim() || "",
 
                 type:
                     "subscription"
@@ -252,54 +223,124 @@ document
 
 
             // =========================================
-            // SEND ORDER TO SERVER
+            // SEND TO SERVER
             // =========================================
 
-            const res =
-                await fetch(
+            submitButton.textContent =
+                "Placing your order...";
+
+
+            const controller =
+                new AbortController();
+
+
+            // Stop waiting after 30 seconds
+            const timeout =
+                setTimeout(() => {
+
+                    controller.abort();
+
+                }, 30000);
+
+
+            let response;
+
+            try {
+
+                response = await fetch(
                     "https://kavro-api.onrender.com/api/orders",
                     {
 
                         method: "POST",
 
                         headers: {
-
-                            "Content-Type":
-                                "application/json"
-
+                            "Content-Type": "application/json"
                         },
 
                         body:
-                            JSON.stringify(order)
+                            JSON.stringify(order),
+
+                        signal:
+                            controller.signal
 
                     }
                 );
 
+            }
 
-            const text = await res.text();
+            catch (error) {
+
+                clearTimeout(timeout);
+
+                if (error.name === "AbortError") {
+
+                    throw new Error(
+                        "Server took too long to respond. Please try again."
+                    );
+
+                }
+
+                throw new Error(
+                    "Could not connect to the server."
+                );
+
+            }
+
+
+            clearTimeout(timeout);
+
+
+            // =========================================
+            // READ RESPONSE
+            // =========================================
+
+            const responseText =
+                await response.text();
+
+
+            console.log(
+                "Server response:",
+                responseText
+            );
+
 
             let data;
 
             try {
-                data = JSON.parse(text);
-            } catch (err) {
-                console.error("Server returned:", text);
+
+                data =
+                    JSON.parse(responseText);
+
+            }
+
+            catch (error) {
 
                 throw new Error(
-                    "SERVER RESPONSE: " + text.substring(0, 300)
+                    "Server returned an invalid response."
                 );
+
             }
 
 
             // =========================================
-            // CHECK SERVER RESPONSE
+            // SERVER ERROR
             // =========================================
 
-            if (!res.ok) {
+            if (!response.ok) {
 
                 throw new Error(
                     data.message ||
-                    "Order failed."
+                    "Order could not be placed."
+                );
+
+            }
+
+
+            if (data.success === false) {
+
+                throw new Error(
+                    data.message ||
+                    "Order could not be placed."
                 );
 
             }
@@ -309,56 +350,43 @@ document
             // SUCCESS
             // =========================================
 
-            clearInterval(
-                loadingText
-            );
-
-
             submitButton.textContent =
                 "Order Placed ✓";
 
 
-            // Remove selected product
             localStorage.removeItem(
                 "selectedProduct"
             );
 
 
-            // Redirect after short delay
-            setTimeout(() => {
+            alert(
+                data.message ||
+                "Your order has been placed successfully!"
+            );
 
-                window.location.href =
-                    "index.html";
 
-            }, 800);
+            window.location.href =
+                "index.html";
 
 
         }
 
-        catch (err) {
+        catch (error) {
 
             console.error(
                 "Subscription order error:",
-                err
+                error
             );
 
 
-            // Stop loading animation
-            clearInterval(
-                loadingText
-            );
-
-
-            // Return button to normal
             submitButton.disabled = false;
 
             submitButton.textContent =
                 "Place Order";
 
 
-            // Show error
             alert(
-                err.message ||
+                error.message ||
                 "Failed to place order."
             );
 
@@ -388,47 +416,34 @@ function updatePaymentDetails() {
         !esewaDetails ||
         !bankDetails
     ) {
-
         return;
-
     }
 
 
-    // Hide both
-    esewaDetails.style.display =
-        "none";
+    esewaDetails.style.display = "none";
 
-    bankDetails.style.display =
-        "none";
+    bankDetails.style.display = "none";
 
 
-    // Show selected payment
     if (
-        paymentSelect.value ===
-        "eSewa"
+        paymentSelect.value === "eSewa"
     ) {
 
-        esewaDetails.style.display =
-            "block";
+        esewaDetails.style.display = "block";
 
     }
+
 
     else if (
-        paymentSelect.value ===
-        "Bank Transfer"
+        paymentSelect.value === "Bank Transfer"
     ) {
 
-        bankDetails.style.display =
-            "block";
+        bankDetails.style.display = "block";
 
     }
 
 }
 
-
-// =========================================
-// PAYMENT CHANGE
-// =========================================
 
 if (paymentSelect) {
 
@@ -437,8 +452,6 @@ if (paymentSelect) {
         updatePaymentDetails
     );
 
-
-    // Run when page loads
     updatePaymentDetails();
 
 }
