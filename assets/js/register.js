@@ -61,7 +61,7 @@ if (form) {
             }
 
             localStorage.setItem(
-                "kavroToken",
+                "token",
                 data.token
             );
 
