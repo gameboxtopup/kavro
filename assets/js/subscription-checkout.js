@@ -1,6 +1,10 @@
-// Load selected subscription
+const item =
+    JSON.parse(localStorage.getItem("selectedProduct"));
 
-const item = JSON.parse(localStorage.getItem("selectedProduct"));
+
+// =========================================
+// CHECK SELECTED PRODUCT
+// =========================================
 
 if (!item) {
 
@@ -8,9 +12,14 @@ if (!item) {
 
     window.location.href = "products.html";
 
+    throw new Error("No subscription selected");
+
 }
 
-// Show Order Summary
+
+// =========================================
+// ORDER SUMMARY
+// =========================================
 
 document.getElementById("checkoutProduct").textContent =
     "Product: " + item.product;
@@ -22,64 +31,414 @@ document.getElementById("checkoutPrice").textContent =
     "Price: " + item.price;
 
 
-// Submit Order
+// =========================================
+// COMPRESS PAYMENT SCREENSHOT
+// =========================================
 
-document.getElementById("checkoutForm").addEventListener("submit", async function(e){
+async function compressImage(file) {
 
-    e.preventDefault();
+    return new Promise((resolve, reject) => {
 
-    const order = {
+        const reader = new FileReader();
 
-        product: item.product,
+        reader.onload = function(event) {
 
-        package: item.package,
+            const img = new Image();
 
-        price: item.price,
+            img.onload = function() {
 
-        email: document.getElementById("email").value,
+                const canvas =
+                    document.createElement("canvas");
 
-        customerName: document.getElementById("customerName").value,
+                const maxWidth = 1200;
 
-        phone: document.getElementById("phone").value,
+                let width = img.width;
+                let height = img.height;
 
-        payment: document.getElementById("payment").value,
 
-        type: "subscription"
+                if (width > maxWidth) {
 
-    };
+                    height =
+                        height * (maxWidth / width);
 
-    try {
+                    width = maxWidth;
 
-        const res = await fetch("https://kavro-api.onrender.com/api/orders", {
+                }
 
-            method: "POST",
 
-            headers: {
+                canvas.width = width;
+                canvas.height = height;
 
-                "Content-Type": "application/json"
 
-            },
+                const ctx =
+                    canvas.getContext("2d");
 
-            body: JSON.stringify(order)
 
-        });
+                ctx.drawImage(
+                    img,
+                    0,
+                    0,
+                    width,
+                    height
+                );
 
-        const data = await res.json();
 
-        alert(data.message || "Subscription order placed successfully!");
+                const compressed =
+                    canvas.toDataURL(
+                        "image/jpeg",
+                        0.75
+                    );
 
-        localStorage.removeItem("selectedProduct");
 
-        window.location.href = "index.html";
+                resolve(compressed);
+
+            };
+
+
+            img.onerror = reject;
+
+            img.src = event.target.result;
+
+        };
+
+
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file);
+
+    });
+
+}
+
+
+// =========================================
+// SUBMIT ORDER
+// =========================================
+
+document
+    .getElementById("checkoutForm")
+    .addEventListener("submit", async function(e) {
+
+        e.preventDefault();
+
+
+        const submitButton =
+            document.querySelector(
+                "#checkoutForm .btn-primary"
+            );
+
+
+        // Prevent multiple clicks
+        if (submitButton.disabled) {
+
+            return;
+
+        }
+
+
+        // =========================================
+        // CHECK SCREENSHOT FIRST
+        // =========================================
+
+        const screenshotFile =
+            document
+                .getElementById("screenshot")
+                .files[0];
+
+
+        if (!screenshotFile) {
+
+            alert(
+                "Please upload your payment screenshot."
+            );
+
+            return;
+
+        }
+
+
+        // =========================================
+        // START LOADING
+        // =========================================
+
+        submitButton.disabled = true;
+
+        let dots = 0;
+
+
+        const loadingText =
+            setInterval(() => {
+
+                dots++;
+
+                if (dots > 3) {
+
+                    dots = 1;
+
+                }
+
+
+                submitButton.textContent =
+                    "Placing your order" +
+                    ".".repeat(dots);
+
+            }, 400);
+
+
+        try {
+
+            // =========================================
+            // COMPRESS SCREENSHOT
+            // =========================================
+
+            const screenshot =
+                await compressImage(
+                    screenshotFile
+                );
+
+
+            // =========================================
+            // GET FORM VALUES
+            // =========================================
+
+            const order = {
+
+                product:
+                    item.product,
+
+                package:
+                    item.package,
+
+                price:
+                    item.price,
+
+                email:
+                    document
+                        .getElementById("email")
+                        .value,
+
+                customerName:
+                    document
+                        .getElementById("customerName")
+                        .value,
+
+                phone:
+                    document
+                        .getElementById("phone")
+                        .value,
+
+                payment:
+                    document
+                        .getElementById("payment")
+                        .value,
+
+                transactionId:
+                    document
+                        .getElementById("transactionId")
+                        .value,
+
+                screenshot:
+                    screenshot,
+
+                note:
+                    document
+                        .getElementById("note")
+                        ?.value || "",
+
+                type:
+                    "subscription"
+
+            };
+
+
+            // =========================================
+            // SEND ORDER TO SERVER
+            // =========================================
+
+            const res =
+                await fetch(
+                    "https://kavro-api.onrender.com/api/orders",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(order)
+
+                    }
+                );
+
+
+            const text = await res.text();
+
+            let data;
+
+            try {
+                data = JSON.parse(text);
+            } catch (err) {
+                console.error("Server returned:", text);
+
+                throw new Error(
+                    "SERVER RESPONSE: " + text.substring(0, 300)
+                );
+            }
+
+
+            // =========================================
+            // CHECK SERVER RESPONSE
+            // =========================================
+
+            if (!res.ok) {
+
+                throw new Error(
+                    data.message ||
+                    "Order failed."
+                );
+
+            }
+
+
+            // =========================================
+            // SUCCESS
+            // =========================================
+
+            clearInterval(
+                loadingText
+            );
+
+
+            submitButton.textContent =
+                "Order Placed ✓";
+
+
+            // Remove selected product
+            localStorage.removeItem(
+                "selectedProduct"
+            );
+
+
+            // Redirect after short delay
+            setTimeout(() => {
+
+                window.location.href =
+                    "index.html";
+
+            }, 800);
+
+
+        }
+
+        catch (err) {
+
+            console.error(
+                "Subscription order error:",
+                err
+            );
+
+
+            // Stop loading animation
+            clearInterval(
+                loadingText
+            );
+
+
+            // Return button to normal
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+                "Place Order";
+
+
+            // Show error
+            alert(
+                err.message ||
+                "Failed to place order."
+            );
+
+        }
+
+    });
+
+
+// =========================================
+// PAYMENT METHOD SWITCHER
+// =========================================
+
+const paymentSelect =
+    document.getElementById("payment");
+
+const esewaDetails =
+    document.getElementById("esewaDetails");
+
+const bankDetails =
+    document.getElementById("bankDetails");
+
+
+function updatePaymentDetails() {
+
+    if (
+        !paymentSelect ||
+        !esewaDetails ||
+        !bankDetails
+    ) {
+
+        return;
 
     }
 
-    catch(err){
 
-        console.error(err);
+    // Hide both
+    esewaDetails.style.display =
+        "none";
 
-        alert("Failed to place order.");
+    bankDetails.style.display =
+        "none";
+
+
+    // Show selected payment
+    if (
+        paymentSelect.value ===
+        "eSewa"
+    ) {
+
+        esewaDetails.style.display =
+            "block";
 
     }
 
-});
+    else if (
+        paymentSelect.value ===
+        "Bank Transfer"
+    ) {
+
+        bankDetails.style.display =
+            "block";
+
+    }
+
+}
+
+
+// =========================================
+// PAYMENT CHANGE
+// =========================================
+
+if (paymentSelect) {
+
+    paymentSelect.addEventListener(
+        "change",
+        updatePaymentDetails
+    );
+
+
+    // Run when page loads
+    updatePaymentDetails();
+
+}

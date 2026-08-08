@@ -1,0 +1,459 @@
+/* =========================================
+   SUBSCRIPTION CHECKOUT
+========================================= */
+
+.checkout-section {
+    padding: 60px 20px;
+    min-height: calc(100vh - 80px);
+    background: #f8fafc;
+}
+
+.checkout-card {
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 15px 45px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e2e8f0;
+    box-sizing: border-box;
+}
+
+.checkout-card h2 {
+    margin: 0 0 20px;
+    font-size: 30px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* =========================================
+   ORDER SUMMARY
+========================================= */
+
+.order-summary {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.order-summary h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: #0f172a;
+}
+
+.order-summary p {
+    margin: 6px 0;
+    color: #475569;
+    font-size: 15px;
+}
+
+#checkoutPrice {
+    margin: 10px 0 0;
+    color: #2563eb;
+    font-size: 25px;
+    font-weight: 800;
+}
+
+/* =========================================
+   FORM
+========================================= */
+
+#checkoutForm {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #334155;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #0f172a;
+    font-family: inherit;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #94a3b8;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+/* =========================================
+   TRANSACTION ID
+========================================= */
+
+#transactionId {
+    width: 100%;
+    max-width: 350px;
+}
+
+/* =========================================
+   SCREENSHOT UPLOAD
+========================================= */
+
+#screenshot {
+    width: 100%;
+    max-width: 350px;
+    padding: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.upload-help {
+    display: block;
+    margin-top: 6px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* =========================================
+   PAYMENT DETAILS
+========================================= */
+
+.payment-details {
+    margin-top: 5px;
+}
+
+.payment-info {
+    padding: 18px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.payment-info h3 {
+    margin: 0 0 12px;
+    color: #0f172a;
+}
+
+.payment-info p {
+    color: #64748b;
+    margin: 7px 0;
+}
+
+.payment-info strong {
+    color: #0f172a;
+}
+
+.payment-qr {
+    display: block;
+    width: 180px;
+    max-width: 100%;
+    height: auto;
+    margin: 12px auto;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+}
+
+.bank-information {
+    margin-top: 12px;
+    padding: 14px;
+    background: #ffffff;
+    border-radius: 9px;
+    text-align: left;
+    border: 1px solid #e2e8f0;
+}
+
+.bank-information p {
+    margin: 6px 0;
+    color: #334155;
+}
+
+/* =========================================
+   BUTTON
+========================================= */
+
+#checkoutForm .btn-primary {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    padding: 13px 18px;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 3px;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+
+    .checkout-section {
+        padding: 35px 15px;
+    }
+
+    .checkout-card {
+        padding: 24px 18px;
+        border-radius: 15px;
+    }
+
+    .checkout-card h2 {
+        font-size: 25px;
+    }
+
+    .order-summary {
+        padding: 17px;
+    }
+
+    #transactionId {
+        max-width: 100%;
+    }
+
+    #screenshot {
+        max-width: 100%;
+    }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+    .checkout-section {
+        padding: 20px 10px;
+    }
+
+    .checkout-card {
+        padding: 18px 14px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(15, 23, 42, 0.05);
+    }
+
+    .checkout-card h2 {
+        font-size: 22px;
+        margin-bottom: 17px;
+    }
+
+    .order-summary {
+        padding: 14px;
+        margin-bottom: 20px;
+    }
+
+    .order-summary h3 {
+        font-size: 18px;
+    }
+
+    #checkoutPrice {
+        font-size: 22px;
+    }
+
+    #checkoutForm {
+        gap: 13px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 14px;
+        padding: 10px 11px;
+    }
+
+    #transactionId,
+    #screenshot {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .payment-info {
+        padding: 13px;
+    }
+
+    .payment-qr {
+        width: 160px;
+    }
+
+    .bank-information {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .form-group textarea {
+        min-height: 80px;
+    }
+
+    #checkoutForm .btn-primary {
+        padding: 12px;
+        font-size: 15px;
+    }
+}
+
+/* =========================================
+   PAYMENT FORM FIELDS
+========================================= */
+
+.payment-form-fields {
+    margin-top: 20px;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.payment-form-fields .form-group {
+    margin-bottom: 16px;
+}
+
+.payment-form-fields .form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Transaction ID */
+
+.payment-form-fields #transactionId {
+    width: 100%;
+    max-width: none;
+}
+
+/* Screenshot */
+
+.payment-form-fields #screenshot {
+    width: 100%;
+    max-width: none;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+/* Note */
+
+.payment-form-fields #note {
+    width: 100%;
+    min-height: 80px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .payment-form-fields {
+        padding: 14px;
+        margin-top: 15px;
+        border-radius: 10px;
+    }
+
+    .payment-form-fields .form-group {
+        margin-bottom: 13px;
+    }
+
+    .payment-form-fields input,
+    .payment-form-fields textarea {
+        font-size: 14px;
+    }
+
+    .payment-form-fields #screenshot {
+        font-size: 13px;
+    }
+
+}
+
+/* =========================================
+   CHECKOUT MESSAGE
+========================================= */
+
+.checkout-message {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 15px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+
+/* Error */
+
+.checkout-message.error {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+
+/* Success */
+
+.checkout-message.success {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+
+/* Loading */
+
+.checkout-message.loading {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+
+/* Loading button */
+
+#checkoutForm .btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .checkout-message {
+        font-size: 13px;
+        padding: 11px 12px;
+        margin-bottom: 15px;
+    }
+
+}
