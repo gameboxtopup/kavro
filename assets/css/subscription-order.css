@@ -457,3 +457,78 @@
     }
 
 }
+
+.order-success {
+    text-align: center;
+    padding: 20px 5px;
+}
+
+.success-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #dcfce7;
+    color: #16a34a;
+
+    font-size: 38px;
+    font-weight: 800;
+}
+
+.order-success h2 {
+    margin: 0 0 10px;
+    color: #0f172a;
+    font-size: 28px;
+}
+
+.success-message {
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+.success-summary {
+    text-align: left;
+
+    padding: 20px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 14px;
+
+    margin-bottom: 25px;
+}
+
+.success-summary h3 {
+    margin: 0 0 15px;
+    color: #0f172a;
+}
+
+.success-summary p {
+    margin: 8px 0;
+    color: #475569;
+}
+
+.order-status {
+    margin-top: 15px;
+    padding: 12px;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+
+    color: #c2410c;
+}
+
+.redirect-message {
+    color: #64748b;
+    font-size: 14px;
+}

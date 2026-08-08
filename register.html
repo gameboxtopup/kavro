@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Account - Kavro</title>
+
+    <link
+        rel="stylesheet"
+        href="assets/css/auth.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <div class="auth-card">
+
+            <h1>Create Account</h1>
+
+            <p class="subtitle">
+                Create your Kavro account
+            </p>
+
+            <form id="registerForm">
+
+                <label>Name</label>
+
+                <input
+                    id="name"
+                    type="text"
+                    placeholder="Your name"
+                    required
+                >
+
+                <label>Email</label>
+
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    required
+                >
+
+                <label>Password</label>
+
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="At least 6 characters"
+                    minlength="6"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="auth-button"
+                >
+                    Create Account
+                </button>
+
+            </form>
+
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <button
+                type="button"
+                class="google-button"
+            >
+                Continue with Google
+            </button>
+
+            <p class="bottom-text">
+
+                Already have an account?
+
+                <a href="login.html">
+                    Login
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <script src="assets/js/register.js"></script>
+
+</body>
+
+</html>

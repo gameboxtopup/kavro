@@ -105,6 +105,14 @@ document
         const submitButton =
             document.querySelector("#checkoutForm .btn-primary");
 
+        const errorBox =
+            document.getElementById("orderError");
+
+        if (errorBox) {
+            errorBox.style.display = "none";
+            errorBox.textContent = "";
+        }
+
 
         if (submitButton.disabled) {
             return;
@@ -124,7 +132,11 @@ document
 
         if (!screenshotFile) {
 
-            alert("Please upload your payment screenshot.");
+            if (errorBox) {
+                errorBox.textContent =
+                    "Please upload your payment screenshot.";
+                errorBox.style.display = "block";
+            }
 
             return;
 
@@ -353,20 +365,86 @@ document
             submitButton.textContent =
                 "Order Placed ✓";
 
-
             localStorage.removeItem(
                 "selectedProduct"
             );
 
 
-            alert(
-                data.message ||
-                "Your order has been placed successfully!"
-            );
+            // Show success message
+            const checkoutCard =
+                document.querySelector(".checkout-card");
+
+            checkoutCard.innerHTML = `
+
+                <div class="order-success">
+
+                    <div class="success-icon">
+                        ✓
+                    </div>
+
+                    <h2>
+                        Order Placed Successfully!
+                    </h2>
+
+                    <p class="success-message">
+                        Thank you for your order. We have received
+                        your payment details and will review your order shortly.
+                    </p>
+
+                    <div class="success-summary">
+
+                        <h3>
+                            Order Summary
+                        </h3>
+
+                        <p>
+                            <strong>Product:</strong>
+                            ${item.product}
+                        </p>
+
+                        <p>
+                            <strong>Plan:</strong>
+                            ${item.package}
+                        </p>
+
+                        <p>
+                            <strong>Price:</strong>
+                            ${item.price}
+                        </p>
+
+                        <p>
+                            <strong>Payment:</strong>
+                            ${order.payment}
+                        </p>
+
+                        <p>
+                            <strong>Transaction ID:</strong>
+                            ${order.transactionId}
+                        </p>
+
+                        <div class="order-status">
+                            🕐 Order Status: <strong>Pending Review</strong>
+                        </div>
+
+                    </div>
+
+                    <p class="redirect-message">
+                        Redirecting you to the home page in
+                        <strong>5 seconds...</strong>
+                    </p>
+
+                </div>
+
+            `;
 
 
-            window.location.href =
-                "index.html";
+            // Redirect after 5 seconds
+            setTimeout(() => {
+
+                window.location.href =
+                    "index.html";
+
+            }, 5000);
 
 
         }
@@ -385,10 +463,15 @@ document
                 "Place Order";
 
 
-            alert(
-                error.message ||
-                "Failed to place order."
-            );
+            if (errorBox) {
+
+                errorBox.textContent =
+                    error.message ||
+                    "Failed to place order.";
+
+                errorBox.style.display = "block";
+
+            }
 
         }
 

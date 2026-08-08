@@ -1,0 +1,566 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #111827;
+    min-height: 100vh;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.dashboard-header {
+    width: 100%;
+    height: 64px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+
+.logo {
+    font-size: 25px;
+    font-weight: 800;
+    color: #2563eb;
+}
+
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+#userName {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+#logoutBtn {
+    border: none;
+
+    background: #fee2e2;
+    color: #dc2626;
+
+    padding: 9px 15px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+}
+
+
+#logoutBtn:hover {
+    background: #fecaca;
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.dashboard-container {
+    width: 100%;
+    max-width: 1000px;
+
+    margin: auto;
+
+    padding: 35px 20px 60px;
+}
+
+
+/* =========================
+   WELCOME
+========================= */
+
+.welcome-section {
+    margin-bottom: 25px;
+}
+
+
+.welcome-section h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+
+.welcome-section p {
+    color: #6b7280;
+    font-size: 15px;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.dashboard-card {
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 22px;
+
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+
+.card-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+
+.card-header h2 {
+    font-size: 19px;
+}
+
+
+.refresh-btn {
+    border: none;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    padding: 8px 13px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+}
+
+
+/* =========================
+   ORDER
+========================= */
+
+.order-card {
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 18px;
+
+    margin-bottom: 12px;
+
+    background: #fafafa;
+}
+
+
+.order-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+}
+
+
+.order-product {
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+
+.order-package {
+    color: #6b7280;
+
+    font-size: 14px;
+
+    margin-top: 4px;
+}
+
+
+.status {
+    display: inline-block;
+
+    padding: 6px 11px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+
+.status-processing {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+
+.status-delivered {
+    background: #dcfce7;
+    color: #166534;
+}
+
+
+.status-rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+
+.order-info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    font-size: 13px;
+}
+
+
+.info-box {
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+
+    padding: 10px;
+}
+
+
+.info-label {
+    color: #6b7280;
+
+    display: block;
+
+    font-size: 11px;
+
+    margin-bottom: 3px;
+}
+
+
+.info-value {
+    font-weight: 600;
+
+    word-break: break-word;
+}
+
+
+/* =========================
+   EMPTY / LOADING
+========================= */
+
+.loading,
+.empty-orders {
+    text-align: center;
+
+    padding: 35px 10px;
+
+    color: #6b7280;
+}
+
+
+.empty-orders-icon {
+    font-size: 35px;
+
+    margin-bottom: 10px;
+}
+
+
+/* =========================
+   CHAT
+========================= */
+
+.chat-card {
+    overflow: hidden;
+}
+
+
+.online-dot {
+    font-size: 12px;
+
+    color: #16a34a;
+
+    font-weight: 600;
+}
+
+
+.chat-messages {
+    height: 350px;
+
+    overflow-y: auto;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    padding: 15px;
+
+    margin-bottom: 12px;
+}
+
+
+.chat-empty {
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    text-align: center;
+
+    color: #6b7280;
+}
+
+
+.chat-icon {
+    font-size: 40px;
+
+    margin-bottom: 10px;
+}
+
+
+.chat-empty p {
+    font-weight: 600;
+
+    color: #374151;
+
+    margin-bottom: 4px;
+}
+
+
+.chat-message {
+    display: flex;
+
+    margin-bottom: 10px;
+}
+
+
+.chat-message.user {
+    justify-content: flex-end;
+}
+
+
+.chat-message.admin {
+    justify-content: flex-start;
+}
+
+
+.chat-bubble {
+    max-width: 75%;
+
+    padding: 10px 13px;
+
+    border-radius: 12px;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+
+    word-break: break-word;
+}
+
+
+.chat-message.user .chat-bubble {
+    background: #2563eb;
+
+    color: white;
+
+    border-bottom-right-radius: 4px;
+}
+
+
+.chat-message.admin .chat-bubble {
+    background: #e5e7eb;
+
+    color: #111827;
+
+    border-bottom-left-radius: 4px;
+}
+
+
+.chat-time {
+    display: block;
+
+    font-size: 9px;
+
+    opacity: 0.7;
+
+    margin-top: 4px;
+}
+
+
+.chat-form {
+    display: flex;
+
+    gap: 10px;
+}
+
+
+.chat-form input {
+    flex: 1;
+
+    min-width: 0;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 9px;
+
+    padding: 12px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+
+.chat-form input:focus {
+    border-color: #2563eb;
+}
+
+
+.chat-form button {
+    border: none;
+
+    background: #2563eb;
+
+    color: white;
+
+    padding: 0 20px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    font-weight: 700;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .dashboard-header {
+        height: 58px;
+
+        padding: 0 15px;
+    }
+
+
+    .logo {
+        font-size: 22px;
+    }
+
+
+    #userName {
+        display: none;
+    }
+
+
+    .dashboard-container {
+        padding: 22px 12px 40px;
+    }
+
+
+    .welcome-section h1 {
+        font-size: 23px;
+    }
+
+
+    .dashboard-card {
+        padding: 15px;
+
+        border-radius: 12px;
+    }
+
+
+    .card-header h2 {
+        font-size: 17px;
+    }
+
+
+    .order-top {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .order-info {
+        grid-template-columns: 1fr;
+    }
+
+
+    .chat-messages {
+        height: 300px;
+    }
+
+
+    .chat-form {
+        gap: 7px;
+    }
+
+
+    .chat-form button {
+        padding: 0 15px;
+    }
+
+
+    .chat-bubble {
+        max-width: 85%;
+    }
+
+}
