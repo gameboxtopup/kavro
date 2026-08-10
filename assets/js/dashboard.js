@@ -1,5 +1,5 @@
 const API_URL = "https://kavro-api.onrender.com";
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("kavroToken");
 
 
 // =========================================
@@ -18,6 +18,7 @@ if (!token) {
 
 const userName = document.getElementById("userName");
 const welcomeName = document.getElementById("welcomeName");
+const userEmail = document.getElementById("userEmail");
 
 const logoutBtn = document.getElementById("logoutBtn");
 const refreshOrders = document.getElementById("refreshOrders");
@@ -68,23 +69,31 @@ async function loadUser() {
         welcomeName.textContent =
             user.name || "Customer";
 
+        if (userEmail) {
+            userEmail.textContent =
+                user.email || "";
+        }
+
         // Save user ID for chat
         localStorage.setItem(
             "userId",
             user._id || user.id
         );
 
+        return true;
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error("LOAD USER ERROR:", error);
 
-        localStorage.removeItem("token");
+        localStorage.removeItem("kavroToken");
+        localStorage.removeItem("kavroUser");
+        localStorage.removeItem("userId");
 
-        window.location.href =
-            "login.html";
+        window.location.href = "login.html";
 
+        return false;
     }
 
 }
@@ -105,7 +114,7 @@ async function loadOrders() {
     try {
 
         const response = await fetch(
-            `${API_URL}/api/orders/my-orders`,
+            `${API_URL}/api/orders/my`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -511,18 +520,19 @@ if (refreshOrders) {
 // LOGOUT
 // =========================================
 
-logoutBtn.addEventListener(
-    "click",
-    function () {
+if (logoutBtn) {
 
-        localStorage.removeItem("token");
+    logoutBtn.addEventListener("click", function () {
+
+        localStorage.removeItem("kavroToken");
+        localStorage.removeItem("kavroUser");
         localStorage.removeItem("userId");
 
-        window.location.href =
-            "login.html";
+        window.location.href = "index.html";
 
-    }
-);
+    });
+
+}
 
 
 // =========================================
@@ -553,15 +563,185 @@ function formatDate(date) {
 
 
 // =========================================
+// DASHBOARD TABS
+// =========================================
+
+const tabs = document.querySelectorAll(".dashboard-tab");
+
+const ordersTab =
+    document.getElementById("ordersTab");
+
+const passwordTab =
+    document.getElementById("passwordTab");
+
+const chatTab =
+    document.getElementById("chatTab");
+
+tabs.forEach(tab => {
+
+    tab.addEventListener("click", () => {
+
+        tabs.forEach(t =>
+            t.classList.remove("active")
+        );
+
+        tab.classList.add("active");
+
+        const selected =
+            tab.dataset.tab;
+
+        ordersTab.style.display =
+            selected === "orders"
+                ? "block"
+                : "none";
+
+        passwordTab.style.display =
+            selected === "password"
+                ? "block"
+                : "none";
+
+        chatTab.style.display =
+            selected === "chat"
+                ? "block"
+                : "none";
+
+    });
+
+});
+
+
+// =========================================
+// CHANGE CUSTOMER PASSWORD
+// =========================================
+
+const changePasswordForm =
+    document.getElementById("changePasswordForm");
+
+if (changePasswordForm) {
+
+    changePasswordForm.addEventListener(
+        "submit",
+        async function (e) {
+
+            e.preventDefault();
+
+            const currentPassword =
+                document.getElementById(
+                    "currentPassword"
+                ).value;
+
+            const newPassword =
+                document.getElementById(
+                    "newPassword"
+                ).value;
+
+            const confirmPassword =
+                document.getElementById(
+                    "confirmPassword"
+                ).value;
+
+
+            if (newPassword !== confirmPassword) {
+
+                alert("New passwords do not match.");
+
+                return;
+
+            }
+
+
+            if (newPassword.length < 6) {
+
+                alert(
+                    "New password must be at least 6 characters."
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const response = await fetch(
+                    `${API_URL}/api/auth/change-password`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            Authorization:
+                                `Bearer ${token}`
+                        },
+
+                        body: JSON.stringify({
+                            currentPassword,
+                            newPassword
+                        })
+                    }
+                );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        "Could not change password."
+                    );
+
+                }
+
+
+                alert(
+                    "Password changed successfully."
+                );
+
+
+                changePasswordForm.reset();
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "CHANGE PASSWORD ERROR:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Could not change password."
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// =========================================
 // START
 // =========================================
 
 (async function () {
 
-    await loadUser();
+    const userLoaded = await loadUser();
+
+    if (!userLoaded) {
+        return;
+    }
 
     await loadOrders();
-
     await loadChat();
 
 })();

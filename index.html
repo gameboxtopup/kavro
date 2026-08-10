@@ -106,23 +106,75 @@ Kavro
 
 <ul class="nav-links" id="navLinks">
 
-<li><a href="index.html" class="active">Home</a></li>
+    <li>
+        <a href="index.html" class="active">
+            Home
+        </a>
+    </li>
 
-<li><a href="products.html">Products</a></li>
+    <li>
+        <a href="products.html">
+            Products
+        </a>
+    </li>
 
-<li><a href="about.html">About</a></li>
+    <li>
+        <a href="about.html">
+            About
+        </a>
+    </li>
 
-<li><a href="blog.html">Blog</a></li>
+    <li>
+        <a href="blog.html">
+            Blog
+        </a>
+    </li>
 
-<li><a href="contact.html">Contact</a></li>
+    <li>
+        <a href="contact.html">
+            Contact
+        </a>
+    </li>
 
 </ul>
 
-<a href="products.html" class="btn-primary">
+<div class="auth-buttons">
 
-Browse Products
+    <!-- Logged out -->
+    <a href="signup.html"
+       id="signupBtn"
+       class="btn-secondary">
+        Sign Up
+    </a>
 
-</a>
+    <a href="login.html"
+       id="signinBtn"
+       class="btn-primary">
+        Sign In
+    </a>
+
+    <!-- Logged in -->
+    <a href="dashboard.html"
+       id="profileBtn"
+       class="profile-icon-btn"
+       style="display:none;"
+       title="My Profile"
+       aria-label="My Profile">
+        👤
+    </a>
+
+    <!-- LOGOUT -->
+    <button
+        type="button"
+        id="navLogoutBtn"
+        class="nav-logout-btn"
+        style="display:none;"
+        onclick="kavroLogout()"
+    >
+        Logout
+    </button>
+
+</div>
 
 <button class="menu-btn" id="menuBtn">
 ☰
@@ -1272,8 +1324,17 @@ Nepal's trusted digital marketplace for game top-ups and digital products.
 </footer>
 
 <script src="assets/js/main.js"></script>
+<script src="assets/js/auth-state.js"></script>
 
 </main>
+
+<button
+    class="floating-chat-btn"
+    onclick="window.location.href='dashboard.html#chat'"
+>
+    💬
+    <span>Chat with Admin</span>
+</button>
 
 </body>
 

@@ -7,6 +7,7 @@
     <title>Kavro - My Dashboard</title>
 
     <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -14,31 +15,62 @@
 <header class="dashboard-header">
 
     <div class="logo">
-        Kavro
+        <a href="index.html">Kavro</a>
     </div>
 
     <div class="header-right">
 
-        <span id="userName">
-            Guest
-        </span>
+        <div class="user-info">
+            <strong id="userName">Customer</strong>
+            <small id="userEmail"></small>
+        </div>
 
-        <button id="logoutButton">
-            Logout
+        <button id="logoutBtn" class="logout-btn">
+            Sign Out
         </button>
 
     </div>
 
 </header>
 
+<nav class="dashboard-nav">
+
+    <button
+        class="dashboard-tab active"
+        data-tab="orders"
+    >
+        📦 My Orders
+    </button>
+
+    <button
+        class="dashboard-tab"
+        data-tab="password"
+    >
+        🔒 Change Password
+    </button>
+
+    <button
+        class="dashboard-tab"
+        data-tab="chat"
+    >
+        💬 Chat with Admin
+    </button>
+
+</nav>
 
 <main class="dashboard-container">
 
     <section class="welcome-section">
 
         <h1>
-            Welcome, <span id="welcomeName">Guest</span> 👋
+            Welcome,
+            <span id="welcomeName">User</span>
+            👋
         </h1>
+
+        <p id="userEmail">
+            Loading email...
+        </p>
 
         <p>
             Track your orders and contact Kavro support.
@@ -49,7 +81,10 @@
 
     <!-- ORDER STATUS -->
 
-    <section class="dashboard-card">
+    <section
+    id="ordersTab"
+    class="dashboard-card dashboard-tab-content"
+    >
 
         <div class="card-header">
 
@@ -78,9 +113,61 @@
     </section>
 
 
+<section
+    id="passwordTab"
+    class="dashboard-card dashboard-tab-content"
+    style="display:none;"
+>
+
+    <div class="card-header">
+
+        <h2>🔒 Change Password</h2>
+
+    </div>
+
+    <form id="changePasswordForm">
+
+        <label>Current Password</label>
+
+        <input
+            type="password"
+            id="currentPassword"
+            required
+        >
+
+        <label>New Password</label>
+
+        <input
+            type="password"
+            id="newPassword"
+            minlength="6"
+            required
+        >
+
+        <label>Confirm New Password</label>
+
+        <input
+            type="password"
+            id="confirmPassword"
+            minlength="6"
+            required
+        >
+
+        <button type="submit">
+            Change Password
+        </button>
+
+    </form>
+
+</section>
+
     <!-- LIVE CHAT -->
 
-    <section class="dashboard-card chat-card">
+    <section
+    id="chatTab"
+    class="dashboard-card chat-card dashboard-tab-content"
+    style="display:none;"
+    >
 
         <div class="card-header">
 
@@ -148,6 +235,14 @@
 <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
 <script src="assets/js/dashboard.js"></script>
+
+<button
+    class="floating-chat-btn"
+    onclick="window.location.href='dashboard.html#chat'"
+>
+    💬
+    <span>Chat with Admin</span>
+</button>
 
 </body>
 </html>
