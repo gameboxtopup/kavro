@@ -3,10 +3,15 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const { OAuth2Client } = require("google-auth-library");
 
 const User = require("../models/User");
 
 const router = express.Router();
+
+const googleClient = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID
+);
 
 
 // =========================================
@@ -292,6 +297,196 @@ router.post("/login", async (req, res) => {
 
 });
 
+
+// =========================================
+// GOOGLE LOGIN
+// =========================================
+
+router.post("/google", async (req, res) => {
+
+    try {
+
+        const credential =
+            req.body.credential || "";
+
+        if (!credential) {
+
+            return res.status(400).json({
+                success: false,
+                message: "Google credential is required."
+            });
+
+        }
+
+        // Verify Google's ID token
+        const ticket =
+            await googleClient.verifyIdToken({
+                idToken: credential,
+                audience:
+                    process.env.GOOGLE_CLIENT_ID
+            });
+
+        const payload =
+            ticket.getPayload();
+
+        if (!payload) {
+
+            return res.status(401).json({
+                success: false,
+                message: "Invalid Google account."
+            });
+
+        }
+
+        const googleId =
+            payload.sub;
+
+        const email =
+            (payload.email || "")
+                .trim()
+                .toLowerCase();
+
+        const name =
+            payload.name ||
+            "Kavro User";
+
+        const avatar =
+            payload.picture ||
+            "";
+
+        if (!googleId || !email) {
+
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Google account information is incomplete."
+            });
+
+        }
+
+        // Find by Google ID first
+        let user =
+            await User.findOne({
+                googleId
+            });
+
+        // If not found, try email
+        if (!user) {
+
+            user =
+                await User.findOne({
+                    email
+                });
+
+        }
+
+        // Create new account
+        if (!user) {
+
+            user =
+                await User.create({
+
+                    name,
+
+                    email,
+
+                    password: "",
+
+                    googleId,
+
+                    avatar
+
+                });
+
+        }
+
+        // Existing account
+        else {
+
+            let changed = false;
+
+            if (!user.googleId) {
+
+                user.googleId =
+                    googleId;
+
+                changed = true;
+
+            }
+
+            if (!user.avatar && avatar) {
+
+                user.avatar =
+                    avatar;
+
+                changed = true;
+
+            }
+
+            if (!user.name && name) {
+
+                user.name =
+                    name;
+
+                changed = true;
+
+            }
+
+            if (changed) {
+
+                await user.save();
+
+            }
+
+        }
+
+        const token =
+            createToken(user);
+
+        return res.json({
+
+            success: true,
+
+            message:
+                "Google login successful.",
+
+            token,
+
+            user: {
+
+                id: user._id,
+
+                name: user.name,
+
+                email: user.email,
+
+                avatar: user.avatar
+
+            }
+
+        });
+
+    }
+
+    catch (err) {
+
+        console.error(
+            "GOOGLE LOGIN ERROR:",
+            err
+        );
+
+        return res.status(401).json({
+
+            success: false,
+
+            message:
+                "Google authentication failed."
+
+        });
+
+    }
+
+});
 
 // =========================================
 // GET CURRENT USER

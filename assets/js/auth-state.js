@@ -1,204 +1,71 @@
+/* Kavro authentication/navigation state */
+
 const KAVRO_API = "https://kavro-api.onrender.com";
-
-
-// ==========================================
-// TOKEN
-// ==========================================
 
 function getKavroToken() {
     return localStorage.getItem("kavroToken");
 }
 
-
-// ==========================================
-// USER
-// ==========================================
-
 function getKavroUser() {
     try {
-        return JSON.parse(
-            localStorage.getItem("kavroUser")
-        );
+        return JSON.parse(localStorage.getItem("kavroUser")) || null;
     } catch {
         return null;
     }
 }
 
-
-// ==========================================
-// LOGIN CHECK
-// ==========================================
-
 function isKavroLoggedIn() {
-    return !!getKavroToken();
+    return Boolean(getKavroToken());
 }
 
+function updateKavroNavigation() {
+    const loggedIn = isKavroLoggedIn();
 
-// ==========================================
-// LOGOUT
-// ==========================================
+    const signUp = document.getElementById("signupBtn");
+    const signIn = document.getElementById("signinBtn");
+    const profile = document.getElementById("profileBtn");
+    const logout = document.getElementById("navLogoutBtn");
+
+    if (loggedIn) {
+        if (signUp) signUp.style.display = "none";
+        if (signIn) signIn.style.display = "none";
+
+        if (profile) {
+            profile.style.display = "inline-flex";
+            profile.setAttribute("aria-label", "Open dashboard");
+            profile.setAttribute("title", "Dashboard");
+        }
+
+        if (logout) {
+            logout.style.display = "inline-flex";
+        }
+    } else {
+        if (signUp) signUp.style.display = "inline-flex";
+        if (signIn) signIn.style.display = "inline-flex";
+        if (profile) profile.style.display = "none";
+        if (logout) logout.style.display = "none";
+    }
+}
 
 function kavroLogout() {
-
     localStorage.removeItem("kavroToken");
     localStorage.removeItem("kavroUser");
-    localStorage.removeItem("userId");
 
-    // Return to homepage
+    // Replace the current page instead of adding another history entry.
     window.location.replace("index.html");
 }
 
+document.addEventListener("click", (event) => {
+    const profile = event.target.closest("#profileBtn");
+    if (!profile) return;
 
-// ==========================================
-// UPDATE NAVIGATION
-// ==========================================
-
-function updateKavroNavigation() {
-
-    const loggedIn = isKavroLoggedIn();
-
-    const signIn =
-        document.getElementById("signInBtn");
-
-    const signUp =
-        document.getElementById("signUpBtn");
-
-    const profile =
-        document.getElementById("profileBtn");
-
-    const logout =
-        document.getElementById("navLogoutBtn");
-
-
-    if (loggedIn) {
-
-        // ------------------------------
-        // HIDE SIGN IN / SIGN UP
-        // ------------------------------
-
-        if (signIn) {
-            signIn.style.display = "none";
-        }
-
-        if (signUp) {
-            signUp.style.display = "none";
-        }
-
-
-        // ------------------------------
-        // SHOW PROFILE ICON
-        // ------------------------------
-
-        if (profile) {
-
-            profile.style.display =
-                "inline-flex";
-
-            // IMPORTANT:
-            // Never put user's name here.
-
-            profile.innerHTML = "👤";
-
-            profile.href =
-                "dashboard.html";
-
-        }
-
-
-        // ------------------------------
-        // SHOW LOGOUT
-        // ------------------------------
-
-        if (logout) {
-
-            logout.style.display =
-                "inline-flex";
-
-        }
-
+    if (isKavroLoggedIn()) {
+        window.location.href = "dashboard.html";
     } else {
-
-        // ------------------------------
-        // SHOW SIGN IN / SIGN UP
-        // ------------------------------
-
-        if (signIn) {
-            signIn.style.display =
-                "inline-flex";
-        }
-
-        if (signUp) {
-            signUp.style.display =
-                "inline-flex";
-        }
-
-
-        // ------------------------------
-        // HIDE PROFILE
-        // ------------------------------
-
-        if (profile) {
-            profile.style.display =
-                "none";
-        }
-
-
-        // ------------------------------
-        // HIDE LOGOUT
-        // ------------------------------
-
-        if (logout) {
-            logout.style.display =
-                "none";
-        }
-
+        window.location.href = "login.html";
     }
-}
+});
 
-
-// ==========================================
-// PROTECT LOGIN / SIGNUP PAGES
-// ==========================================
-
-function redirectIfAlreadyLoggedIn() {
-
-    const page =
-        window.location.pathname
-            .split("/")
-            .pop()
-            .toLowerCase();
-
-    const authPages = [
-        "login.html",
-        "signup.html",
-        "register.html"
-    ];
-
-    if (
-        isKavroLoggedIn() &&
-        authPages.includes(page)
-    ) {
-
-        window.location.replace(
-            "dashboard.html"
-        );
-
-    }
-
-}
-
-
-// ==========================================
-// INITIALIZE
-// ==========================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        updateKavroNavigation();
-
-        redirectIfAlreadyLoggedIn();
-
-    }
-);
+document.addEventListener("DOMContentLoaded", () => {
+    updateKavroNavigation();
+});

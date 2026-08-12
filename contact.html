@@ -2,580 +2,1077 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Kavro | Gaming & Digital Product Support</title>
 
-<title>Contact Kavro | Get in Touch</title>
+    <meta name="description"
+        content="Contact Kavro for gaming top-ups, digital products, gift cards, order support, partnerships and customer assistance in Nepal.">
 
-<meta name="description" content="Contact Kavro for questions about game top-ups, digital products, gift cards, AI tools, software recommendations, partnerships, or customer support.">
+    <meta name="author" content="Kavro">
+    <meta name="robots" content="index,follow">
+    <meta name="theme-color" content="#2563eb">
 
-<meta name="keywords" content="Contact Kavro, Customer Support, Digital Marketplace, Game Topup Support, UniPin Support">
+    <link rel="canonical" href="https://gameboxtopup.github.io/kavro/contact.html">
+    <link rel="icon" href="assets/images/favicon.png">
 
-<meta name="author" content="Kavro">
+    <link rel="stylesheet" href="style.css">
 
-<meta name="robots" content="index,follow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<meta name="theme-color" content="#2563eb">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
 
-<link rel="canonical" href="https://gameboxtopup.github.io/kavro/contact.html">
+    <style>
+        /* ================================
+           CONTACT PAGE
+        ================================ */
 
-<link rel="stylesheet" href="style.css">
+        .contact-hero {
+            position: relative;
+            padding: 90px 0 75px;
+            overflow: hidden;
+        }
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+        .contact-hero::before {
+            content: "";
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            right: -250px;
+            top: -300px;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                rgba(37,99,235,.25),
+                transparent 68%
+            );
+            pointer-events: none;
+        }
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        .contact-hero-grid {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 65px;
+            align-items: center;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+        .contact-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 13px;
+            margin-bottom: 22px;
+            border-radius: 999px;
+            color: #bfdbfe;
+            background: rgba(37,99,235,.10);
+            border: 1px solid rgba(59,130,246,.28);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
 
-<link rel="icon" href="assets/images/favicon.png">
+        .contact-hero h1 {
+            max-width: 700px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(44px, 6vw, 72px);
+            line-height: 1;
+            letter-spacing: -.06em;
+        }
 
-<link rel="canonical" href="https://YOURDOMAIN/contact.html">
+        .contact-hero h1 span {
+            color: #60a5fa;
+        }
+
+        .contact-hero-text {
+            max-width: 620px;
+            margin: 25px 0 28px;
+            color: #94a3b8;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .contact-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 11px;
+        }
+
+        /* Hero side card */
+
+        .contact-overview {
+            padding: 30px;
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background:
+                radial-gradient(
+                    circle at 100% 0,
+                    rgba(37,99,235,.16),
+                    transparent 45%
+                ),
+                rgba(16,24,39,.88);
+            box-shadow: 0 25px 70px rgba(0,0,0,.28);
+        }
+
+        .contact-overview h3 {
+            margin-bottom: 24px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 21px;
+        }
+
+        .contact-overview-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .contact-overview-item:first-of-type {
+            border-top: 0;
+        }
+
+        .contact-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: rgba(37,99,235,.12);
+            border: 1px solid rgba(59,130,246,.18);
+            font-size: 18px;
+        }
+
+        .contact-overview-item h4 {
+            margin-bottom: 2px;
+            font-size: 14px;
+        }
+
+        .contact-overview-item p {
+            color: #8190a8;
+            font-size: 12px;
+        }
+
+        /* Contact section */
+
+        .contact-section {
+            padding: 100px 0;
+            background: rgba(11,17,32,.62);
+            border-block: 1px solid rgba(148,163,184,.05);
+        }
+
+        .contact-section-heading {
+            max-width: 700px;
+            margin: 0 auto 45px;
+            text-align: center;
+        }
+
+        .contact-section-heading span {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: #60a5fa;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+        }
+
+        .contact-section-heading h2 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(30px,4vw,45px);
+            line-height: 1.08;
+            letter-spacing: -.045em;
+        }
+
+        .contact-section-heading p {
+            margin-top: 12px;
+            color: #8190a8;
+            font-size: 14px;
+        }
+
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        /* Form */
+
+        .contact-form-card,
+        .contact-info-card {
+            padding: 30px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: rgba(16,24,39,.88);
+            box-shadow: 0 18px 50px rgba(0,0,0,.20);
+        }
+
+        .contact-form-card h3,
+        .contact-info-card h3 {
+            margin-bottom: 5px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 22px;
+        }
+
+        .card-subtitle {
+            margin-bottom: 25px;
+            color: #718097;
+            font-size: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: #cbd5e1;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            color: #fff;
+            background: #0b1220;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            outline: none;
+            transition: .2s;
+        }
+
+        .form-group input {
+            height: 48px;
+            padding: 0 14px;
+        }
+
+        .form-group textarea {
+            min-height: 145px;
+            padding: 13px 14px;
+            resize: vertical;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #536176;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: rgba(59,130,246,.65);
+            box-shadow: 0 0 0 3px rgba(37,99,235,.10);
+        }
+
+        .contact-submit {
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        /* Info */
+
+        .contact-info-list {
+            display: grid;
+            gap: 13px;
+            margin-top: 20px;
+        }
+
+        .contact-info-item {
+            display: flex;
+            gap: 13px;
+            padding: 15px;
+            border: 1px solid rgba(148,163,184,.09);
+            border-radius: 14px;
+            background: rgba(7,11,20,.45);
+        }
+
+        .contact-info-item .contact-icon {
+            width: 38px;
+            height: 38px;
+            font-size: 16px;
+        }
+
+        .contact-info-item h4 {
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .contact-info-item p {
+            color: #8190a8;
+            font-size: 12px;
+        }
+
+        .contact-note {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 13px;
+            color: #93c5fd;
+            background: rgba(37,99,235,.08);
+            border: 1px solid rgba(59,130,246,.15);
+            font-size: 12px;
+        }
+
+        /* FAQ */
+
+        .contact-faq {
+            padding: 100px 0;
+        }
+
+        .contact-faq-grid {
+            max-width: 850px;
+            margin: auto;
+            display: grid;
+            gap: 11px;
+        }
+
+        .contact-faq-item {
+            padding: 21px 23px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(16,24,39,.78);
+        }
+
+        .contact-faq-item h3 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 15px;
+        }
+
+        .contact-faq-item p {
+            margin-top: 7px;
+            color: #8290a6;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* CTA */
+
+        .contact-cta {
+            padding: 90px 0;
+            text-align: center;
+            border-block: 1px solid var(--line);
+            background:
+                radial-gradient(
+                    circle at 50% 100%,
+                    rgba(37,99,235,.20),
+                    transparent 50%
+                ),
+                #0a111e;
+        }
+
+        .contact-cta h2 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(30px,4vw,48px);
+            line-height: 1.08;
+            letter-spacing: -.045em;
+        }
+
+        .contact-cta p {
+            max-width: 580px;
+            margin: 13px auto 25px;
+            color: #8290a6;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 850px) {
+            .contact-hero-grid,
+            .contact-layout {
+                grid-template-columns: 1fr;
+                gap: 35px;
+            }
+
+            .contact-hero {
+                padding: 65px 0;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .contact-hero h1 {
+                font-size: 43px;
+            }
+
+            .contact-hero-text {
+                font-size: 14px;
+            }
+
+            .contact-buttons {
+                justify-content: center;
+            }
+
+            .contact-overview,
+            .contact-form-card,
+            .contact-info-card {
+                padding: 22px;
+                border-radius: 18px;
+            }
+
+            .contact-section,
+            .contact-faq {
+                padding: 72px 0;
+            }
+
+            .contact-cta {
+                padding: 72px 0;
+            }
+        }
+    </style>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        "name": "Contact Kavro",
+        "url": "https://gameboxtopup.github.io/kavro/contact.html"
+    }
+    </script>
 
 </head>
 
 <body>
 
-<!-- ========================================= -->
-<!-- HEADER -->
-<!-- ========================================= -->
+<!-- ================= HEADER ================= -->
 
 <header class="header">
 
-<div class="container">
+    <div class="container">
 
-<nav class="navbar">
+        <nav class="navbar">
 
-<a href="index.html" class="logo">
-    <img src="assets/images/logo.png" alt="Kavro Logo" class="logo-img">
-</a>
+            <a href="index.html" class="logo">
+                <img
+                    src="assets/images/logo.png"
+                    alt="Kavro Logo"
+                    class="logo-img">
+                <span>Kavro</span>
+            </a>
 
-<button class="menu-btn" id="menuBtn">
+            <ul class="nav-links" id="navLinks">
 
-☰
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
 
-</button>
+                <li>
+                    <a href="products.html">Products</a>
+                </li>
 
-<ul class="nav-links" id="navLinks">
+                <li>
+                    <a href="about.html">About</a>
+                </li>
 
-<li><a href="index.html">Home</a></li>
+                <li>
+                    <a href="blog.html">Blog</a>
+                </li>
 
-<li><a href="products.html">Products</a></li>
+                <li>
+                    <a href="contact.html" class="active">Contact</a>
+                </li>
 
-<li><a href="about.html">About</a></li>
+            </ul>
 
-<li><a href="blog.html">Blog</a></li>
+            <a href="products.html" class="btn-primary">
+                Buy Now
+            </a>
 
-<li><a href="contact.html" class="active">Contact</a></li>
+            <button class="menu-btn" id="menuBtn">
+                ☰
+            </button>
 
-</ul>
+        </nav>
 
-</nav>
-
-</div>
+    </div>
 
 </header>
 
 
+<!-- ================= HERO ================= -->
 
-<!-- ========================================= -->
-<!-- HERO -->
-<!-- ========================================= -->
+<section class="contact-hero">
 
-<section class="hero">
+    <div class="container contact-hero-grid">
 
-<div class="container hero-grid">
+        <div>
 
-<div>
+            <span class="contact-badge">
+                💬 KAVRO SUPPORT
+            </span>
 
-<p class="hero-tag">
+            <h1>
+                We're Here to <span>Help.</span>
+            </h1>
 
-Contact Kavro
+            <p class="contact-hero-text">
+                Have a question about a game top-up, digital product,
+                gift card or order? Need help with something else?
+                Send us a message and our team will get back to you.
+            </p>
 
-</p>
+            <div class="contact-buttons">
 
-<h1>
+                <a href="#contact-form" class="btn-primary">
+                    Send a Message
+                </a>
 
-Let's Build Something Great Together
+                <a href="products.html" class="btn-secondary">
+                    Browse Products
+                </a>
 
-</h1>
+            </div>
 
-<p class="hero-description">
+        </div>
 
-Whether you have a question about our products, need help with an order, want to discuss a partnership, or simply want to say hello, we're here to help. We aim to provide clear communication and a friendly customer experience.
 
-</p>
+        <div class="contact-overview">
 
-<div class="hero-buttons">
+            <h3>
+                How Can We Help?
+            </h3>
 
-<a href="#contact-form" class="btn-primary">
+            <div class="contact-overview-item">
 
-Send a Message
+                <div class="contact-icon">📧</div>
 
-</a>
+                <div>
+                    <h4>Order Support</h4>
+                    <p>
+                        Need help with a purchase or delivery?
+                    </p>
+                </div>
 
-<a href="products.html" class="btn-secondary">
+            </div>
 
-Browse Products
+            <div class="contact-overview-item">
 
-</a>
+                <div class="contact-icon">🎮</div>
 
-</div>
+                <div>
+                    <h4>Gaming Products</h4>
+                    <p>
+                        Questions about Diamonds, UC and top-ups.
+                    </p>
+                </div>
 
-<div class="hero-stats">
+            </div>
 
-<div class="stat">
+            <div class="contact-overview-item">
 
-<h2>24h</h2>
+                <div class="contact-icon">🤝</div>
 
-<span>Typical response goal</span>
+                <div>
+                    <h4>Business & Partnerships</h4>
+                    <p>
+                        Interested in working with Kavro?
+                    </p>
+                </div>
 
-</div>
+            </div>
 
-<div class="stat">
+            <div class="contact-overview-item">
 
-<h2>100%</h2>
+                <div class="contact-icon">💡</div>
 
-<span>Focused on customer satisfaction</span>
+                <div>
+                    <h4>Product Requests</h4>
+                    <p>
+                        Suggest a game or digital product.
+                    </p>
+                </div>
 
-</div>
+            </div>
 
-<div class="stat">
+        </div>
 
-<h2>Online</h2>
-
-<span>Digital-first support</span>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="glass-card">
-
-<h3>
-
-Contact Overview
-
-</h3>
-
-<div class="category">
-
-📧
-
-<div>
-
-<h4>Email Support</h4>
-
-<p>Reach us for questions and assistance.</p>
-
-</div>
-
-</div>
-
-<div class="category">
-
-💬
-
-<div>
-
-<h4>Community</h4>
-
-<p>Connect through our community channels.</p>
-
-</div>
-
-</div>
-
-<div class="category">
-
-🤝
-
-<div>
-
-<h4>Business Inquiries</h4>
-
-<p>Partnerships and collaboration opportunities.</p>
-
-</div>
-
-</div>
-
-<div class="category">
-
-🛡️
-
-<div>
-
-<h4>Customer Care</h4>
-
-<p>We're committed to helping you quickly and professionally.</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+    </div>
 
 </section>
-<!-- ========================================= -->
-<!-- CONTACT SECTION -->
-<!-- ========================================= -->
 
-<section id="contact-form" class="services">
 
-<div class="container">
+<!-- ================= CONTACT ================= -->
 
-<p class="section-subtitle">
+<section id="contact-form" class="contact-section">
 
-Get In Touch
+    <div class="container">
 
-</p>
+        <div class="contact-section-heading">
 
-<h2 class="section-title">
+            <span>
+                Get In Touch
+            </span>
 
-We'd Love To Hear From You
+            <h2>
+                Let's Talk
+            </h2>
 
-</h2>
+            <p>
+                Send us your question and we'll do our best to help.
+            </p>
 
-<div class="hero-grid">
+        </div>
 
-<!-- Contact Form -->
 
-<div class="glass-card">
+        <div class="contact-layout">
 
-<h3>Send a Message</h3>
+            <!-- FORM -->
 
-<form id="contactForm">
+            <div class="contact-form-card">
 
-<div class="form-group">
+                <h3>
+                    Send a Message
+                </h3>
 
-<label for="name">Full Name</label>
+                <p class="card-subtitle">
+                    Fill out the form below and tell us how we can help.
+                </p>
 
-<input type="text" id="name" placeholder="Your full name" required>
+                <form id="contactForm">
 
-</div>
+                    <div class="form-group">
 
-<div class="form-group">
+                        <label for="name">
+                            Full Name
+                        </label>
 
-<label for="email">Email Address</label>
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="Your full name"
+                            required>
 
-<input type="email" id="email" placeholder="you@example.com" required>
+                    </div>
 
-</div>
 
-<div class="form-group">
+                    <div class="form-group">
 
-<label for="subject">Subject</label>
+                        <label for="email">
+                            Email Address
+                        </label>
 
-<input type="text" id="subject" placeholder="How can we help?" required>
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="you@example.com"
+                            required>
 
-</div>
+                    </div>
 
-<div class="form-group">
 
-<label for="message">Message</label>
+                    <div class="form-group">
 
-<textarea id="message" rows="7" placeholder="Write your message..." required></textarea>
+                        <label for="subject">
+                            Subject
+                        </label>
 
-</div>
+                        <input
+                            type="text"
+                            id="subject"
+                            placeholder="How can we help?"
+                            required>
 
-<button type="submit" class="btn-primary">
+                    </div>
 
-Send Message
+
+                    <div class="form-group">
+
+                        <label for="message">
+                            Message
+                        </label>
+
+                        <textarea
+                            id="message"
+                            placeholder="Write your message..."
+                            required></textarea>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="btn-primary contact-submit">
+
+                        Send Message →
+
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- INFORMATION -->
+
+            <div class="contact-info-card">
+
+                <h3>
+                    Contact Information
+                </h3>
+
+                <p class="card-subtitle">
+                    Choose the easiest way to reach Kavro.
+                </p>
+
+
+                <div class="contact-info-list">
+
+                    <div class="contact-info-item">
+
+                        <div class="contact-icon">
+                            📧
+                        </div>
+
+                        <div>
+                            <h4>Email</h4>
+                            <p>
+                                nirmalktht@gmail.com
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="contact-info-item">
+
+                        <div class="contact-icon">
+                            💬
+                        </div>
+
+                        <div>
+                            <h4>WhatsApp</h4>
+                            <p>
+                                +977 9708567948
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="contact-info-item">
+
+                        <div class="contact-icon">
+                            🌐
+                        </div>
+
+                        <div>
+                            <h4>Location</h4>
+                            <p>
+                                Nepal · Online Marketplace
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="contact-info-item">
+
+                        <div class="contact-icon">
+                            🕒
+                        </div>
+
+                        <div>
+                            <h4>Support</h4>
+                            <p>
+                                Monday – Sunday
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="contact-info-item">
+
+                        <div class="contact-icon">
+                            🤝
+                        </div>
+
+                        <div>
+                            <h4>Business</h4>
+                            <p>
+                                Affiliate & partnership inquiries welcome.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contact-note">
+
+                    ⚡ For order-related questions, please include
+                    your order details so we can assist you faster.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FAQ ================= -->
+
+<section class="contact-faq">
+
+    <div class="container">
+
+        <div class="contact-section-heading">
+
+            <span>
+                FAQ
+            </span>
+
+            <h2>
+                Common Questions
+            </h2>
+
+            <p>
+                Quick answers before you contact us.
+            </p>
+
+        </div>
+
+
+        <div class="contact-faq-grid">
+
+            <div class="contact-faq-item">
+
+                <h3>
+                    How long does it take to receive a response?
+                </h3>
+
+                <p>
+                    We aim to respond as quickly as possible.
+                    Response times may vary depending on message
+                    volume and availability.
+                </p>
+
+            </div>
+
+
+            <div class="contact-faq-item">
+
+                <h3>
+                    Can I request a new product?
+                </h3>
+
+                <p>
+                    Yes. You can suggest games, gift cards,
+                    software or other digital products you'd like
+                    to see on Kavro.
+                </p>
+
+            </div>
+
+
+            <div class="contact-faq-item">
+
+                <h3>
+                    Can I contact Kavro about a partnership?
+                </h3>
+
+                <p>
+                    Absolutely. Businesses, creators and suppliers
+                    can contact us regarding partnerships,
+                    collaborations and affiliate opportunities.
+                </p>
+
+            </div>
+
+
+            <div class="contact-faq-item">
+
+                <h3>
+                    What should I include when asking about an order?
+                </h3>
+
+                <p>
+                    Include your order information, product name
+                    and any relevant details. Please never send
+                    passwords or sensitive account information.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CTA ================= -->
+
+<section class="contact-cta">
+
+    <div class="container">
+
+        <h2>
+            Ready to Explore Kavro?
+        </h2>
+
+        <p>
+            Browse gaming top-ups, gift cards and other digital
+            products available through Kavro.
+        </p>
+
+        <a href="products.html" class="btn-primary">
+            Explore Products
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="container">
+
+        <div class="footer-grid">
+
+            <div>
+
+                <h3>Kavro</h3>
+
+                <p>
+                    A growing digital marketplace focused on
+                    gaming services, digital products, gift cards
+                    and useful online resources.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h4>Quick Links</h4>
+
+                <ul>
+
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+
+                    <li>
+                        <a href="products.html">Products</a>
+                    </li>
+
+                    <li>
+                        <a href="about.html">About</a>
+                    </li>
+
+                    <li>
+                        <a href="blog.html">Blog</a>
+                    </li>
+
+                    <li>
+                        <a href="contact.html">Contact</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div>
+
+                <h4>Legal</h4>
+
+                <ul>
+
+                    <li>
+                        <a href="privacy.html">
+                            Privacy Policy
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="terms.html">
+                            Terms & Conditions
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div>
+
+                <h4>Support</h4>
+
+                <p>
+                    nirmalktht@gmail.com
+                </p>
+
+                <p>
+                    Nepal · Online Support
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Kavro. All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- ================= CHAT ================= -->
+
+<button
+    class="floating-chat-btn"
+    onclick="window.location.href='dashboard.html#chat'">
+
+    💬
+    <span>Chat with Admin</span>
 
 </button>
 
-</form>
 
-</div>
-
-<!-- Contact Information -->
-
-<div class="glass-card">
-
-<h3>Contact Information</h3>
-
-<div class="category">
-
-📧
-
-<div>
-
-<h4>Email</h4>
-
-<p>nirmalktht@gmail.com</p>
-
-</div>
-
-</div>
-
-<div class="category">
-
-💬
-
-<div>
-
-<h4>WhatsApp</h4>
-
-<p>+9779708567948</p>
-
-</div>
-
-</div>
-
-<div class="category">
-
-🌍
-
-<div>
-
-<h4>Website</h4>
-
-<p>Kavro Nepal</p>
-
-</div>
-
-</div>
-
-<div class="category">
-
-🕒
-
-<div>
-
-<h4>Support Hours</h4>
-
-<p>Monday – Sunday</p>
-
-<p>Online Support Available</p>
-
-</div>
-
-</div>
-
-<div class="category">
-
-🤝
-
-<div>
-
-<h4>Business</h4>
-
-<p>Affiliate & Partnership Inquiries Welcome</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-
-<!-- ========================================= -->
-<!-- FAQ -->
-<!-- ========================================= -->
-
-<section class="faq">
-
-<div class="container">
-
-<p class="section-subtitle">
-
-Frequently Asked Questions
-
-</p>
-
-<h2 class="section-title">
-
-Common Questions
-
-</h2>
-
-<div class="faq-item">
-
-<h3>
-
-How long does it take to receive a response?
-
-</h3>
-
-<p>
-
-We aim to reply as quickly as possible. Response times may vary depending on message volume and business hours.
-
-</p>
-
-</div>
-
-<div class="faq-item">
-
-<h3>
-
-Can I request a new product?
-
-</h3>
-
-<p>
-
-Yes. We welcome suggestions for games, gift cards, software, and digital products.
-
-</p>
-
-</div>
-
-<div class="faq-item">
-
-<h3>
-
-Do you accept partnership requests?
-
-</h3>
-
-<p>
-
-Yes. Businesses and creators can contact us regarding collaborations and partnership opportunities.
-
-</p>
-
-</div>
-
-</div>
-
-</section>
-<!-- ========================================= -->
-<!-- CTA -->
-<!-- ========================================= -->
-
-<section class="cta">
-
-<div class="container">
-
-<h2>
-
-Let's Grow Together
-
-</h2>
-
-<p>
-
-Thank you for visiting Kavro. Whether you're looking for digital products, gaming services, or business opportunities, we're here to help.
-
-</p>
-
-<a href="products.html" class="btn-primary">
-
-Explore Products
-
-</a>
-
-</div>
-
-</section>
-
-
-
-<!-- ========================================= -->
-<!-- FOOTER -->
-<!-- ========================================= -->
-
-<footer>
-
-<div class="container">
-
-<div class="footer-grid">
-
-<div>
-
-<h2>Kavro</h2>
-
-<p>
-
-Kavro is a growing digital marketplace focused on trusted gaming services, AI tools, software recommendations, gift cards, and digital products.
-
-</p>
-
-</div>
-
-<div>
-
-<h3>Quick Links</h3>
-
-<ul>
-
-<li><a href="index.html">Home</a></li>
-
-<li><a href="products.html">Products</a></li>
-
-<li><a href="about.html">About</a></li>
-
-<li><a href="contact.html">Contact</a></li>
-
-<li><a href="blog.html">Blog</a></li>
-
-</ul>
-
-</div>
-
-<div>
-
-<h3>Legal</h3>
-
-<ul>
-
-<li><a href="privacy.html">Privacy Policy</a></li>
-
-<li><a href="terms.html">Terms & Conditions</a></li>
-
-</ul>
-
-</div>
-
-</div>
-
-<hr>
-
-<p class="copyright">
-
-© 2026 Kavro. All Rights Reserved.
-
-</p>
-
-</div>
-
-</footer>
+<!-- ================= JS ================= -->
 
 <script src="assets/js/main.js"></script>
 
 <script>
 
-document.getElementById("contactForm").addEventListener("submit",function(e){
+document
+    .getElementById("contactForm")
+    .addEventListener("submit", function(e) {
 
-e.preventDefault();
+        e.preventDefault();
 
-alert("Thank you! Your message has been received. Contact form integration will be added soon.");
+        alert(
+            "Thank you! Your message has been received."
+        );
 
-this.reset();
+        this.reset();
 
-});
+    });
 
 </script>
 
-<button
-    class="floating-chat-btn"
-    onclick="window.location.href='dashboard.html#chat'"
->
-    💬
-    <span>Chat with Admin</span>
-</button>
-
 </body>
-
 </html>

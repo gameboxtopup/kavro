@@ -1,91 +1,298 @@
-const API_URL = "https://kavro-api.onrender.com/api/auth";
+const API_URL =
+    "https://kavro-api.onrender.com/api/auth";
 
-const form = document.getElementById("loginForm");
+const GOOGLE_CLIENT_ID =
+    "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+
+const form =
+    document.getElementById("loginForm");
+
+
+// ==========================================
+// SAVE LOGIN SESSION
+// ==========================================
+
+function saveKavroSession(data) {
+
+    localStorage.setItem(
+        "kavroToken",
+        data.token
+    );
+
+    localStorage.setItem(
+        "kavroUser",
+        JSON.stringify(data.user)
+    );
+}
+
+
+// ==========================================
+// NORMAL LOGIN
+// ==========================================
 
 if (form) {
 
-    form.addEventListener("submit", async function (e) {
+    form.addEventListener(
+        "submit",
+        async function (e) {
 
-        e.preventDefault();
+            e.preventDefault();
 
-        const email =
-            document.getElementById("email").value.trim();
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim()
+                    .toLowerCase();
 
-        const password =
-            document.getElementById("password").value;
+            const password =
+                document
+                    .getElementById("password")
+                    .value;
 
-        const button =
-            form.querySelector("button[type='submit']");
+            const button =
+                form.querySelector(
+                    "button[type='submit']"
+                );
 
-        if (!email || !password) {
+            if (!email || !password) {
 
-            alert("Please enter your email and password.");
-            return;
+                alert(
+                    "Please enter your email and password."
+                );
 
-        }
+                return;
 
-        button.disabled = true;
-        button.textContent = "Logging in...";
+            }
 
-        try {
+            button.disabled = true;
+            button.textContent =
+                "Logging in...";
 
-            const response = await fetch(
-                `${API_URL}/login`,
-                {
-                    method: "POST",
+            try {
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                const response =
+                    await fetch(
+                        `${API_URL}/login`,
+                        {
 
-                    body: JSON.stringify({
-                        email,
-                        password
-                    })
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    email,
+                                    password
+                                })
+
+                        }
+                    );
+
+                const data =
+                    await response.json();
+
+                if (
+                    !response.ok ||
+                    !data.success
+                ) {
+
+                    throw new Error(
+                        data.message ||
+                        "Login failed."
+                    );
+
                 }
-            );
 
-            const data = await response.json();
+                saveKavroSession(data);
 
-            if (!response.ok || !data.success) {
+                button.textContent =
+                    "Login Successful ✓";
 
-                throw new Error(
-                    data.message ||
-                    "Login failed."
+                // Go to main website
+                window.location.replace(
+                    "index.html"
                 );
 
             }
 
-            localStorage.setItem(
-                "kavroToken",
-                data.token
+            catch (error) {
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    "Login failed."
+                );
+
+                button.disabled = false;
+
+                button.textContent =
+                    "Login";
+
+            }
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// GOOGLE LOGIN
+// ==========================================
+
+async function handleGoogleLogin(
+    response
+) {
+
+    try {
+
+        if (
+            !response ||
+            !response.credential
+        ) {
+
+            throw new Error(
+                "Google login did not return a credential."
             );
-
-            localStorage.setItem(
-                "kavroUser",
-                JSON.stringify(data.user)
-            );
-
-            button.textContent = "Login Successful ✓";
-
-            window.location.href = "index.html";
 
         }
 
-        catch (error) {
+        const googleResponse =
+            await fetch(
+                `${API_URL}/google`,
+                {
 
-            console.error(error);
+                    method: "POST",
 
-            alert(
-                error.message ||
-                "Login failed."
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            credential:
+                                response.credential
+                        })
+
+                }
             );
 
-            button.disabled = false;
-            button.textContent = "Login";
+        const data =
+            await googleResponse.json();
+
+        if (
+            !googleResponse.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.message ||
+                "Google login failed."
+            );
 
         }
+
+        saveKavroSession(data);
+
+        window.location.replace(
+            "index.html"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "GOOGLE LOGIN ERROR:",
+            error
+        );
+
+        alert(
+            error.message ||
+            "Google login failed."
+        );
+
+    }
+
+}
+
+
+// ==========================================
+// GOOGLE BUTTON
+// ==========================================
+
+function initializeGoogleLogin() {
+
+    if (
+        !window.google ||
+        !google.accounts ||
+        !google.accounts.id
+    ) {
+
+        setTimeout(
+            initializeGoogleLogin,
+            300
+        );
+
+        return;
+
+    }
+
+    const container =
+        document.getElementById(
+            "googleLoginButton"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    google.accounts.id.initialize({
+
+        client_id:
+            GOOGLE_CLIENT_ID,
+
+        callback:
+            handleGoogleLogin,
+
+        auto_select:
+            false
 
     });
 
+    google.accounts.id.renderButton(
+        container,
+        {
+
+            type: "standard",
+
+            theme: "outline",
+
+            size: "large",
+
+            text: "continue_with",
+
+            shape: "rectangular",
+
+            width: 320
+
+        }
+    );
+
 }
+
+
+// ==========================================
+// START GOOGLE
+// ==========================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeGoogleLogin
+);

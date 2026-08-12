@@ -2,453 +2,846 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
 
-<meta name="robots" content="index,follow">
+    <meta name="robots" content="index,follow">
+    <meta name="author" content="Kavro">
+    <meta name="theme-color" content="#2563eb">
 
-<meta name="author" content="Kavro">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="theme-color" content="#2563eb">
+    <title>Kavro Blog | Gaming Guides, Top Up Tips & News</title>
 
-<link rel="manifest" href="manifest.json">
+    <meta
+        name="description"
+        content="Kavro Gaming Blog — Free Fire, PUBG Mobile, Roblox, gaming top-up guides, payment tips and gaming news for Nepal."
+    >
 
-<meta property="og:type" content="website">
+    <meta
+        name="keywords"
+        content="Free Fire Nepal, PUBG UC Nepal, Gaming Blog Nepal, Free Fire Top Up Nepal, PUBG UC Top Up"
+    >
 
-<meta property="og:site_name" content="Kavro">
+    <link rel="icon" href="assets/images/logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/blog.css">
 
-<meta property="og:image" content="assets/images/logo.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
-<meta name="twitter:card" content="summary_large_image">
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Kavro Blog | Gaming Guides, Top Up Tips & News</title>
-
-<meta name="description" content="Read Free Fire, PUBG, Roblox and gaming top-up guides. Learn safe top-up methods, payment tips and gaming news in Nepal.">
-
-<meta name="keywords" content="Free Fire Nepal, PUBG UC Nepal, Gaming Blog Nepal, Free Fire Top Up Nepal">
-
-<link rel="icon" href="assets/images/logo.png">
-
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="assets/css/blog.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-<script type="application/ld+json">
-{
-"@context":"https://schema.org",
-"@type":"Blog",
-"name":"Kavro Blog",
-"url":"https://YOURDOMAIN/blog.html",
-"description":"Gaming guides, Free Fire Diamonds, PUBG UC and digital products."
-}
-</script>
-
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Kavro Blog",
+        "description": "Gaming guides, top-up guides and gaming news from Kavro Nepal.",
+        "url": "https://YOURDOMAIN/blog.html"
+    }
+    </script>
 </head>
 
 <body>
 
-<!-- HEADER -->
-</body>
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <header class="header">
 
-<div class="container">
+    <div class="container">
 
-<nav class="navbar">
+        <nav class="navbar">
 
-<a href="index.html" class="logo">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="Kavro Logo">
+                <span>Kavro</span>
+            </a>
 
-<img src="assets/images/logo.png">
+            <ul class="nav-links">
+                <li>
+                    <a href="index.html">Home</a>
+                </li>
 
-<span>Kavro</span>
+                <li>
+                    <a href="products.html">Products</a>
+                </li>
 
-</a>
+                <li>
+                    <a href="blog.html" class="active">Blog</a>
+                </li>
 
-<ul class="nav-links">
+                <li>
+                    <a href="about.html">About</a>
+                </li>
 
-<li><a href="index.html">Home</a></li>
+                <li>
+                    <a href="contact.html">Contact</a>
+                </li>
+            </ul>
 
-<li><a href="products.html">Products</a></li>
+            <a href="products.html" class="btn-primary">
+                Shop Now
+            </a>
 
-<li><a href="blog.html" class="active">Blog</a></li>
+            <button class="menu-btn" aria-label="Open menu">
+                ☰
+            </button>
 
-<li><a href="about.html">About</a></li>
+        </nav>
 
-<li><a href="contact.html">Contact</a></li>
-
-</ul>
-
-<a href="products.html" class="btn-primary">
-
-Buy Now
-
-</a>
-
-</nav>
-
-</div>
+    </div>
 
 </header>
 
-<!-- HERO -->
 
-<section class="blogHero">
+<!-- =====================================================
+     BLOG HERO
+===================================================== -->
 
-<div class="container">
+<section class="blog-hero">
 
-<span class="blogBadge">
+    <div class="container">
 
-🎮 KAVRO BLOG
+        <div class="blog-hero-content">
 
-</span>
+            <span class="blog-badge">
+                🎮 KAVRO GAMING BLOG
+            </span>
 
-<h1>
+            <h1>
+                Level Up Your
+                <span>Gaming Knowledge.</span>
+            </h1>
 
-Gaming Guides, Top Up Tips & Latest News
+            <p>
+                Gaming guides, top-up tips, payment information and
+                useful updates for gamers in Nepal.
+            </p>
 
-</h1>
+            <div class="blog-search">
 
-<p>
+                <input
+                    type="search"
+                    id="blogSearch"
+                    placeholder="Search gaming articles..."
+                    aria-label="Search articles"
+                >
 
-Everything about Free Fire, PUBG Mobile, Roblox, Diamonds, UC, Gift Cards and safe online top-ups.
+                <button type="button" id="blogSearchBtn">
+                    🔍
+                </button>
 
-</p>
+            </div>
 
-<div class="blogSearch">
+        </div>
 
-<input type="text" placeholder="Search articles...">
+        <div class="blog-hero-stats">
 
-<button>
+            <div>
+                <strong>Gaming</strong>
+                <span>Guides</span>
+            </div>
 
-🔍
+            <div>
+                <strong>Top Up</strong>
+                <span>Tips</span>
+            </div>
 
-</button>
+            <div>
+                <strong>Nepal</strong>
+                <span>Focused</span>
+            </div>
 
-</div>
+        </div>
 
-</div>
-
-</section>
-
-<!-- FEATURED -->
-
-<section class="featuredBlog">
-
-<div class="container">
-
-<div class="featuredCard">
-
-<img src="assets/images/freefire-diamonds.webp" alt="Free Fire Diamonds Nepal">
-
-<div class="featuredContent">
-
-<span>
-
-FEATURED ARTICLE
-
-</span>
-
-<h2>
-
-Free Fire Diamond Top Up Nepal (2026 Complete Guide)
-
-</h2>
-
-<p>
-
-Learn how to safely buy Free Fire Diamonds in Nepal using eSewa and Bank Transfer with instant delivery.
-
-</p>
-
-<a href="blog/free-fire-top-up-nepal.html" class="btn-primary">
-
-Read Article →
-
-</a>
-
-</div>
-
-</div>
-
-</div>
+    </div>
 
 </section>
 
-<!-- CATEGORIES -->
 
-<section class="blogCategories">
+<!-- =====================================================
+     CATEGORIES
+===================================================== -->
 
-<div class="container">
+<section class="blog-categories">
 
-<h2>
+    <div class="container">
 
-Categories
+        <div class="blog-section-heading">
 
-</h2>
+            <div>
+                <span>EXPLORE</span>
+                <h2>Browse by Category</h2>
+            </div>
 
-<div class="categoryGrid">
+            <p>
+                Find guides and articles for your favorite games.
+            </p>
 
-<div class="categoryCard">
+        </div>
 
-🎮
 
-<h3>
+        <div class="category-grid">
 
-Free Fire
+            <a href="#" class="category-card">
 
-</h3>
+                <div class="category-icon">
+                    🔥
+                </div>
 
-</div>
+                <div>
+                    <h3>Free Fire</h3>
+                    <p>Diamonds & guides</p>
+                </div>
 
-<div class="categoryCard">
+                <span class="category-arrow">→</span>
 
-🔫
+            </a>
 
-<h3>
 
-PUBG Mobile
+            <a href="#" class="category-card">
 
-</h3>
+                <div class="category-icon">
+                    🎯
+                </div>
 
-</div>
+                <div>
+                    <h3>PUBG Mobile</h3>
+                    <p>UC & gaming tips</p>
+                </div>
 
-<div class="categoryCard">
+                <span class="category-arrow">→</span>
 
-🎁
+            </a>
 
-<h3>
 
-Gift Cards
+            <a href="#" class="category-card">
 
-</h3>
+                <div class="category-icon">
+                    🎁
+                </div>
 
-</div>
+                <div>
+                    <h3>Gift Cards</h3>
+                    <p>Digital products</p>
+                </div>
 
-<div class="categoryCard">
+                <span class="category-arrow">→</span>
 
-💎
+            </a>
 
-<h3>
 
-Top Up Guides
+            <a href="#" class="category-card">
 
-</h3>
+                <div class="category-icon">
+                    💎
+                </div>
 
-</div>
+                <div>
+                    <h3>Top Up Guides</h3>
+                    <p>Payment & safety</p>
+                </div>
 
-</div>
+                <span class="category-arrow">→</span>
 
-</div>
+            </a>
+
+        </div>
+
+    </div>
 
 </section>
 
-<!-- LATEST -->
 
-<section class="latestBlogs">
+<!-- =====================================================
+     FEATURED ARTICLE
+===================================================== -->
 
-<div class="container">
+<section class="featured-blog">
 
-<div class="sectionTitle">
+    <div class="container">
 
-<h2>
+        <div class="blog-section-label">
+            <span>FEATURED</span>
+            <h2>Editor's Pick</h2>
+        </div>
 
-Latest Articles
 
-</h2>
+        <article class="featured-blog-card">
 
-<p>
+            <div class="featured-image">
 
-Fresh gaming guides from Kavro.
+                <img
+                    src="assets/images/freefire-diamonds.webp"
+                    alt="Free Fire Diamonds Nepal"
+                >
 
-</p>
+                <div class="featured-overlay"></div>
 
-</div>
+                <span class="featured-badge">
+                    🔥 Featured Guide
+                </span>
 
-<div class="blogGrid">
+            </div>
 
-<!-- ARTICLE -->
 
-<div class="blogCard">
+            <div class="featured-content">
 
-<img src="assets/images/freefire-diamonds.webp" alt="Free Fire Diamonds Nepal">
+                <div class="article-meta">
+                    <span>Free Fire</span>
+                    <span>•</span>
+                    <span>5 min read</span>
+                </div>
 
-<div class="blogBody">
+                <h2>
+                    Free Fire Diamond Top Up Nepal:
+                    Complete 2026 Guide
+                </h2>
 
-<span class="tag">
+                <p>
+                    Everything you need to know about buying Free Fire
+                    Diamonds in Nepal, choosing a payment method,
+                    avoiding scams and getting your top-up delivered safely.
+                </p>
 
-Free Fire
+                <div class="article-author">
 
-</span>
+                    <div class="author-avatar">
+                        K
+                    </div>
 
-<h3>
+                    <div>
+                        <strong>Kavro Team</strong>
+                        <span>Gaming Guide • 2026</span>
+                    </div>
 
-Free Fire Diamond Top Up Nepal (2026 Guide)
+                </div>
 
-</h3>
+                <a
+                    href="blog/free-fire-top-up-nepal.html"
+                    class="btn-primary"
+                >
+                    Read Full Guide →
+                </a>
 
-<p>
+            </div>
 
-Complete guide to buying Free Fire Diamonds safely in Nepal.
+        </article>
 
-</p>
-
-<a href="blog/free-fire-top-up-nepal.html">
-
-Read More →
-
-</a>
-
-</div>
-
-</div>
-
-<!-- ARTICLE -->
-
-<div class="blogCard">
-
-<img src="assets/images/pubg-uc.webp" alt="PUBG UC Nepal">
-
-<div class="blogBody">
-
-<span class="tag">
-
-PUBG Mobile
-
-</span>
-
-<h3>
-
-PUBG UC Top Up Nepal (2026 Guide)
-
-</h3>
-
-<p>
-
-Everything you need to know before buying PUBG UC in Nepal.
-
-</p>
-
-<a href="blog/pubg-uc-top-up-nepal.html">
-
-Read More →
-
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+    </div>
 
 </section>
 
-<!-- NEWSLETTER -->
 
-<section class="newsletter">
+<!-- =====================================================
+     LATEST ARTICLES
+===================================================== -->
 
-<div class="container">
+<section class="latest-blogs">
 
-<h2>
+    <div class="container">
 
-Never Miss Gaming Updates
+        <div class="blog-section-heading">
 
-</h2>
+            <div>
+                <span>FROM THE BLOG</span>
+                <h2>Latest Articles</h2>
+            </div>
 
-<p>
+            <p>
+                Fresh guides and useful gaming information.
+            </p>
 
-Get the latest Free Fire, PUBG and top-up news.
+        </div>
 
-</p>
 
-<form>
+        <div class="blog-grid" id="blogGrid">
 
-<input type="email" placeholder="Your Email">
 
-<button class="btn-primary">
+            <!-- ARTICLE 1 -->
 
-Subscribe
+            <article class="blog-card">
 
-</button>
+                <a
+                    href="blog/free-fire-top-up-nepal.html"
+                    class="blog-image"
+                >
 
-</form>
+                    <img
+                        src="assets/images/freefire-diamonds.webp"
+                        alt="Free Fire Diamonds Nepal"
+                    >
 
-</div>
+                    <span class="blog-card-category">
+                        Free Fire
+                    </span>
+
+                </a>
+
+                <div class="blog-body">
+
+                    <div class="article-meta">
+                        <span>Free Fire</span>
+                        <span>•</span>
+                        <span>5 min read</span>
+                    </div>
+
+                    <h3>
+                        Free Fire Diamond Top Up Nepal
+                    </h3>
+
+                    <p>
+                        A simple guide to buying Free Fire Diamonds
+                        safely using Nepali payment methods.
+                    </p>
+
+                    <a href="blog/free-fire-top-up-nepal.html">
+                        Read Article <span>→</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- ARTICLE 2 -->
+
+            <article class="blog-card">
+
+                <a
+                    href="blog/pubg-uc-top-up-nepal.html"
+                    class="blog-image"
+                >
+
+                    <img
+                        src="assets/images/pubg-uc.webp"
+                        alt="PUBG UC Nepal"
+                    >
+
+                    <span class="blog-card-category">
+                        PUBG Mobile
+                    </span>
+
+                </a>
+
+                <div class="blog-body">
+
+                    <div class="article-meta">
+                        <span>PUBG Mobile</span>
+                        <span>•</span>
+                        <span>6 min read</span>
+                    </div>
+
+                    <h3>
+                        PUBG UC Top Up Nepal
+                    </h3>
+
+                    <p>
+                        Learn how PUBG UC top-ups work and what
+                        to check before purchasing UC online.
+                    </p>
+
+                    <a href="blog/pubg-uc-top-up-nepal.html">
+                        Read Article <span>→</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- ARTICLE 3 -->
+
+            <article class="blog-card">
+
+                <div class="blog-image placeholder-image">
+
+                    <div>
+                        🎁
+                    </div>
+
+                    <span class="blog-card-category">
+                        Gift Cards
+                    </span>
+
+                </div>
+
+                <div class="blog-body">
+
+                    <div class="article-meta">
+                        <span>Gift Cards</span>
+                        <span>•</span>
+                        <span>4 min read</span>
+                    </div>
+
+                    <h3>
+                        How Digital Gift Cards Work
+                    </h3>
+
+                    <p>
+                        Understand digital gift cards, regions,
+                        codes and what to check before buying.
+                    </p>
+
+                    <a href="#">
+                        Read Article <span>→</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- ARTICLE 4 -->
+
+            <article class="blog-card">
+
+                <div class="blog-image placeholder-image">
+
+                    <div>
+                        🔐
+                    </div>
+
+                    <span class="blog-card-category">
+                        Safety
+                    </span>
+
+                </div>
+
+                <div class="blog-body">
+
+                    <div class="article-meta">
+                        <span>Safety</span>
+                        <span>•</span>
+                        <span>4 min read</span>
+                    </div>
+
+                    <h3>
+                        How to Stay Safe When Buying Top Ups
+                    </h3>
+
+                    <p>
+                        Simple things every gamer should check
+                        before paying for digital products online.
+                    </p>
+
+                    <a href="#">
+                        Read Article <span>→</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- ARTICLE 5 -->
+
+            <article class="blog-card">
+
+                <div class="blog-image placeholder-image">
+
+                    <div>
+                        💳
+                    </div>
+
+                    <span class="blog-card-category">
+                        Payments
+                    </span>
+
+                </div>
+
+                <div class="blog-body">
+
+                    <div class="article-meta">
+                        <span>Payments</span>
+                        <span>•</span>
+                        <span>5 min read</span>
+                    </div>
+
+                    <h3>
+                        Payment Methods for Nepali Gamers
+                    </h3>
+
+                    <p>
+                        A look at popular payment options and
+                        how digital purchases are verified.
+                    </p>
+
+                    <a href="#">
+                        Read Article <span>→</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- ARTICLE 6 -->
+
+            <article class="blog-card">
+
+                <div class="blog-image placeholder-image">
+
+                    <div>
+                        🎮
+                    </div>
+
+                    <span class="blog-card-category">
+                        Gaming
+                    </span>
+
+                </div>
+
+                <div class="blog-body">
+
+                    <div class="article-meta">
+                        <span>Gaming</span>
+                        <span>•</span>
+                        <span>5 min read</span>
+                    </div>
+
+                    <h3>
+                        Best Digital Products for Gamers
+                    </h3>
+
+                    <p>
+                        Explore popular digital products that
+                        gamers can purchase online.
+                    </p>
+
+                    <a href="#">
+                        Read Article <span>→</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
 
 </section>
 
-<!-- FOOTER -->
+
+<!-- =====================================================
+     NEWSLETTER
+===================================================== -->
+
+<section class="blog-newsletter">
+
+    <div class="container">
+
+        <div class="newsletter-box">
+
+            <div class="newsletter-icon">
+                ✉
+            </div>
+
+            <span>
+                KAVRO UPDATES
+            </span>
+
+            <h2>
+                Gaming updates.
+                <br>
+                Straight to your inbox.
+            </h2>
+
+            <p>
+                Get useful gaming guides, top-up tips and
+                important updates from Kavro.
+            </p>
+
+            <form class="blog-newsletter-form">
+
+                <input
+                    type="email"
+                    placeholder="Enter your email address"
+                    required
+                >
+
+                <button class="btn-primary" type="submit">
+                    Subscribe
+                </button>
+
+            </form>
+
+            <small>
+                No spam. Unsubscribe anytime.
+            </small>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CTA
+===================================================== -->
+
+<section class="blog-cta">
+
+    <div class="container">
+
+        <span>
+            READY TO PLAY?
+        </span>
+
+        <h2>
+            Need a game top-up?
+        </h2>
+
+        <p>
+            Browse Kavro's digital products and get your
+            gaming top-ups without the hassle.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="products.html" class="btn-primary">
+                Browse Products →
+            </a>
+
+            <a href="contact.html" class="btn-secondary">
+                Contact Support
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
 
 <footer class="footer">
 
-<div class="container">
+    <div class="container">
 
-<div class="footer-grid">
+        <div class="footer-grid">
 
-<div>
+            <div>
 
-<h3>Kavro</h3>
+                <h3>Kavro</h3>
 
-<p>
+                <p>
+                    Nepal's gaming marketplace for
+                    game top-ups, gift cards and digital products.
+                </p>
 
-Nepal's trusted gaming top-up platform.
+            </div>
 
-</p>
 
-</div>
+            <div>
 
-<div>
+                <h4>Quick Links</h4>
 
-<h4>Quick Links</h4>
+                <ul>
 
-<ul>
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
 
-<li><a href="index.html">Home</a></li>
+                    <li>
+                        <a href="products.html">Products</a>
+                    </li>
 
-<li><a href="products.html">Products</a></li>
+                    <li>
+                        <a href="blog.html">Blog</a>
+                    </li>
 
-<li><a href="blog.html">Blog</a></li>
+                    <li>
+                        <a href="contact.html">Contact</a>
+                    </li>
 
-<li><a href="contact.html">Contact</a></li>
+                </ul>
 
-</ul>
+            </div>
 
-</div>
 
-<div>
+            <div>
 
-<h4>Support</h4>
+                <h4>Popular Guides</h4>
 
-<p>
+                <ul>
 
-Email: nirmalktht@gmail.com
+                    <li>Free Fire Top Up</li>
+                    <li>PUBG UC Guide</li>
+                    <li>Gift Card Guide</li>
+                    <li>Payment Safety</li>
 
-</p>
+                </ul>
 
-</div>
+            </div>
 
-</div>
 
-<div class="footer-bottom">
+            <div>
 
-© 2026 Kavro. All Rights Reserved.
+                <h4>Support</h4>
 
-</div>
+                <p>
+                    Email: nirmalktht@gmail.com
+                </p>
 
-</div>
+                <p>
+                    Available: 24/7
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+            © 2026 Kavro. All Rights Reserved.
+        </div>
+
+    </div>
 
 </footer>
+
+
+<!-- CHAT -->
 
 <button
     class="floating-chat-btn"
     onclick="window.location.href='dashboard.html#chat'"
+    aria-label="Chat with Admin"
 >
     💬
     <span>Chat with Admin</span>
 </button>
 
-</body>
 
+<script>
+const searchInput = document.getElementById("blogSearch");
+
+const blogCards = document.querySelectorAll(".blog-card");
+
+searchInput?.addEventListener("input", function () {
+
+    const query = this.value.toLowerCase().trim();
+
+    blogCards.forEach(card => {
+
+        const text = card.innerText.toLowerCase();
+
+        card.style.display =
+            text.includes(query) ? "" : "none";
+
+    });
+
+});
+</script>
+
+
+</body>
 </html>

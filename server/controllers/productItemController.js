@@ -88,7 +88,9 @@ exports.getItem = async (req, res) => {
 
     try {
 
-        const item = await ProductItem.findById(req.params.id);
+        const item = await ProductItem
+            .findById(req.params.id)
+            .populate("product");
 
         if (!item) {
             return res.status(404).json({
