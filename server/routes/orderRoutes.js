@@ -1,6 +1,6 @@
 const express = require("express");
-const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
+const { Resend } = require("resend");
 
 const router = express.Router();
 
@@ -9,39 +9,16 @@ const User = require("../models/User");
 
 
 // =====================================================
-// EMAIL TRANSPORTER
+// RESEND EMAIL
 // =====================================================
 
-const transporter = nodemailer.createTransport({
+const resend = new Resend(
+    process.env.RESEND_API_KEY
+);
 
-    service: "gmail",
-
-    auth: {
-
-        user: process.env.EMAIL_USER,
-
-        pass: process.env.EMAIL_PASS
-
-    }
-
-});
-
-
-// Check Gmail
-transporter.verify(function (error) {
-
-    if (error) {
-
-        console.log("❌ Gmail Error:");
-        console.log(error);
-
-    } else {
-
-        console.log("✅ Gmail Ready");
-
-    }
-
-});
+const EMAIL_FROM =
+    process.env.RESEND_FROM_EMAIL ||
+    "Kavro <onboarding@resend.dev>";
 
 
 // =====================================================
@@ -60,8 +37,7 @@ router.post("/", async (req, res) => {
 
 
         // =================================================
-        // SUBSCRIPTION ONLY
-        // DUPLICATE TRANSACTION CHECK
+        // SUBSCRIPTION DUPLICATE TRANSACTION CHECK
         // =================================================
 
         if (
@@ -101,53 +77,52 @@ router.post("/", async (req, res) => {
         // CREATE ORDER
         // =================================================
 
-        const order = new Order({
+        const order =
+            new Order({
 
-            product:
-                req.body.product,
+                product:
+                    req.body.product,
 
-            package:
-                req.body.package,
+                package:
+                    req.body.package,
 
-            price:
-                req.body.price,
+                price:
+                    req.body.price,
 
-            // Game orders
-            uid:
-                req.body.uid || "",
+                uid:
+                    req.body.uid || "",
 
-            // Subscription orders
-            email:
-                req.body.email || "",
+                email:
+                    req.body.email || "",
 
-            customerName:
-                req.body.customerName || "",
+                customerName:
+                    req.body.customerName || "",
 
-            phone:
-                req.body.phone || "",
+                phone:
+                    req.body.phone || "",
 
-            paymentMethod:
-                req.body.paymentMethod ||
-                req.body.payment ||
-                "",
+                paymentMethod:
+                    req.body.paymentMethod ||
+                    req.body.payment ||
+                    "",
 
-            transactionId:
-                transactionId,
+                transactionId:
+                    transactionId,
 
-            screenshot:
-                req.body.screenshot || "",
+                screenshot:
+                    req.body.screenshot || "",
 
-            note:
-                req.body.note || "",
+                note:
+                    req.body.note || "",
 
-            type:
-                orderType
+                type:
+                    orderType
 
-        });
+            });
 
 
         // =================================================
-        // SAVE TO DATABASE
+        // SAVE ORDER
         // =================================================
 
         await order.save();
@@ -160,6 +135,7 @@ router.post("/", async (req, res) => {
         const io =
             req.app.get("io");
 
+
         if (io) {
 
             io.emit(
@@ -171,258 +147,364 @@ router.post("/", async (req, res) => {
 
 
         // =================================================
-        // SEND EMAIL
-        //
-        // IMPORTANT:
-        // DO NOT USE "await" HERE.
-        //
-        // This prevents Gmail from blocking the customer.
+        // NEW ORDER EMAIL TO ADMIN
         // =================================================
 
-        transporter.sendMail({
+        resend.emails.send({
 
             from:
-                `"Kavro Nepal" <${process.env.EMAIL_USER}>`,
+                EMAIL_FROM,
 
-            to:
-                process.env.EMAIL_USER,
+            to: [
+                process.env.EMAIL_USER
+            ],
 
             subject:
-                `🛒 New Order - ${order.product}`,
+                `New Kavro Order - ${order.product}`,
 
             html: `
 
-            <div
-                style="
-                    font-family:Arial,sans-serif;
-                    padding:20px;
-                "
-            >
-
-                <h2
+                <div
                     style="
-                        color:#2563eb;
-                    "
-                >
-                    New Order Received
-                </h2>
-
-
-                <table
-                    style="
-                        border-collapse:collapse;
+                        font-family:Arial,sans-serif;
+                        padding:24px;
+                        max-width:650px;
+                        margin:auto;
                     "
                 >
 
-                    <tr>
-
-                        <td>
-                            <strong>🎮 Product</strong>
-                        </td>
-
-                        <td
-                            style="
-                                padding-left:15px;
-                            "
-                        >
-                            ${order.product}
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <td>
-                            <strong>💎 Package</strong>
-                        </td>
-
-                        <td
-                            style="
-                                padding-left:15px;
-                            "
-                        >
-                            ${order.package}
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <td>
-                            <strong>💰 Price</strong>
-                        </td>
-
-                        <td
-                            style="
-                                padding-left:15px;
-                            "
-                        >
-                            ${order.price}
-                        </td>
-
-                    </tr>
-
-
-                    ${
-                        order.type === "subscription"
-                        ?
-                        `
-                        <tr>
-
-                            <td>
-                                <strong>📧 Email</strong>
-                            </td>
-
-                            <td
-                                style="
-                                    padding-left:15px;
-                                "
-                            >
-                                ${order.email}
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>
-                                <strong>👤 Customer</strong>
-                            </td>
-
-                            <td
-                                style="
-                                    padding-left:15px;
-                                "
-                            >
-                                ${order.customerName}
-                            </td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>
-                                <strong>📱 Phone</strong>
-                            </td>
-
-                            <td
-                                style="
-                                    padding-left:15px;
-                                "
-                            >
-                                ${order.phone}
-                            </td>
-
-                        </tr>
-                        `
-                        :
-                        `
-                        <tr>
-
-                            <td>
-                                <strong>🆔 UID</strong>
-                            </td>
-
-                            <td
-                                style="
-                                    padding-left:15px;
-                                "
-                            >
-                                ${order.uid}
-                            </td>
-
-                        </tr>
-                        `
-                    }
-
-
-                    <tr>
-
-                        <td>
-                            <strong>💳 Payment</strong>
-                        </td>
-
-                        <td
-                            style="
-                                padding-left:15px;
-                            "
-                        >
-                            ${order.paymentMethod}
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <td>
-                            <strong>🧾 Transaction ID</strong>
-                        </td>
-
-                        <td
-                            style="
-                                padding-left:15px;
-                            "
-                        >
-                            ${order.transactionId || "N/A"}
-                        </td>
-
-                    </tr>
-
-                </table>
-
-
-                <br>
-
-
-                <p>
-
-                    <strong>
-                        Payment Screenshot
-                    </strong>
-
-                </p>
-
-
-                <p>
-
-                    <a
-                        href="${order.screenshot}"
-                        target="_blank"
+                    <h2
+                        style="
+                            color:#2563eb;
+                            margin-bottom:24px;
+                        "
                     >
-                        View Screenshot
-                    </a>
-
-                </p>
+                        New Order Received
+                    </h2>
 
 
-                <br>
+                    <table
+                        style="
+                            width:100%;
+                            border-collapse:collapse;
+                        "
+                    >
+
+                        <tr>
+
+                            <td
+                                style="
+                                    padding:8px 0;
+                                "
+                            >
+                                <strong>
+                                    Product
+                                </strong>
+                            </td>
+
+                            <td
+                                style="
+                                    padding:8px 0;
+                                "
+                            >
+                                ${order.product}
+                            </td>
+
+                        </tr>
 
 
-                <p>
+                        <tr>
 
-                    <strong>
-                        Customer Note:
-                    </strong>
+                            <td
+                                style="
+                                    padding:8px 0;
+                                "
+                            >
+                                <strong>
+                                    Package
+                                </strong>
+                            </td>
+
+                            <td
+                                style="
+                                    padding:8px 0;
+                                "
+                            >
+                                ${order.package}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td
+                                style="
+                                    padding:8px 0;
+                                "
+                            >
+                                <strong>
+                                    Price
+                                </strong>
+                            </td>
+
+                            <td
+                                style="
+                                    padding:8px 0;
+                                "
+                            >
+                                ${order.price}
+                            </td>
+
+                        </tr>
+
+
+                        ${
+                            order.type === "subscription"
+                                ? `
+
+                                    <tr>
+
+                                        <td
+                                            style="
+                                                padding:8px 0;
+                                            "
+                                        >
+                                            <strong>
+                                                Customer Email
+                                            </strong>
+                                        </td>
+
+                                        <td
+                                            style="
+                                                padding:8px 0;
+                                            "
+                                        >
+                                            ${order.email}
+                                        </td>
+
+                                    </tr>
+
+
+                                    <tr>
+
+                                        <td
+                                            style="
+                                                padding:8px 0;
+                                            "
+                                        >
+                                            <strong>
+                                                Customer Name
+                                            </strong>
+                                        </td>
+
+                                        <td
+                                            style="
+                                                padding:8px 0;
+                                            "
+                                        >
+                                            ${order.customerName || "N/A"}
+                                        </td>
+
+                                    </tr>
+
+
+                                    <tr>
+
+                                        <td
+                                            style="
+                                                padding:8px 0;
+                                            "
+                                        >
+                                            <strong>
+                                                Phone
+                                            </strong>
+                                        </td>
+
+                                        <td
+                                            style="
+                                                padding:8px 0;
+                                            "
+                                        >
+                                            ${order.phone || "N/A"}
+                                        </td>
+
+                                    </tr>
+
+                                  `
+                                : `
+
+                                    <tr>
+
+                                        <td
+                                            style="
+                                                padding:8px 0;
+                                            "
+                                        >
+                                            <strong>
+                                                UID
+                                            </strong>
+                                        </td>
+
+                                        <td
+                                            style="
+                                                padding:8px 0;
+                                            "
+                                        >
+                                            ${order.uid || "N/A"}
+                                        </td>
+
+                                    </tr>
+
+
+                                    <tr>
+
+                                        <td
+                                            style="
+                                                padding:8px 0;
+                                            "
+                                        >
+                                            <strong>
+                                                Customer Email
+                                            </strong>
+                                        </td>
+
+                                        <td
+                                            style="
+                                                padding:8px 0;
+                                            "
+                                        >
+                                            ${order.email || "N/A"}
+                                        </td>
+
+                                    </tr>
+
+                                  `
+                        }
+
+
+                        <tr>
+
+                            <td
+                                style="
+                                    padding:8px 0;
+                                "
+                            >
+                                <strong>
+                                    Payment Method
+                                </strong>
+                            </td>
+
+                            <td
+                                style="
+                                    padding:8px 0;
+                                "
+                            >
+                                ${order.paymentMethod}
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td
+                                style="
+                                    padding:8px 0;
+                                "
+                            >
+                                <strong>
+                                    Transaction ID
+                                </strong>
+                            </td>
+
+                            <td
+                                style="
+                                    padding:8px 0;
+                                "
+                            >
+                                ${order.transactionId || "N/A"}
+                            </td>
+
+                        </tr>
+
+                    </table>
+
 
                     <br>
 
-                    ${order.note || "No note"}
 
-                </p>
+                    <p>
+                        <strong>
+                            Payment Screenshot
+                        </strong>
+                    </p>
 
-            </div>
+
+                    ${
+                        order.screenshot
+                            ? `
+
+                                <p>
+                                    <a
+                                        href="${order.screenshot}"
+                                        target="_blank"
+                                        style="
+                                            color:#2563eb;
+                                        "
+                                    >
+                                        View Payment Screenshot
+                                    </a>
+                                </p>
+
+                              `
+                            : `
+
+                                <p>
+                                    No screenshot provided.
+                                </p>
+
+                              `
+                    }
+
+
+                    <br>
+
+
+                    <p>
+
+                        <strong>
+                            Customer Note:
+                        </strong>
+
+                        <br>
+
+                        ${order.note || "No note"}
+
+                    </p>
+
+                </div>
 
             `
 
         })
 
-        .then(() => {
+        .then(({ data, error }) => {
+
+            if (error) {
+
+                console.error(
+                    "❌ New order email failed:",
+                    error
+                );
+
+                return;
+            }
+
 
             console.log(
-                "✅ New order email sent."
+                "✅ New order email sent:",
+                data?.id
             );
 
         })
@@ -438,13 +520,12 @@ router.post("/", async (req, res) => {
 
 
         // =================================================
-        // RETURN SUCCESS IMMEDIATELY
+        // RETURN SUCCESS
         // =================================================
 
         return res.status(201).json({
 
-            success:
-                true,
+            success: true,
 
             message:
                 "Order placed successfully.",
@@ -464,11 +545,6 @@ router.post("/", async (req, res) => {
         );
 
 
-        // =================================================
-        // DUPLICATE KEY SAFETY
-        // SUBSCRIPTION ONLY
-        // =================================================
-
         if (
             err.code === 11000 &&
             req.body.type === "subscription"
@@ -476,8 +552,7 @@ router.post("/", async (req, res) => {
 
             return res.status(409).json({
 
-                success:
-                    false,
+                success: false,
 
                 message:
                     "This transaction ID has already been used. Please check your transaction ID."
@@ -489,8 +564,7 @@ router.post("/", async (req, res) => {
 
         return res.status(500).json({
 
-            success:
-                false,
+            success: false,
 
             message:
                 "Failed to place order. Please try again."
@@ -502,9 +576,9 @@ router.post("/", async (req, res) => {
 });
 
 
-// =========================================
+// =====================================================
 // GET CUSTOMER ORDERS
-// =========================================
+// =====================================================
 
 router.get("/my-orders", async (req, res) => {
 
@@ -513,11 +587,16 @@ router.get("/my-orders", async (req, res) => {
         const authHeader =
             req.headers.authorization;
 
+
         if (!authHeader) {
 
             return res.status(401).json({
+
                 success: false,
-                message: "No token provided."
+
+                message:
+                    "No token provided."
+
             });
 
         }
@@ -526,11 +605,16 @@ router.get("/my-orders", async (req, res) => {
         const token =
             authHeader.split(" ")[1];
 
+
         if (!token) {
 
             return res.status(401).json({
+
                 success: false,
-                message: "Invalid token."
+
+                message:
+                    "Invalid token."
+
             });
 
         }
@@ -552,24 +636,29 @@ router.get("/my-orders", async (req, res) => {
         if (!user) {
 
             return res.status(404).json({
+
                 success: false,
-                message: "User not found."
+
+                message:
+                    "User not found."
+
             });
 
         }
 
 
-        /*
-         * Customer orders are matched
-         * using their email.
-         */
-
         const orders =
             await Order.find({
-                email: user.email
+
+                email:
+                    user.email
+
             })
             .sort({
-                createdAt: -1
+
+                createdAt:
+                    -1
+
             });
 
 
@@ -582,6 +671,7 @@ router.get("/my-orders", async (req, res) => {
         });
 
     }
+
 
     catch (err) {
 
@@ -604,6 +694,7 @@ router.get("/my-orders", async (req, res) => {
 
 });
 
+
 // =====================================================
 // GET ALL ORDERS
 // PROTECTED
@@ -621,8 +712,7 @@ router.get("/", async (req, res) => {
 
             return res.status(401).json({
 
-                success:
-                    false,
+                success: false,
 
                 message:
                     "No token provided."
@@ -646,24 +736,31 @@ router.get("/", async (req, res) => {
             await Order
                 .find()
                 .sort({
-                    createdAt: -1
+
+                    createdAt:
+                        -1
+
                 });
 
 
-        res.json(orders);
+        return res.json(
+            orders
+        );
 
     }
 
 
     catch (err) {
 
-        console.error(err);
+        console.error(
+            "GET ORDERS ERROR:",
+            err
+        );
 
 
-        res.status(401).json({
+        return res.status(401).json({
 
-            success:
-                false,
+            success: false,
 
             message:
                 "Unauthorized."
@@ -691,8 +788,7 @@ router.patch("/:id", async (req, res) => {
 
             return res.status(401).json({
 
-                success:
-                    false,
+                success: false,
 
                 message:
                     "No token provided."
@@ -718,13 +814,17 @@ router.patch("/:id", async (req, res) => {
                 req.params.id,
 
                 {
+
                     status:
                         req.body.status
+
                 },
 
                 {
+
                     new:
                         true
+
                 }
 
             );
@@ -734,8 +834,7 @@ router.patch("/:id", async (req, res) => {
 
             return res.status(404).json({
 
-                success:
-                    false,
+                success: false,
 
                 message:
                     "Order not found."
@@ -746,7 +845,7 @@ router.patch("/:id", async (req, res) => {
 
 
         // =================================================
-        // DELIVERY EMAIL
+        // CUSTOMER DELIVERY EMAIL
         // =================================================
 
         if (
@@ -755,196 +854,232 @@ router.patch("/:id", async (req, res) => {
         ) {
 
             console.log(
-                "Sending delivery email to:",
+                "📧 Sending delivery email to:",
                 order.email
             );
 
 
-            transporter.sendMail({
+            resend.emails.send({
 
                 from:
-                    `"Kavro Nepal" <${process.env.EMAIL_USER}>`,
+                    EMAIL_FROM,
 
-                to:
-                    order.email,
+                to: [
+                    order.email
+                ],
 
                 subject:
-                    "🎉 Your Kavro Order Has Been Delivered!",
+                    "Your Kavro Order Has Been Delivered!",
 
                 html: `
 
-                <div
-                    style="
-                        font-family:Arial,sans-serif;
-                        padding:20px;
-                    "
-                >
-
-                    <h2
+                    <div
                         style="
-                            color:#2563eb;
-                        "
-                    >
-                        Your Order is Delivered!
-                    </h2>
-
-
-                    <p>
-                        Hello,
-                    </p>
-
-
-                    <p>
-                        Your order has been successfully delivered.
-                    </p>
-
-
-                    <table
-                        style="
-                            border-collapse:collapse;
+                            font-family:Arial,sans-serif;
+                            padding:24px;
+                            max-width:650px;
+                            margin:auto;
                         "
                     >
 
-                        <tr>
-
-                            <td>
-                                <strong>
-                                    Product
-                                </strong>
-                            </td>
-
-                            <td
-                                style="
-                                    padding-left:15px;
-                                "
-                            >
-                                ${order.product}
-                            </td>
-
-                        </tr>
+                        <h2
+                            style="
+                                color:#2563eb;
+                            "
+                        >
+                            Your Order Has Been Delivered
+                        </h2>
 
 
-                        <tr>
-
-                            <td>
-                                <strong>
-                                    Package
-                                </strong>
-                            </td>
-
-                            <td
-                                style="
-                                    padding-left:15px;
-                                "
-                            >
-                                ${order.package}
-                            </td>
-
-                        </tr>
+                        <p>
+                            Hello,
+                        </p>
 
 
-                        ${
-                            order.type === "subscription"
-                            ?
-                            `
+                        <p>
+                            Your Kavro order has been successfully delivered.
+                        </p>
+
+
+                        <table
+                            style="
+                                width:100%;
+                                border-collapse:collapse;
+                            "
+                        >
+
                             <tr>
 
-                                <td>
+                                <td
+                                    style="
+                                        padding:8px 0;
+                                    "
+                                >
                                     <strong>
-                                        Email
+                                        Product
                                     </strong>
                                 </td>
 
                                 <td
                                     style="
-                                        padding-left:15px;
+                                        padding:8px 0;
                                     "
                                 >
-                                    ${order.email}
+                                    ${order.product}
                                 </td>
 
                             </tr>
-                            `
-                            :
-                            `
+
+
                             <tr>
 
-                                <td>
+                                <td
+                                    style="
+                                        padding:8px 0;
+                                    "
+                                >
                                     <strong>
-                                        UID
+                                        Package
                                     </strong>
                                 </td>
 
                                 <td
                                     style="
-                                        padding-left:15px;
+                                        padding:8px 0;
                                     "
                                 >
-                                    ${order.uid}
+                                    ${order.package}
                                 </td>
 
                             </tr>
-                            `
-                        }
 
 
-                        <tr>
+                            ${
+                                order.type === "subscription"
+                                    ? `
 
-                            <td>
-                                <strong>
-                                    💰 Price
-                                </strong>
-                            </td>
+                                        <tr>
 
-                            <td
-                                style="
-                                    padding-left:15px;
-                                "
-                            >
-                                ${order.price}
-                            </td>
+                                            <td
+                                                style="
+                                                    padding:8px 0;
+                                                "
+                                            >
+                                                <strong>
+                                                    Email
+                                                </strong>
+                                            </td>
 
-                        </tr>
+                                            <td
+                                                style="
+                                                    padding:8px 0;
+                                                "
+                                            >
+                                                ${order.email}
+                                            </td>
 
-                    </table>
+                                        </tr>
+
+                                      `
+                                    : `
+
+                                        <tr>
+
+                                            <td
+                                                style="
+                                                    padding:8px 0;
+                                                "
+                                            >
+                                                <strong>
+                                                    UID
+                                                </strong>
+                                            </td>
+
+                                            <td
+                                                style="
+                                                    padding:8px 0;
+                                                "
+                                            >
+                                                ${order.uid || "N/A"}
+                                            </td>
+
+                                        </tr>
+
+                                      `
+                            }
 
 
-                    <br>
+                            <tr>
+
+                                <td
+                                    style="
+                                        padding:8px 0;
+                                    "
+                                >
+                                    <strong>
+                                        Price
+                                    </strong>
+                                </td>
+
+                                <td
+                                    style="
+                                        padding:8px 0;
+                                    "
+                                >
+                                    ${order.price}
+                                </td>
+
+                            </tr>
+
+                        </table>
 
 
-                    <p>
-
-                        Thank you for choosing
-                        <strong>Kavro</strong>.
-
-                    </p>
+                        <br>
 
 
-                    <p>
+                        <p>
+                            Thank you for choosing
+                            <strong>
+                                Kavro
+                            </strong>.
+                        </p>
 
-                        We hope to serve you again!
 
-                    </p>
+                        <p>
+                            We hope to serve you again!
+                        </p>
 
-                </div>
+                    </div>
 
                 `
 
             })
 
-            .then(() => {
+            .then(({ data, error }) => {
+
+                if (error) {
+
+                    console.error(
+                        "❌ Delivery email failed:",
+                        error
+                    );
+
+                    return;
+                }
+
 
                 console.log(
-                    "✅ Delivery email sent successfully."
+                    "✅ Delivery email sent:",
+                    data?.id
                 );
 
             })
 
-            .catch((err) => {
+            .catch((error) => {
 
                 console.error(
                     "❌ Delivery email failed:",
-                    err.message
+                    error.message
                 );
 
             });
@@ -972,8 +1107,7 @@ router.patch("/:id", async (req, res) => {
 
         return res.json({
 
-            success:
-                true,
+            success: true,
 
             message:
                 "Order updated successfully.",
@@ -987,13 +1121,15 @@ router.patch("/:id", async (req, res) => {
 
     catch (err) {
 
-        console.error(err);
+        console.error(
+            "UPDATE ORDER ERROR:",
+            err
+        );
 
 
-        res.status(500).json({
+        return res.status(500).json({
 
-            success:
-                false,
+            success: false,
 
             message:
                 "Failed to update order."
@@ -1021,8 +1157,7 @@ router.delete("/:id", async (req, res) => {
 
             return res.status(401).json({
 
-                success:
-                    false,
+                success: false,
 
                 message:
                     "No token."
@@ -1047,10 +1182,9 @@ router.delete("/:id", async (req, res) => {
         );
 
 
-        res.json({
+        return res.json({
 
-            success:
-                true,
+            success: true,
 
             message:
                 "Order deleted."
@@ -1062,13 +1196,15 @@ router.delete("/:id", async (req, res) => {
 
     catch (err) {
 
-        console.log(err);
+        console.error(
+            "DELETE ORDER ERROR:",
+            err
+        );
 
 
-        res.status(500).json({
+        return res.status(500).json({
 
-            success:
-                false,
+            success: false,
 
             message:
                 "Delete failed."
