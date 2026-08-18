@@ -1,71 +1,61 @@
-/* Kavro authentication/navigation state */
+document.addEventListener("DOMContentLoaded", function () {
 
-const KAVRO_API = "https://kavro-api.onrender.com";
+    const signUpBtn = document.getElementById("signUpBtn");
+    const signInBtn = document.getElementById("signInBtn");
+    const profileBtn = document.getElementById("profileBtn");
+    const logoutBtn = document.getElementById("navLogoutBtn");
 
-function getKavroToken() {
-    return localStorage.getItem("kavroToken");
-}
+    const token = localStorage.getItem("token");
 
-function getKavroUser() {
-    try {
-        return JSON.parse(localStorage.getItem("kavroUser")) || null;
-    } catch {
-        return null;
-    }
-}
+    if (token) {
 
-function isKavroLoggedIn() {
-    return Boolean(getKavroToken());
-}
-
-function updateKavroNavigation() {
-    const loggedIn = isKavroLoggedIn();
-
-    const signUp = document.getElementById("signupBtn");
-    const signIn = document.getElementById("signinBtn");
-    const profile = document.getElementById("profileBtn");
-    const logout = document.getElementById("navLogoutBtn");
-
-    if (loggedIn) {
-        if (signUp) signUp.style.display = "none";
-        if (signIn) signIn.style.display = "none";
-
-        if (profile) {
-            profile.style.display = "inline-flex";
-            profile.setAttribute("aria-label", "Open dashboard");
-            profile.setAttribute("title", "Dashboard");
+        // Hide Sign Up and Sign In
+        if (signUpBtn) {
+            signUpBtn.style.setProperty("display", "none", "important");
         }
 
-        if (logout) {
-            logout.style.display = "inline-flex";
+        if (signInBtn) {
+            signInBtn.style.setProperty("display", "none", "important");
         }
+
+        // Show Profile and Logout
+        if (profileBtn) {
+            profileBtn.style.setProperty("display", "flex", "important");
+        }
+
+        if (logoutBtn) {
+            logoutBtn.style.setProperty("display", "block", "important");
+        }
+
     } else {
-        if (signUp) signUp.style.display = "inline-flex";
-        if (signIn) signIn.style.display = "inline-flex";
-        if (profile) profile.style.display = "none";
-        if (logout) logout.style.display = "none";
+
+        // Show Sign Up and Sign In
+        if (signUpBtn) {
+            signUpBtn.style.setProperty("display", "", "important");
+        }
+
+        if (signInBtn) {
+            signInBtn.style.setProperty("display", "", "important");
+        }
+
+        // Hide Profile and Logout
+        if (profileBtn) {
+            profileBtn.style.setProperty("display", "none", "important");
+        }
+
+        if (logoutBtn) {
+            logoutBtn.style.setProperty("display", "none", "important");
+        }
     }
-}
+
+});
+
 
 function kavroLogout() {
-    localStorage.removeItem("kavroToken");
-    localStorage.removeItem("kavroUser");
 
-    // Replace the current page instead of adding another history entry.
-    window.location.replace("index.html");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("currentUser");
+
+    window.location.href = "index.html";
 }
-
-document.addEventListener("click", (event) => {
-    const profile = event.target.closest("#profileBtn");
-    if (!profile) return;
-
-    if (isKavroLoggedIn()) {
-        window.location.href = "dashboard.html";
-    } else {
-        window.location.href = "login.html";
-    }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    updateKavroNavigation();
-});

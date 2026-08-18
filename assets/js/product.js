@@ -1,202 +1,341 @@
 const API_URL = "https://kavro-api.onrender.com";
 
-// PRODUCT_SLUG is defined in freefire.html / pubg.html / roblox.html
-// Example:
-// const PRODUCT_SLUG = "ff";
+
+// ==========================================
+// LOAD PRODUCT ITEMS
+// ==========================================
 
 async function loadProductItems() {
+
     try {
 
+        // ==========================================
+        // 1. CHECK PRODUCT SLUG
+        // ==========================================
+
         if (typeof PRODUCT_SLUG === "undefined") {
-            console.error("PRODUCT_SLUG is not defined.");
+
+            console.error(
+                "PRODUCT_SLUG is not defined."
+            );
+
             return;
         }
 
+
         // ==========================================
-        // 1. GET ALL PRODUCTS
+        // 2. GET ALL PRODUCTS
         // ==========================================
 
         const productResponse = await fetch(
             `${API_URL}/api/products`
         );
 
+
         if (!productResponse.ok) {
-            throw new Error("Failed to load products");
+
+            throw new Error(
+                "Failed to load products"
+            );
+
         }
 
-        const products = await productResponse.json();
 
-        // Find the current product using its slug
-        const product = products.find(
-            item => item.slug === PRODUCT_SLUG
-        );
+        const products =
+            await productResponse.json();
+
+
+        // ==========================================
+        // 3. FIND CURRENT PRODUCT
+        // ==========================================
+
+        const product =
+            products.find(
+                item =>
+                    item.slug === PRODUCT_SLUG
+            );
+
 
         if (!product) {
+
             console.error(
                 `Product with slug "${PRODUCT_SLUG}" was not found.`
             );
+
             return;
         }
 
+
         // ==========================================
-        // 2. GET PRODUCT ITEMS
+        // 4. GET PRODUCT ITEMS
         // ==========================================
 
-        const itemsResponse = await fetch(
-            `${API_URL}/api/product-items/product/${product._id}`
-        );
+        const itemsResponse =
+            await fetch(
+                `${API_URL}/api/product-items/product/${product._id}`
+            );
+
 
         if (!itemsResponse.ok) {
-            throw new Error("Failed to load product items");
+
+            throw new Error(
+                "Failed to load product items"
+            );
+
         }
 
-        const items = await itemsResponse.json();
+
+        const items =
+            await itemsResponse.json();
+
 
         // ==========================================
-        // 3. FIND PACKAGE CONTAINER
+        // 5. FIND PACKAGE CONTAINER
         // ==========================================
 
-        const container = document.getElementById("diamond");
+        const container =
+            document.querySelector(
+                ".package-grid"
+            );
+
 
         if (!container) {
+
             console.error(
-                'Element with id="diamond" was not found.'
+                "Package container (.package-grid) was not found."
             );
+
             return;
         }
+
+
+        // Clear old packages
 
         container.innerHTML = "";
 
+
         // ==========================================
-        // 4. NO PACKAGES
+        // 6. NO PACKAGES
         // ==========================================
 
-        if (!items.length) {
+        if (!items || !items.length) {
 
             container.innerHTML = `
+
                 <div class="no-packages">
-                    <h3>No packages available</h3>
-                    <p>Please check back later.</p>
+
+                    <h3>
+                        No packages available
+                    </h3>
+
+                    <p>
+                        Please check back later.
+                    </p>
+
                 </div>
+
             `;
 
             return;
         }
 
+
         // ==========================================
-        // 5. DISPLAY PRODUCT ITEMS
+        // 7. CREATE PACKAGE CARDS
         // ==========================================
 
-        items.forEach(item => {
+        items.forEach((item) => {
 
-            const card = document.createElement("div");
 
-            card.className = "package-card";
+            // ======================================
+            // FINAL PRICE
+            // ======================================
+
+            const finalPrice =
+
+                item.discountPrice &&
+                item.discountPrice > 0 &&
+                item.discountPrice < item.price
+
+                    ? item.discountPrice
+
+                    : item.price;
+
+
+            // ======================================
+            // CREATE CARD
+            // ======================================
+
+            const card =
+                document.createElement("div");
+
+
+            card.className =
+                "package-card";
+
+
+            // ======================================
+            // PACKAGE HTML
+            // ======================================
 
             card.innerHTML = `
-                
+
                 ${
                     item.image
                         ? `
+
                             <img
-                                src="${item.image}"
+                                src="${escapeHTML(item.image)}"
                                 alt="${escapeHTML(item.title)}"
                                 class="package-image"
                             >
+
                           `
                         : ""
                 }
 
+
                 <div class="package-info">
+
 
                     <h3>
                         ${escapeHTML(item.title)}
                     </h3>
 
+
                     ${
                         item.description
                             ? `
-                                <p>
+
+                                <p class="package-description">
                                     ${escapeHTML(item.description)}
                                 </p>
+
                               `
                             : ""
                     }
 
+
                     <div class="package-price">
+
 
                         ${
                             item.discountPrice &&
                             item.discountPrice > 0 &&
                             item.discountPrice < item.price
+
                                 ? `
+
                                     <span class="old-price">
                                         Rs. ${item.price}
                                     </span>
 
                                     <strong>
-                                        Rs. ${item.discountPrice}
+                                        Rs. ${finalPrice}
                                     </strong>
+
                                   `
+
                                 : `
+
                                     <strong>
-                                        Rs. ${item.price}
+                                        Rs. ${finalPrice}
                                     </strong>
+
                                   `
                         }
 
+
                     </div>
 
-                    <button
-                        type="button"
-                        class="package-select-btn"
-                    >
-                        Select
-                    </button>
 
                 </div>
+
             `;
 
+
             // ==========================================
-            // 6. SELECT PACKAGE
+            // CLICK PACKAGE
             // ==========================================
 
-            const button = card.querySelector(
-                ".package-select-btn"
+            card.addEventListener(
+                "click",
+                function () {
+
+                    selectPackage(
+                        item,
+                        card
+                    );
+
+                }
             );
 
-            button.addEventListener("click", function () {
 
-                selectPackage(item);
-
-            });
+            // ==========================================
+            // ADD CARD
+            // ==========================================
 
             container.appendChild(card);
 
         });
 
+
+        // ==========================================
+        // 8. AUTO SELECT FIRST PACKAGE
+        // ==========================================
+
+        const firstCard =
+            container.querySelector(
+                ".package-card"
+            );
+
+
+        if (firstCard && items.length > 0) {
+
+        }
+
+
     } catch (error) {
+
+
+        // ==========================================
+        // ERROR
+        // ==========================================
 
         console.error(
             "Product loading error:",
             error
         );
 
+
         const container =
-            document.getElementById("diamond");
+            document.querySelector(
+                ".package-grid"
+            );
+
 
         if (container) {
 
             container.innerHTML = `
+
                 <div class="no-packages">
-                    <h3>Unable to load packages</h3>
-                    <p>Please refresh the page and try again.</p>
+
+                    <h3>
+                        Unable to load packages
+                    </h3>
+
+                    <p>
+                        Please refresh the page and try again.
+                    </p>
+
                 </div>
+
             `;
 
         }
 
     }
+
 }
 
 
@@ -204,16 +343,84 @@ async function loadProductItems() {
 // SELECT PACKAGE
 // ==========================================
 
-function selectPackage(item) {
+function selectPackage(
+    item,
+    selectedCard
+) {
+
+
+    // ==========================================
+    // GET SUMMARY ELEMENTS
+    // ==========================================
 
     const nameElement =
-        document.getElementById("packageName");
+        document.getElementById(
+            "packageName"
+        );
+
 
     const priceElement =
-        document.getElementById("packagePrice");
+        document.getElementById(
+            "packagePrice"
+        );
+
 
     const buyButton =
-        document.getElementById("buyButton");
+        document.getElementById(
+            "buyButton"
+        );
+
+
+    // ==========================================
+    // CALCULATE FINAL PRICE
+    // ==========================================
+
+    const finalPrice =
+
+        item.discountPrice &&
+        item.discountPrice > 0 &&
+        item.discountPrice < item.price
+
+            ? item.discountPrice
+
+            : item.price;
+
+
+    // ==========================================
+    // REMOVE ACTIVE FROM ALL CARDS
+    // ==========================================
+
+    document
+        .querySelectorAll(
+            ".package-card"
+        )
+        .forEach(
+            card => {
+
+                card.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    // ==========================================
+    // ACTIVATE SELECTED CARD
+    // ==========================================
+
+    if (selectedCard) {
+
+        selectedCard.classList.add(
+            "active"
+        );
+
+    }
+
+
+    // ==========================================
+    // UPDATE PACKAGE NAME
+    // ==========================================
 
     if (nameElement) {
 
@@ -222,35 +429,37 @@ function selectPackage(item) {
 
     }
 
-    if (priceElement) {
 
-        const finalPrice =
-            item.discountPrice &&
-            item.discountPrice > 0 &&
-            item.discountPrice < item.price
-                ? item.discountPrice
-                : item.price;
+    // ==========================================
+    // UPDATE PRICE
+    // ==========================================
+
+    if (priceElement) {
 
         priceElement.textContent =
             `Rs. ${finalPrice}`;
 
     }
 
-    // Store selected item
-    window.selectedProductItem = item;
 
-    // Update Buy button
+    // ==========================================
+    // SAVE SELECTED PACKAGE
+    // ==========================================
+
+    window.selectedProductItem =
+        item;
+
+
+    // ==========================================
+    // UPDATE BUY BUTTON
+    // ==========================================
+
     if (buyButton) {
 
-        const finalPrice =
-            item.discountPrice &&
-            item.discountPrice > 0 &&
-            item.discountPrice < item.price
-                ? item.discountPrice
-                : item.price;
-
         buyButton.href =
-            `contact.html?product=${encodeURIComponent(item.title)}&price=${finalPrice}`;
+            `contact.html?product=${encodeURIComponent(
+                item.title
+            )}&price=${finalPrice}`;
 
     }
 
@@ -263,16 +472,42 @@ function selectPackage(item) {
 
 function escapeHTML(value) {
 
-    if (value === null || value === undefined) {
+    if (
+        value === null ||
+        value === undefined
+    ) {
+
         return "";
+
     }
 
+
     return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 

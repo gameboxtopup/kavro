@@ -29,6 +29,7 @@
 <link rel="icon" type="image/png" href="assets/images/logo.png">
 
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="order.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -248,7 +249,6 @@ required>
     <input type="radio"
            name="Payment Method"
            value="eSewa"
-           checked
            required>
 
     <img src="assets/images/esewa.png" alt="eSewa">
@@ -923,7 +923,7 @@ const screenshotURL = uploadResult.secure_url;
 
 try {
 
-    const response = await fetch("https://kavro-api.onrender.com /api/orders", {
+    const response = await fetch("https://kavro-api.onrender.com/api/orders", {
 
         method: "POST",
 

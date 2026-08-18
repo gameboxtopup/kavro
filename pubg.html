@@ -29,6 +29,7 @@
 <link rel="icon" href="assets/images/favicon.png">
 
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="assets/css/pubg.css">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -140,47 +141,55 @@ Buy PUBG Mobile UC instantly with secure payment and fast delivery across Nepal.
 
 <section class="ff-order">
 
-<div class="container">
+    <div class="container">
 
-<div class="order-box">
+        <div class="order-box">
 
-<h2>Select UC Package</h2>
+            <h2>Select UC Package</h2>
 
-<p>Choose your PUBG UC package below.</p>
+            <p>Choose your PUBG UC package below.</p>
 
-<form class="ff-form">
+            <form class="ff-form">
 
-<label>Available Packages</label>
+                <label>Available Packages</label>
 
-<div class="package-grid" id="pubg-packages">
+                <div class="package-grid" id="pubg-packages"></div>
 
-</div>
+                <div class="selected-box">
 
+                    <div class="summary-label">
+                        PUBG MOBILE UC
+                    </div>
 
-<div class="selected-box">
+                    <h3>Your Selection</h3>
 
-<h3>Your Selection</h3>
+                    <div class="summary-package">
+                        <span id="packageName">-- UC</span>
+                    </div>
 
-<div id="packageName" class="selected-package">
-60 UC
-</div>
+                    <div class="summary-bottom">
 
-<div class="selected-price">
-Price:
-<span id="packagePrice">NPR 150</span>
-</div>
+                        <span class="summary-price-label">
+                            Price
+                        </span>
 
-</div>
+                        <strong id="packagePrice">
+                            Rs. ---
+                        </strong>
 
-<a href="#" id="buyButton" class="btn-primary ff-buy">
-Buy Now
-</a>
+                    </div>
 
-</form>
+                </div>
 
-</div>
+                <a href="#" id="buyButton" class="btn-primary ff-buy">
+                    Buy Now
+                </a>
 
-</div>
+            </form>
+
+        </div>
+
+    </div>
 
 </section>
 
@@ -487,6 +496,7 @@ Nepal's trusted digital marketplace for game top-ups and gift cards.
 const PRODUCT_SLUG = "pubg";
 const PRODUCT_NAME = "PUBG Mobile";
 </script>
+
 
 <script src="assets/js/product.js"></script>
 

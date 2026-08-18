@@ -4,17 +4,13 @@
 <head>
 
 <meta name="robots" content="index,follow">
-
 <meta name="author" content="Kavro">
-
 <meta name="theme-color" content="#2563eb">
 
 <link rel="manifest" href="manifest.json">
 
 <meta property="og:type" content="website">
-
 <meta property="og:site_name" content="Kavro">
-
 <meta property="og:image" content="assets/images/logo.png">
 
 <meta name="twitter:card" content="summary_large_image">
@@ -22,419 +18,706 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Free Fire | Kavro</title>
+<title>Free Fire Diamonds | Kavro</title>
+
+<meta
+    name="description"
+    content="Buy Free Fire Diamonds with fast delivery and secure payment through Kavro."
+>
 
 <link rel="icon" href="assets/images/favicon.png">
 
-<link rel="stylesheet" href="assets/css/freefire.css">
+<link rel="stylesheet" href="style.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
 
 </head>
+
 <body>
 
-<!--================ HEADER ================-->
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
 
 <header class="header">
 
-<div class="container">
+    <div class="container">
 
-<nav class="navbar">
+        <nav class="navbar">
 
-<a href="index.html" class="logo">
-<img src="assets/images/logo.png" alt="Kavro">
-<span>Kavro</span>
-</a>
+            <a href="index.html" class="logo">
 
-<ul class="nav-links">
-<li><a href="index.html">Home</a></li>
-<li><a href="products.html" class="active">Products</a></li>
-<li><a href="about.html">About</a></li>
-<li><a href="contact.html">Contact</a></li>
-</ul>
+                <img
+                    src="assets/images/logo.png"
+                    alt="Kavro"
+                >
 
-<a href="contact.html" class="btn-primary">
-Need Help?
-</a>
+                <span>Kavro</span>
 
-</nav>
+            </a>
 
-</div>
+
+            <ul class="nav-links">
+
+                <li>
+                    <a href="index.html">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="products.html" class="active">
+                        Products
+                    </a>
+                </li>
+
+                <li>
+                    <a href="about.html">
+                        About
+                    </a>
+                </li>
+
+                <li>
+                    <a href="contact.html">
+                        Contact
+                    </a>
+                </li>
+
+            </ul>
+
+
+            <a
+                href="contact.html"
+                class="btn-primary"
+            >
+                Need Help?
+            </a>
+
+        </nav>
+
+    </div>
 
 </header>
 
 
 
-
-
-<!--================ HERO ================-->
+<!-- =========================================================
+     HERO
+========================================================= -->
 
 <section class="ff-hero">
 
-<div class="container">
+    <div class="container">
 
-<div class="ff-hero-content">
-
-<div class="ff-left">
-
-<span class="ff-badge">
-🔥 Bangladesh Server
-</span>
-
-<h1>
-Free Fire Diamond Top Up
-</h1>
-
-<p>
-
-Top up Garena Free Fire Bangladesh Server safely with instant delivery and secure payment through eSewa, Khalti and Bank Transfer.
-
-</p>
-
-<div class="ff-features">
-
-<div>
-⚡ Instant Delivery
-</div>
-
-<div>
-🔒 Secure Payment
-</div>
-
-<div>
-🎮 Official Top Up
-</div>
-
-</div>
-
-</div>
+        <div class="ff-hero-content">
 
 
+            <!-- LEFT -->
 
-<div class="ff-right">
+            <div class="ff-left">
 
-<img src="assets/images/freefire-diamonds.webp"
-alt="Free Fire">
+                <span class="ff-badge">
+                    🔥 Bangladesh Server
+                </span>
 
-</div>
 
-</div>
+                <h1>
+                    Free Fire Diamond Top Up
+                </h1>
 
-</div>
+
+                <p>
+                    Top up your Garena Free Fire Bangladesh
+                    Server account with fast delivery and
+                    secure payment.
+                </p>
+
+
+                <div class="ff-features">
+
+                    <div>
+                        ⚡ Fast Delivery
+                    </div>
+
+                    <div>
+                        🔒 Secure Payment
+                    </div>
+
+                    <div>
+                        🎮 Official Diamond Top Up
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RIGHT -->
+
+            <div class="ff-right">
+
+                <img
+                    src="assets/images/freefire-diamonds.webp"
+                    alt="Free Fire Diamonds"
+                >
+
+            </div>
+
+
+        </div>
+
+    </div>
 
 </section>
 
 
 
-
-
-<!--================ ORDER CARD ================-->
+<!-- =========================================================
+     ORDER SECTION
+========================================================= -->
 
 <section class="ff-order">
 
-<div class="container">
+    <div class="container">
 
-<div class="order-box">
+        <div class="order-box">
 
-<h2>
+            <h2>Select Diamond Package</h2>
 
-Top Up Your Account
+            <p>
+                Choose your Free Fire Diamond package below.
+            </p>
 
-</h2>
+            <form class="ff-form">
 
-<p>
+                <label>Available Packages</label>
 
-Choose your package below.
-
-</p>
-
-<form class="ff-form">
-
-<label>Select Package</label>
-
-<!-- CATEGORY TABS -->
-
-<div class="package-tabs">
-
-<button type="button" class="tab-btn active">
-💎 Diamonds
-</button>
-
-</div>
+                <!-- Packages loaded automatically by product.js -->
+                <div
+                    class="package-grid"
+                    id="diamond"
+                ></div>
 
 
+                <!-- =========================
+                     ORDER SUMMARY
+                ========================== -->
 
-<!-- DIAMONDS -->
+                <div class="selected-box">
 
-<div class="package-grid package-content active" id="diamond">
+                    <div class="summary-label">
+                        FREE FIRE DIAMONDS
+                    </div>
+
+                    <h3>
+                        Your Selection
+                    </h3>
+
+                    <div class="summary-package">
+
+                        <span id="packageName">
+                            Select a package
+                        </span>
+
+                    </div>
+
+                    <div class="summary-bottom">
+
+                        <span class="summary-price-label">
+                            Price
+                        </span>
+
+                        <strong id="packagePrice">
+                            Rs. --
+                        </strong>
+
+                    </div>
+
+                </div>
 
 
-</div>
+                <!-- =========================
+                     BUY BUTTON
+                ========================== -->
 
+                <a
+                    href="#"
+                    id="buyButton"
+                    class="btn-primary ff-buy"
+                >
+                    Buy Now
+                </a>
 
+            </form>
 
+        </div>
 
-
-</div>
-
-<div class="selected-box">
-
-<h3>Your Selection</h3>
-
-<div class="selected-package" id="packageName">
-please select packages
-</div>
-
-<div class="selected-price">
-Price:
-<span id="packagePrice">
---
-</span>
-</div>
-
-<a
-id="buyButton"
-href="#"
-class="btn-primary ff-buy">
-
-Buy Now
-
-</a>
-
-<div class="trust-bar">
-
-<div class="trust-item">
-⚡ <span>5–30 Min Delivery</span>
-</div>
-
-<div class="trust-item">
-🔒 <span>Secure Payment</span>
-</div>
-
-<div class="trust-item">
-💬 <span>24/7 Support</span>
-</div>
-
-</div>ss
-
-</div>
-
-</form>
-
-</div>
-
-</div>
+    </div>
 
 </section>
 
-<!--================ PAYMENT METHODS ================-->
+
+
+<!-- =========================================================
+     PAYMENT METHODS
+========================================================= -->
 
 <section class="payment-section">
 
-<div class="container">
+    <div class="container">
 
-<div class="section-heading">
 
-<span>Payment</span>
+        <div class="section-heading">
 
-<h2>Available Payment Methods</h2>
+            <span>
+                Payment
+            </span>
 
-<p>Pay using your favorite payment method.</p>
+            <h2>
+                Available Payment Methods
+            </h2>
 
-</div>
+            <p>
+                Pay securely using your preferred payment method.
+            </p>
 
-<div class="payment-grid">
+        </div>
 
-<div class="payment-card">
-<img src="assets/images/esewa.png" alt="eSewa">
-<h3>eSewa</h3>
-</div>
 
-<div class="payment-card">
-<img src="assets/images/khalti.png" alt="Khalti">
-<h3>Khalti</h3>
-</div>
 
-<div class="payment-card">
-<img src="assets/images/fonepay.png" alt="Fonepay">
-<h3>Fonepay</h3>
-</div>
+        <div class="payment-grid">
 
-<div class="payment-card">
-<img src="assets/images/bank.png" alt="Bank Transfer">
-<h3>Bank Transfer</h3>
-</div>
 
-</div>
+            <!-- ESEWA -->
 
-</div>
+            <div class="payment-card">
+
+                <img
+                    src="assets/images/esewa.png"
+                    alt="eSewa"
+                >
+
+                <h3>
+                    eSewa
+                </h3>
+
+                <p>
+                    Fast & Secure
+                </p>
+
+            </div>
+
+
+
+            <!-- KHALTI -->
+
+            <div class="payment-card">
+
+                <img
+                    src="assets/images/khalti.png"
+                    alt="Khalti"
+                >
+
+                <h3>
+                    Khalti
+                </h3>
+
+                <p>
+                    Instant Payment
+                </p>
+
+            </div>
+
+
+
+            <!-- FONEPAY -->
+
+            <div class="payment-card">
+
+                <img
+                    src="assets/images/fonepay.png"
+                    alt="FonePay"
+                >
+
+                <h3>
+                    FonePay
+                </h3>
+
+                <p>
+                    QR Payment
+                </p>
+
+            </div>
+
+
+
+            <!-- BANK -->
+
+            <div class="payment-card">
+
+                <img
+                    src="assets/images/bank.png"
+                    alt="Bank Transfer"
+                >
+
+                <h3>
+                    Bank Transfer
+                </h3>
+
+                <p>
+                    Direct Deposit
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
 
 </section>
 
 
-<!--================ WHY CHOOSE US ================-->
+
+<!-- =========================================================
+     WHY KAVRO
+========================================================= -->
 
 <section class="why-kavro">
 
-<div class="container">
+    <div class="container">
 
-<div class="section-heading">
 
-<span>Why Kavro?</span>
+        <div class="section-heading">
 
-<h2>Why Customers Choose Us</h2>
+            <span>
+                Why Kavro?
+            </span>
 
-</div>
+            <h2>
+                Why Players Choose Us
+            </h2>
 
-<div class="why-grid">
+        </div>
 
-<div class="why-card">
 
-<h3>⚡ Fast Delivery</h3>
 
-<p>Most orders are completed within a few minutes after payment confirmation.</p>
+        <div class="why-grid">
 
-</div>
 
-<div class="why-card">
+            <div class="why-card">
 
-<h3>🔒 Safe Payment</h3>
+                <h3>
+                    ⚡ Fast Delivery
+                </h3>
 
-<p>Your payment is verified securely before delivery.</p>
+                <p>
+                    Most Free Fire Diamond orders
+                    are delivered within 5–30 minutes
+                    after payment confirmation.
+                </p>
 
-</div>
+            </div>
 
-<div class="why-card">
 
-<h3>💬 Friendly Support</h3>
 
-<p>Need help? Our support team is always ready to assist you.</p>
+            <div class="why-card">
 
-</div>
+                <h3>
+                    🔒 Secure Payment
+                </h3>
 
-</div>
+                <p>
+                    Pay safely using trusted payment
+                    methods with secure order verification.
+                </p>
 
-</div>
+            </div>
+
+
+
+            <div class="why-card">
+
+                <h3>
+                    💬 24/7 Support
+                </h3>
+
+                <p>
+                    Need help with your order?
+                    Our support team is always ready
+                    to assist you.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
 
 </section>
 
 
-<!--================ FAQ ================-->
+
+<!-- =========================================================
+     FAQ
+========================================================= -->
 
 <section class="faq">
 
-<div class="container">
+    <div class="container">
 
-<div class="section-heading">
 
-<span>FAQ</span>
+        <div class="section-heading">
 
-<h2>Frequently Asked Questions</h2>
+            <span>
+                FAQ
+            </span>
 
-</div>
+            <h2>
+                Frequently Asked Questions
+            </h2>
 
-<div class="faq-item">
+        </div>
 
-<h3>How long does delivery take?</h3>
 
-<p>Usually within 5–30 minutes after payment verification.</p>
 
-</div>
+        <div class="faq-item">
 
-<div class="faq-item">
+            <h3>
+                How long does delivery take?
+            </h3>
 
-<h3>Which server is supported?</h3>
+            <p>
+                Most Diamond orders are completed
+                within 5–30 minutes after payment
+                verification.
+            </p>
 
-<p>This page is only for Garena Free Fire Bangladesh Server.</p>
+        </div>
 
-</div>
 
-<div class="faq-item">
 
-<h3>Can I pay using eSewa?</h3>
+        <div class="faq-item">
 
-<p>Yes. We also accept Khalti, Fonepay and Bank Transfer.</p>
+            <h3>
+                Which server is supported?
+            </h3>
 
-</div>
+            <p>
+                This page is currently for the
+                Garena Free Fire Bangladesh Server.
+            </p>
 
-</div>
+        </div>
+
+
+
+        <div class="faq-item">
+
+            <h3>
+                Which payment methods are accepted?
+            </h3>
+
+            <p>
+                We accept eSewa, Khalti, FonePay
+                and Bank Transfer.
+            </p>
+
+        </div>
+
+
+
+        <div class="faq-item">
+
+            <h3>
+                Is my payment secure?
+            </h3>
+
+            <p>
+                Yes. Every order is verified before
+                the Diamond top-up is delivered.
+            </p>
+
+        </div>
+
+
+    </div>
 
 </section>
 
 
-<!--================ CTA ================-->
+
+<!-- =========================================================
+     CTA
+========================================================= -->
 
 <section class="cta">
 
-<div class="container">
+    <div class="container">
 
-<h2>Ready to Top Up?</h2>
 
-<p>Choose your package and place your order securely.</p>
+        <h2>
+            Ready to Top Up?
+        </h2>
 
-<div class="hero-buttons">
 
-<a href="contact.html" class="btn-primary">
-Buy Now
-</a>
+        <p>
+            Choose your Diamond package and
+            place your order today.
+        </p>
 
-<a href="products.html" class="btn-secondary">
-Back to Products
-</a>
 
-</div>
+        <div class="hero-buttons">
 
-</div>
+
+            <a
+                href="#"
+                id="mobileBuyButton"
+                class="btn-primary"
+            >
+                🛒 Buy Now
+            </a>
+
+
+            <a
+                href="products.html"
+                class="btn-secondary"
+            >
+                Back to Products
+            </a>
+
+
+        </div>
+
+    </div>
 
 </section>
 
 
-<!--================ FOOTER ================-->
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
 
 <footer class="footer">
 
-<div class="container">
+    <div class="container">
 
-<div class="footer-grid">
+        <div class="footer-grid">
 
-<div>
-<h3>Kavro</h3>
-<p>Nepal's trusted digital marketplace for game top-ups and gift cards.</p>
-</div>
 
-<div>
-<h4>Quick Links</h4>
-<ul>
-<li><a href="index.html">Home</a></li>
-<li><a href="products.html">Products</a></li>
-<li><a href="contact.html">Contact</a></li>
-</ul>
-</div>
+            <div>
 
-<div>
-<h4>Support</h4>
-<p>Email: nirmalktht@gmail.com</p>
-<p>Available: 24/7</p>
-</div>
+                <h3>
+                    Kavro
+                </h3>
 
-</div>
+                <p>
+                    Nepal's trusted digital marketplace
+                    for game top-ups and digital products.
+                </p>
 
-<div class="footer-bottom">
-<p>© 2025 Kavro. All Rights Reserved.</p>
-</div>
+            </div>
 
-</div>
+
+
+            <div>
+
+                <h4>
+                    Quick Links
+                </h4>
+
+                <ul>
+
+                    <li>
+                        <a href="index.html">
+                            Home
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="products.html">
+                            Products
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="about.html">
+                            About
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="contact.html">
+                            Contact
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+
+            <div>
+
+                <h4>
+                    Support
+                </h4>
+
+                <p>
+                    Email: nirmalktht@gmail.com
+                </p>
+
+                <p>
+                    Available: 24/7
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2025 Kavro. All Rights Reserved.
+            </p>
+
+        </div>
+
+    </div>
 
 </footer>
 
+
+
+<!-- =========================================================
+     SCRIPTS
+========================================================= -->
+
 <script src="script.js"></script>
 
+
 <script>
+
 const PRODUCT_SLUG = "ff";
-const PRODUCT_NAME = "Free Fire";
+const PRODUCT_NAME = "Free Fire Diamonds";
+
 </script>
+
 
 <script src="assets/js/product.js"></script>
 
+
 </body>
+
 </html>
