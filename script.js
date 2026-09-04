@@ -276,6 +276,13 @@ document.addEventListener("DOMContentLoaded", () => {
             "click",
             event => {
 
+                // Dynamic product pages (including UniPin) build their own
+                // complete checkout URL with item ID, unit price and quantity.
+                // Do not overwrite that URL with the legacy Free Fire link.
+                if (window.selectedProductItem) {
+                    return;
+                }
+
                 event.preventDefault();
 
 
