@@ -163,7 +163,9 @@ async function loadOrders() {
 
                 if (
                     status.toLowerCase() ===
-                    "delivered"
+                    "delivered" ||
+                    status.toLowerCase() ===
+                    "completed"
                 ) {
                     statusClass = "delivered";
                 }
@@ -177,9 +179,18 @@ async function loadOrders() {
 
                 else if (
                     status.toLowerCase() ===
-                    "processing"
+                    "processing" ||
+                    status.toLowerCase() ===
+                    "payment verified"
                 ) {
                     statusClass = "processing";
+                }
+
+                else if (
+                    status.toLowerCase() ===
+                    "refund required"
+                ) {
+                    statusClass = "refund-required";
                 }
 
                 return `

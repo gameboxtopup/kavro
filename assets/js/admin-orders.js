@@ -19,6 +19,7 @@ logoutBtn.onclick = () => {
 };
 
 let allOrders = [];
+let currentOrderId = null;
 const notificationSound = new Audio("assets/sounds/notification.mp3");
 notificationSound.volume = 1;
 
@@ -60,6 +61,8 @@ socket.on("newOrder", (order) => {
 
 });
 
+socket.on("orderUpdated", () => loadOrders());
+
 async function loadOrders(){
 
     try{
@@ -73,6 +76,10 @@ async function loadOrders(){
         });
 
         const data = await res.json();
+
+        if (!res.ok || !Array.isArray(data)) {
+            throw new Error(data.message || "Could not load orders.");
+        }
 
         allOrders = data;
 
@@ -113,19 +120,19 @@ function displayOrders(orders){
 
 <tr>
 
-<td>${order.product}</td>
+<td>${escapeHtml(order.product)}</td>
 
-<td>${order.uid}</td>
+<td>${escapeHtml(order.uid)}</td>
 
-<td>${order.paymentMethod}</td>
+<td>${escapeHtml(order.paymentMethod)}</td>
 
-<td>${order.price}</td>
+<td>${escapeHtml(order.price)}</td>
 
 <td>
 
-<span class="status ${order.status.toLowerCase()}">
+<span class="status ${getStatusClass(order.status)}">
 
-${order.status}
+${escapeHtml(order.status)}
 
 </span>
 
@@ -137,18 +144,6 @@ ${order.status}
 onclick="viewOrder('${order._id}')">
 View
 </button>
-
-${
-order.status === "Pending"
-? `
-<button class="action-btn"
-style="background:#16a34a"
-onclick="deliverOrder('${order._id}')">
-Deliver
-</button>
-`
-: ""
-}
 
 <button class="action-btn"
 style="background:#dc2626"
@@ -172,6 +167,8 @@ function viewOrder(id){
 
     if(!order) return;
 
+    currentOrderId = id;
+
     document.getElementById("mProduct").textContent = order.product;
 
     document.getElementById("mPackage").textContent = order.package;
@@ -192,6 +189,16 @@ function viewOrder(id){
 
     document.getElementById("mStatus").textContent = order.status;
 
+    document.getElementById("orderStatusSelect").value =
+        order.status === "Delivered" ? "Completed" : order.status;
+
+    const history = order.statusHistory || [];
+    document.getElementById("mTimeline").innerHTML = history.length
+        ? history.slice().reverse().map(item =>
+            `<div><strong>${escapeHtml(item.status)}</strong> · ${formatDate(item.changedAt)}</div>`
+          ).join("")
+        : `<div>Created · ${formatDate(order.createdAt)}</div>`;
+
     document.getElementById("mScreenshot").src = order.screenshot;
     document.getElementById("mScreenshotLink").href = order.screenshot;
 
@@ -204,17 +211,14 @@ function viewOrder(id){
     document.getElementById("mNote").textContent =
         order.note || "No note.";
 
-    document.getElementById("deliverBtn").onclick = function () {
-        deliverOrder(order._id);
-    };
-
     document.getElementById("orderModal").style.display = "flex";
 
 }
 
 const search=document.getElementById("search");
+const statusFilter=document.getElementById("statusFilter");
 
-search.addEventListener("input",()=>{
+function applyFilters(){
 
     const keyword=search.value.toLowerCase();
 
@@ -226,13 +230,18 @@ search.addEventListener("input",()=>{
 
             o.uid.toLowerCase().includes(keyword) ||
 
-            o.paymentMethod.toLowerCase().includes(keyword)
+            o.paymentMethod.toLowerCase().includes(keyword) ||
 
-        )
+            (o.transactionId || "").toLowerCase().includes(keyword)
+
+        ).filter(o => !statusFilter.value || o.status === statusFilter.value)
 
     );
 
-});
+}
+
+search.addEventListener("input", applyFilters);
+statusFilter.addEventListener("change", applyFilters);
 
 loadOrders();
 
@@ -248,9 +257,9 @@ window.onclick = (e) => {
 
 };
 
-async function deliverOrder(id) {
+async function updateOrderStatus(id, status) {
 
-    if (!confirm("Mark this order as Delivered?")) {
+    if (!confirm(`Change this order to “${status}”?`)) {
         return;
     }
 
@@ -265,7 +274,7 @@ async function deliverOrder(id) {
                     Authorization: "Bearer " + token
                 },
                 body: JSON.stringify({
-                    status: "Delivered"
+                    status
                 })
             }
         );
@@ -274,7 +283,7 @@ async function deliverOrder(id) {
 
         if (data.success) {
 
-            alert("Order marked as Delivered.");
+            alert(`Order marked as ${status}.`);
 
                 closeModal();
 
@@ -341,4 +350,44 @@ async function deleteOrder(id) {
 
     }
 
+}
+
+document.getElementById("updateStatusBtn").addEventListener("click", () => {
+    if (!currentOrderId) return;
+    updateOrderStatus(
+        currentOrderId,
+        document.getElementById("orderStatusSelect").value
+    );
+});
+
+document.querySelectorAll("[data-copy]").forEach(button => {
+    button.addEventListener("click", async () => {
+        const value = document.getElementById(button.dataset.copy).textContent.trim();
+        try {
+            await navigator.clipboard.writeText(value);
+            const original = button.textContent;
+            button.textContent = "Copied ✓";
+            setTimeout(() => { button.textContent = original; }, 1200);
+        } catch (error) {
+            alert("Could not copy automatically. Please copy it manually.");
+        }
+    });
+});
+
+function getStatusClass(status) {
+    return String(status || "Pending").toLowerCase().replace(/\s+/g, "-");
+}
+
+function formatDate(value) {
+    if (!value) return "—";
+    return new Date(value).toLocaleString();
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }

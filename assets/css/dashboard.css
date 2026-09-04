@@ -775,3 +775,8 @@ body {
         display: none;
     }
 }
+
+.status.refund-required {
+    background: rgba(234, 88, 12, 0.15);
+    color: #fb923c;
+}

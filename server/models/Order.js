@@ -88,7 +88,31 @@ const orderSchema = new mongoose.Schema({
     status: {
         type: String,
         default: "Pending"
-    }
+    },
+
+    paymentVerifiedAt: {
+        type: Date,
+        default: null
+    },
+
+    processingStartedAt: {
+        type: Date,
+        default: null
+    },
+
+    completedAt: {
+        type: Date,
+        default: null
+    },
+
+    statusHistory: [{
+        status: String,
+        changedAt: {
+            type: Date,
+            default: Date.now
+        },
+        changedBy: String
+    }]
 
 }, {
     timestamps: true

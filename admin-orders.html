@@ -76,6 +76,16 @@ type="text"
 id="search"
 placeholder="Search Orders...">
 
+<select id="statusFilter" aria-label="Filter orders by status">
+<option value="">All statuses</option>
+<option>Pending</option>
+<option>Payment Verified</option>
+<option>Processing</option>
+<option>Completed</option>
+<option>Rejected</option>
+<option>Refund Required</option>
+</select>
+
 </div>
 
 <table>
@@ -133,7 +143,9 @@ Loading...
 
             <p><strong>Package:</strong> <span id="mPackage"></span></p>
 
-            <p><strong>UID:</strong> <span id="mUid"></span></p>
+            <p><strong>UID:</strong> <span id="mUid"></span>
+                <button type="button" class="copy-btn" data-copy="mUid">Copy</button>
+            </p>
 
             <p><strong>Player:</strong> <span id="mPlayer"></span></p>
 
@@ -141,7 +153,9 @@ Loading...
 
             <p><strong>Payment:</strong> <span id="mPayment"></span></p>
 
-            <p><strong>Transaction:</strong> <span id="mTransaction"></span></p>
+            <p><strong>Transaction:</strong> <span id="mTransaction"></span>
+                <button type="button" class="copy-btn" data-copy="mTransaction">Copy</button>
+            </p>
 
             <p><strong>Price:</strong> <span id="mPrice"></span></p>
 
@@ -165,15 +179,26 @@ Loading...
 
         <div id="mNote" class="note-box"></div>
 
-        <div class="modal-buttons">
+        <div class="workflow-box">
+            <h3>Update Workflow</h3>
 
-            <button
-                id="deliverBtn"
-                class="action-btn">
+            <select id="orderStatusSelect">
+                <option>Pending</option>
+                <option>Payment Verified</option>
+                <option>Processing</option>
+                <option>Completed</option>
+                <option>Rejected</option>
+                <option>Refund Required</option>
+            </select>
 
-                Mark Delivered
-
+            <button id="updateStatusBtn" type="button" class="action-btn">
+                Update Status
             </button>
+
+            <div id="mTimeline" class="status-timeline"></div>
+        </div>
+
+        <div class="modal-buttons">
 
             <button
                 onclick="closeModal()"

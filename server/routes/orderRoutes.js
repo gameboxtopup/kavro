@@ -815,6 +815,24 @@ router.patch("/:id", requireAdmin, async (req, res) => {
 
     try {
 
+        const allowedStatuses = [
+            "Pending",
+            "Payment Verified",
+            "Processing",
+            "Completed",
+            "Rejected",
+            "Refund Required"
+        ];
+
+        const requestedStatus = String(req.body.status || "").trim();
+
+        if (!allowedStatuses.includes(requestedStatus)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid order status."
+            });
+        }
+
         const authHeader =
             req.headers.authorization;
 
@@ -843,16 +861,35 @@ router.patch("/:id", requireAdmin, async (req, res) => {
         );
 
 
+        const now = new Date();
+        const statusFields = { status: requestedStatus };
+
+        if (requestedStatus === "Payment Verified") {
+            statusFields.paymentVerifiedAt = now;
+        }
+
+        if (requestedStatus === "Processing") {
+            statusFields.processingStartedAt = now;
+        }
+
+        if (requestedStatus === "Completed") {
+            statusFields.completedAt = now;
+        }
+
         const order =
             await Order.findByIdAndUpdate(
 
                 req.params.id,
 
                 {
-
-                    status:
-                        req.body.status
-
+                    $set: statusFields,
+                    $push: {
+                        statusHistory: {
+                            status: requestedStatus,
+                            changedAt: now,
+                            changedBy: String(req.admin.id || "admin")
+                        }
+                    }
                 },
 
                 {
@@ -884,7 +921,7 @@ router.patch("/:id", requireAdmin, async (req, res) => {
         // =================================================
 
         if (
-            req.body.status === "Delivered" &&
+            requestedStatus === "Completed" &&
             order.email
         ) {
 
@@ -904,7 +941,7 @@ router.patch("/:id", requireAdmin, async (req, res) => {
                 ],
 
                 subject:
-                    "Your Kavro Order Has Been Delivered!",
+                    "Your Kavro Order Has Been Completed!",
 
                 html: `
 
@@ -922,7 +959,7 @@ router.patch("/:id", requireAdmin, async (req, res) => {
                                 color:#2563eb;
                             "
                         >
-                            Your Order Has Been Delivered
+                            Your Order Has Been Completed
                         </h2>
 
 
@@ -932,7 +969,7 @@ router.patch("/:id", requireAdmin, async (req, res) => {
 
 
                         <p>
-                            Your Kavro order has been successfully delivered.
+                            Your Kavro order has been successfully completed.
                         </p>
 
 
