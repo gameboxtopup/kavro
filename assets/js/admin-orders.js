@@ -218,6 +218,9 @@ function viewOrder(id){
 
     document.getElementById("mQuantity").textContent = getDisplayedQuantity(order);
 
+    document.getElementById("mEmail").textContent =
+        order.email || "No delivery email provided";
+
     document.getElementById("mUid").textContent = order.uid;
 
     document.getElementById("mPlayer").textContent =
