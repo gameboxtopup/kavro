@@ -47,12 +47,6 @@ async function loadProducts() {
 
             <p>${product.description || ""}</p>
 
-            <div class="price">
-
-                Starting from Rs. ${product.price}
-
-            </div>
-
             <a href="${link}" class="btn-primary">
 
                 View Products
