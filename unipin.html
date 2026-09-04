@@ -6,17 +6,17 @@
     <meta name="robots" content="index,follow">
     <meta name="author" content="Kavro">
     <meta name="theme-color" content="#2563eb">
-    <meta name="description" content="Buy a UniPin 2000 UPBD Bangladesh-region voucher in Nepal with secure NPR payment through Kavro.">
+    <meta name="description" content="Buy available UniPin Bangladesh-region vouchers in Nepal with secure NPR payment through Kavro.">
     <meta property="og:type" content="product">
     <meta property="og:site_name" content="Kavro">
-    <meta property="og:title" content="UniPin 2000 UPBD Voucher | Kavro">
-    <meta property="og:description" content="UniPin 2000 UPBD digital voucher for supported Bangladesh-region services.">
+    <meta property="og:title" content="UniPin BD Vouchers | Kavro">
+    <meta property="og:description" content="Available UniPin digital vouchers for supported Bangladesh-region services.">
     <meta property="og:image" content="assets/images/giftcards.webp">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="assets/images/favicon.png">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <title>UniPin 2000 UPBD Voucher | Kavro</title>
+    <title>UniPin BD Vouchers | Kavro</title>
 </head>
 <body>
     <header class="header">
@@ -43,7 +43,7 @@
             <div class="ff-hero-content">
                 <div class="ff-left">
                     <span class="ff-badge">🎟️ Bangladesh Region</span>
-                    <h1>UniPin 2000 UPBD Voucher</h1>
+                    <h1>UniPin BD Vouchers</h1>
                     <p>Receive a digital UniPin voucher code through your registered Kavro email after payment and stock verification.</p>
                     <div class="ff-features">
                         <div>📧 Email Delivery</div>
@@ -52,7 +52,7 @@
                     </div>
                 </div>
                 <div class="ff-right">
-                    <img src="assets/images/giftcards.webp" alt="UniPin 2000 UPBD digital voucher">
+                    <img src="assets/images/giftcards.webp" alt="UniPin BD digital voucher">
                 </div>
             </div>
         </div>
@@ -62,26 +62,18 @@
         <div class="container">
             <div class="order-box">
                 <h2>Purchase Voucher</h2>
-                <p>This voucher is supplied manually and is subject to stock confirmation.</p>
-                <div class="package-grid">
-                    <div class="package-card active">
-                        <div class="package-info">
-                            <h3>2000 UPBD Credits</h3>
-                            <p class="package-description">One Bangladesh-region UniPin digital voucher code</p>
-                            <div class="package-price"><strong>Rs. 2,399</strong></div>
-                        </div>
-                    </div>
-                </div>
+                <p>Choose an available voucher package. Prices and stock are managed from the Kavro admin panel.</p>
+                <div class="package-grid" id="unipinPackages"></div>
                 <div class="selected-box">
                     <div class="summary-label">UNIPIN BD VOUCHER</div>
                     <h3>Your Selection</h3>
-                    <div class="summary-package"><span>2000 UPBD Credits</span></div>
+                    <div class="summary-package"><span id="packageName">Select a package</span></div>
                     <div class="summary-bottom">
                         <span class="summary-price-label">Price</span>
-                        <strong>Rs. 2,399</strong>
+                        <strong id="packagePrice">Rs. --</strong>
                     </div>
                 </div>
-                <a href="order.html?product=UniPin%20BD%20Voucher&amp;package=2000%20UPBD%20Credits&amp;price=Rs.%202399" class="btn-primary ff-buy">Continue to Order</a>
+                <a href="#" id="buyButton" class="btn-primary ff-buy">Continue to Order</a>
             </div>
         </div>
     </section>
@@ -95,7 +87,7 @@
             <div class="why-grid">
                 <div class="why-card">
                     <h3>🌏 Check the Region</h3>
-                    <p>This is a 2000 UPBD Bangladesh-region voucher. Confirm compatibility before ordering.</p>
+                    <p>These vouchers are for the Bangladesh region. Confirm the selected package is compatible before ordering.</p>
                 </div>
                 <div class="why-card">
                     <h3>📦 Stock Confirmation</h3>
@@ -141,5 +133,10 @@
         </div>
     </footer>
     <script src="script.js"></script>
+    <script>
+        const PRODUCT_SLUG = "unipin";
+        const PRODUCT_NAME = "UniPin BD Voucher";
+    </script>
+    <script src="assets/js/product.js"></script>
 </body>
 </html>

@@ -13,6 +13,7 @@ addBtn.onclick = () => {
     editingItemId = null;
     form.reset();
     document.getElementById("active").checked = true;
+    document.getElementById("stock").value = 0;
     loadProductDropdown();
     modal.style.display = "flex";
 };
@@ -69,6 +70,8 @@ async function loadProducts() {
             <td>${item.title}</td>
 
             <td>Rs. ${item.price}</td>
+
+            <td>${item.stock ?? 0}</td>
 
             <td>${item.active ? "🟢 Active" : "🔴 Hidden"}</td>
 
@@ -187,11 +190,11 @@ async function editItem(id) {
     item.description || "";
 
     document.getElementById("stock").value =
-    item.stock || 999;
+    item.stock ?? 0;
     document.getElementById("discountPrice").value = item.discountPrice || "";
     document.getElementById("image").value = item.image || "";
     document.getElementById("description").value = item.description || "";
-    document.getElementById("stock").value = item.stock || 999;
+    document.getElementById("stock").value = item.stock ?? 0;
     document.getElementById("active").checked = item.active;
     document.getElementById("modalTitle").textContent = "Edit Product Item";
     document.getElementById("saveBtn").textContent = "Update Item";

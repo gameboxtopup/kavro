@@ -455,9 +455,12 @@ function selectPackage(
     // ==========================================
 
     if (buyButton) {
-        if (PRODUCT_SLUG === "ff") {
+        if (PRODUCT_SLUG === "ff" || PRODUCT_SLUG === "unipin") {
+            const checkoutProduct = PRODUCT_SLUG === "unipin"
+                ? "UniPin BD Voucher"
+                : "Free Fire";
             const params = new URLSearchParams({
-                product: "Free Fire",
+                product: checkoutProduct,
                 package: item.title,
                 price: `Rs. ${finalPrice}`,
                 item: item._id

@@ -122,7 +122,9 @@ exports.getItemsByProduct = async (req, res) => {
 
             product: req.params.productId,
 
-            active: true
+            active: true,
+
+            stock: { $gt: 0 }
 
         }).sort({
 
