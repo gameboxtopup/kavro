@@ -37,4 +37,9 @@
 <priority>0.7</priority>
 </url>
 
+<url>
+<loc>https://YOUR-DOMAIN/unipin.html</loc>
+<priority>0.8</priority>
+</url>
+
 </urlset>

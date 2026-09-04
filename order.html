@@ -208,7 +208,7 @@ type="hidden"
 name="redirect"
 value="success.html">
 
-<div class="form-group">
+<div class="form-group" id="gameAccountGroup">
 
 <label id="uidLabel">
 
@@ -917,6 +917,13 @@ else if(product === "PUBG Mobile"){
 else if(product === "Roblox"){
     uidLabel.textContent = "Roblox Username";
     uidInput.placeholder = "Enter your Roblox Username";
+    uidInput.removeAttribute("pattern");
+}
+
+else if(product === "UniPin BD Voucher"){
+    document.getElementById("gameAccountGroup").style.display = "none";
+    uidInput.value = "Digital voucher delivery";
+    uidInput.removeAttribute("required");
     uidInput.removeAttribute("pattern");
 }
 

@@ -8,6 +8,20 @@ async function loadProducts() {
 
     grid.innerHTML = "";
 
+    const hasUnipin = products.some(product => product.slug === "unipin");
+
+    if (!hasUnipin) {
+        grid.innerHTML += `
+        <div class="product-card" data-product="unipin">
+            <img src="assets/images/giftcards.webp" alt="UniPin 2000 UPBD Voucher">
+            <h3>UniPin 2000 UPBD</h3>
+            <p>Bangladesh-region digital voucher delivered to your Kavro account email.</p>
+            <div class="price">Rs. 2,399</div>
+            <a href="unipin.html" class="btn-primary">View Product</a>
+        </div>
+        `;
+    }
+
     products.forEach(product => {
 
         if (!product.active) return;
@@ -30,6 +44,10 @@ async function loadProducts() {
         } else if (product.slug === "roblox") {
 
             link = "roblox.html";
+
+        } else if (product.slug === "unipin") {
+
+            link = "unipin.html";
 
         }
 
