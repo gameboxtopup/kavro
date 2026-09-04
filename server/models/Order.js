@@ -24,6 +24,17 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
 
+    unitPrice: {
+        type: String,
+        default: ""
+    },
+
+    quantity: {
+        type: Number,
+        default: 1,
+        min: 1
+    },
+
     // =========================
     // GAME ORDERS
     // =========================

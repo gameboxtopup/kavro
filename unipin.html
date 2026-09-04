@@ -14,7 +14,7 @@
     <meta property="og:image" content="assets/images/giftcards.webp">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="assets/images/favicon.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=20260904-quantity">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <title>UniPin BD Vouchers | Kavro</title>
 </head>
@@ -64,12 +64,23 @@
                 <h2>Purchase Voucher</h2>
                 <p>Choose an available voucher package. Prices and stock are managed from the Kavro admin panel.</p>
                 <div class="package-grid" id="unipinPackages"></div>
+                <div class="voucher-quantity" id="voucherQuantity">
+                    <div>
+                        <strong>Quantity</strong>
+                        <small id="quantityStock">Select a voucher package first</small>
+                    </div>
+                    <div class="quantity-stepper">
+                        <button type="button" id="quantityMinus" aria-label="Decrease quantity">−</button>
+                        <input type="number" id="voucherQuantityInput" value="1" min="1" step="1" inputmode="numeric" aria-label="Voucher quantity">
+                        <button type="button" id="quantityPlus" aria-label="Increase quantity">+</button>
+                    </div>
+                </div>
                 <div class="selected-box">
                     <div class="summary-label">UNIPIN BD VOUCHER</div>
                     <h3>Your Selection</h3>
                     <div class="summary-package"><span id="packageName">Select a package</span></div>
                     <div class="summary-bottom">
-                        <span class="summary-price-label">Price</span>
+                        <span class="summary-price-label" id="priceCalculation">Total</span>
                         <strong id="packagePrice">Rs. --</strong>
                     </div>
                 </div>
@@ -137,6 +148,6 @@
         const PRODUCT_SLUG = "unipin";
         const PRODUCT_NAME = "UniPin BD Voucher";
     </script>
-    <script src="assets/js/product.js?v=20260904-unipin2"></script>
+    <script src="assets/js/product.js?v=20260904-quantity"></script>
 </body>
 </html>

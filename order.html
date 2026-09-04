@@ -239,6 +239,14 @@ Verify UID
 
 </div>
 
+<div class="summary-row" id="orderQuantityRow" style="display:none;">
+
+<span>🛒 Quantity</span>
+
+<strong id="orderQuantity">1</strong>
+
+</div>
+
 <input
 type="hidden"
 id="uidVerificationToken"
@@ -822,6 +830,9 @@ const params = new URLSearchParams(window.location.search);
 let product = params.get("product");
 const pack = params.get("package");
 const price = params.get("price");
+const quantity = Math.max(1, Number.parseInt(params.get("quantity") || "1", 10) || 1);
+const unitPrice = params.get("unitPrice") || "";
+const productItemId = params.get("item") || "";
 
 // Repair checkout links created by the older UniPin page.
 if (product === "Free Fire" && /UPBD|UNIPIN/i.test(pack || "")) {
@@ -838,6 +849,11 @@ if(pack){
 
 if(price){
     document.getElementById("orderPrice").textContent = price;
+}
+
+if(product === "UniPin BD Voucher"){
+    document.getElementById("orderQuantityRow").style.display = "flex";
+    document.getElementById("orderQuantity").textContent = quantity;
 }
 
 const uidLabel = document.getElementById("uidLabel");
@@ -1157,6 +1173,12 @@ try {
             package: document.getElementById("orderPackage").textContent,
 
             price: document.getElementById("orderPrice").textContent,
+
+            unitPrice: unitPrice,
+
+            quantity: quantity,
+
+            item: productItemId,
 
             uid: uid,
 

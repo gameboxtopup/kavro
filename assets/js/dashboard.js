@@ -218,6 +218,11 @@ async function loadOrders() {
                         </p>
 
                         <p>
+                            Quantity:
+                            ${escapeHtml(order.quantity || 1)}
+                        </p>
+
+                        <p>
                             Price:
                             ${escapeHtml(
                                 order.price

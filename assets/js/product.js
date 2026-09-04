@@ -385,6 +385,27 @@ function selectPackage(
 
             : item.price;
 
+    let quantity = 1;
+    const quantityInput =
+        document.getElementById("voucherQuantityInput");
+
+    if (PRODUCT_SLUG === "unipin" && quantityInput) {
+        const availableStock = Math.max(1, Number(item.stock) || 1);
+        quantityInput.max = String(availableStock);
+        quantity = Math.min(
+            availableStock,
+            Math.max(1, Number.parseInt(quantityInput.value || "1", 10) || 1)
+        );
+        quantityInput.value = String(quantity);
+
+        const stockText = document.getElementById("quantityStock");
+        if (stockText) {
+            stockText.textContent = `${availableStock} available`;
+        }
+    }
+
+    const totalPrice = finalPrice * quantity;
+
 
     // ==========================================
     // REMOVE ACTIVE FROM ALL CARDS
@@ -437,7 +458,15 @@ function selectPackage(
     if (priceElement) {
 
         priceElement.textContent =
-            `Rs. ${finalPrice}`;
+            `Rs. ${totalPrice}`;
+
+        const calculation =
+            document.getElementById("priceCalculation");
+
+        if (calculation && PRODUCT_SLUG === "unipin") {
+            calculation.textContent =
+                `${quantity} × Rs. ${finalPrice} = Total`;
+        }
 
     }
 
@@ -462,7 +491,9 @@ function selectPackage(
             const params = new URLSearchParams({
                 product: checkoutProduct,
                 package: item.title,
-                price: `Rs. ${finalPrice}`,
+                price: `Rs. ${totalPrice}`,
+                unitPrice: `Rs. ${finalPrice}`,
+                quantity: String(quantity),
                 item: item._id
             });
 
@@ -476,6 +507,55 @@ function selectPackage(
 
     }
 
+}
+
+// ==========================================
+// UNIPIN QUANTITY
+// ==========================================
+
+const voucherQuantityInput =
+    document.getElementById("voucherQuantityInput");
+const quantityMinus =
+    document.getElementById("quantityMinus");
+const quantityPlus =
+    document.getElementById("quantityPlus");
+
+function refreshVoucherQuantity(nextValue) {
+    if (!voucherQuantityInput || !window.selectedProductItem) {
+        return;
+    }
+
+    const maximum = Math.max(
+        1,
+        Number.parseInt(voucherQuantityInput.max || "1", 10) || 1
+    );
+
+    voucherQuantityInput.value = String(
+        Math.min(maximum, Math.max(1, Number.parseInt(nextValue, 10) || 1))
+    );
+
+    selectPackage(
+        window.selectedProductItem,
+        document.querySelector(".package-card.active")
+    );
+}
+
+if (voucherQuantityInput) {
+    voucherQuantityInput.addEventListener("input", () => {
+        refreshVoucherQuantity(voucherQuantityInput.value);
+    });
+}
+
+if (quantityMinus) {
+    quantityMinus.addEventListener("click", () => {
+        refreshVoucherQuantity(Number(voucherQuantityInput.value) - 1);
+    });
+}
+
+if (quantityPlus) {
+    quantityPlus.addEventListener("click", () => {
+        refreshVoucherQuantity(Number(voucherQuantityInput.value) + 1);
+    });
 }
 
 

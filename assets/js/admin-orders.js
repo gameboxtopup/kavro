@@ -103,7 +103,7 @@ function displayOrders(orders){
 
         table.innerHTML = `
         <tr>
-            <td colspan="6">
+            <td colspan="7">
                 No Orders Found
             </td>
         </tr>`;
@@ -125,6 +125,8 @@ function displayOrders(orders){
 <td>${escapeHtml(order.uid)}</td>
 
 <td>${escapeHtml(order.paymentMethod)}</td>
+
+<td>${escapeHtml(order.quantity || 1)}</td>
 
 <td>${escapeHtml(order.price)}</td>
 
@@ -172,6 +174,8 @@ function viewOrder(id){
     document.getElementById("mProduct").textContent = order.product;
 
     document.getElementById("mPackage").textContent = order.package;
+
+    document.getElementById("mQuantity").textContent = order.quantity || 1;
 
     document.getElementById("mUid").textContent = order.uid;
 

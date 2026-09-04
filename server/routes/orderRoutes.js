@@ -6,6 +6,7 @@ const router = express.Router();
 
 const Order = require("../models/Order");
 const User = require("../models/User");
+const ProductItem = require("../models/ProductItem");
 const { requireAdmin } = require("../middleware/auth");
 
 
@@ -74,6 +75,52 @@ router.post("/", async (req, res) => {
 
         const transactionId =
             (req.body.transactionId || "").trim();
+
+        let orderProduct = String(req.body.product || "").trim();
+        let orderPackage = String(req.body.package || "").trim();
+        let orderPrice = String(req.body.price || "").trim();
+        let unitPrice = String(req.body.unitPrice || "").trim();
+        let quantity = Math.max(
+            1,
+            Number.parseInt(req.body.quantity || "1", 10) || 1
+        );
+
+        if (orderProduct === "UniPin BD Voucher") {
+            if (!req.body.item) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Please select the UniPin package again."
+                });
+            }
+
+            const productItem = await ProductItem.findById(req.body.item);
+
+            if (!productItem || !productItem.active) {
+                return res.status(400).json({
+                    success: false,
+                    message: "This UniPin package is not available."
+                });
+            }
+
+            if (quantity > productItem.stock) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Only ${productItem.stock} voucher(s) are currently available.`
+                });
+            }
+
+            const finalUnitPrice =
+                productItem.discountPrice > 0 &&
+                productItem.discountPrice < productItem.price
+                    ? productItem.discountPrice
+                    : productItem.price;
+
+            orderPackage = productItem.title;
+            unitPrice = `Rs. ${finalUnitPrice}`;
+            orderPrice = `Rs. ${finalUnitPrice * quantity}`;
+        } else {
+            quantity = 1;
+        }
 
         const uid =
             (req.body.uid || "").trim();
@@ -152,13 +199,17 @@ router.post("/", async (req, res) => {
                 userId: linkedUser?._id || null,
 
                 product:
-                    req.body.product,
+                    orderProduct,
 
                 package:
-                    req.body.package,
+                    orderPackage,
 
                 price:
-                    req.body.price,
+                    orderPrice,
+
+                unitPrice,
+
+                quantity,
 
                 uid,
 
