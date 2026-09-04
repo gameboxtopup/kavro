@@ -86,14 +86,31 @@ router.post("/", async (req, res) => {
         );
 
         if (orderProduct === "UniPin BD Voucher") {
-            if (!req.body.item) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Please select the UniPin package again."
-                });
+            let productItem = null;
+
+            if (req.body.item) {
+                productItem = await ProductItem
+                    .findById(req.body.item)
+                    .populate("product", "name slug");
             }
 
-            const productItem = await ProductItem.findById(req.body.item);
+            // Support checkout links created before item IDs were added.
+            if (!productItem) {
+                const matchingItems = await ProductItem
+                    .find({
+                        title: orderPackage,
+                        active: true
+                    })
+                    .populate("product", "name slug");
+
+                productItem = matchingItems.find(item =>
+                    item.product &&
+                    (
+                        item.product.slug === "unipin" ||
+                        item.product.name === orderProduct
+                    )
+                ) || null;
+            }
 
             if (!productItem || !productItem.active) {
                 return res.status(400).json({
@@ -114,6 +131,28 @@ router.post("/", async (req, res) => {
                 productItem.discountPrice < productItem.price
                     ? productItem.discountPrice
                     : productItem.price;
+
+            if (!req.body.quantity) {
+                const submittedTotal = Number(
+                    String(req.body.price || "")
+                        .replace(/[^0-9.]/g, "")
+                );
+                const inferredQuantity = submittedTotal / finalUnitPrice;
+
+                if (
+                    Number.isInteger(inferredQuantity) &&
+                    inferredQuantity >= 1
+                ) {
+                    quantity = inferredQuantity;
+                }
+            }
+
+            if (quantity > productItem.stock) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Only ${productItem.stock} voucher(s) are currently available.`
+                });
+            }
 
             orderPackage = productItem.title;
             unitPrice = `Rs. ${finalUnitPrice}`;
