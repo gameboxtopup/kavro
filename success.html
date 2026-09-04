@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta name="robots" content="index,follow">
+
+<meta name="author" content="Kavro">
+
+<meta name="theme-color" content="#2563eb">
+
+<link rel="manifest" href="manifest.json">
+
+<meta property="og:type" content="website">
+
+<meta property="og:site_name" content="Kavro">
+
+<meta property="og:image" content="assets/images/logo.png">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Order Received | Kavro</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<section class="success-page">
+
+<div class="container">
+
+<div class="success-card">
+
+<div class="success-icon">
+✅
+</div>
+
+<h1>Order Received</h1>
+
+<p>
+
+Thank you for your order.
+
+Our team will verify your payment and process your top-up shortly.
+
+</p>
+
+<div class="success-details">
+
+<div>
+
+<strong>Product</strong>
+
+<p id="successProduct">-</p>
+
+</div>
+
+<div>
+
+<strong>Package</strong>
+
+<p id="successPackage">-</p>
+
+</div>
+
+<div>
+
+<strong>Total Price</strong>
+
+<p id="successPrice">-</p>
+
+</div>
+
+<div>
+
+<strong>Estimated Delivery</strong>
+
+<p>5–30 Minutes</p>
+
+</div>
+
+</div>
+
+<div class="hero-buttons">
+
+<a href="index.html" class="btn-primary">
+
+Go Home
+
+</a>
+
+<a href="products.html" class="btn-secondary">
+
+Continue Shopping
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+document.getElementById("successProduct").textContent =
+params.get("product") || "-";
+
+document.getElementById("successPackage").textContent =
+params.get("package") || "-";
+
+document.getElementById("successPrice").textContent =
+params.get("price") || "-";
+
+</script>
+
+</body>
+
+</html>

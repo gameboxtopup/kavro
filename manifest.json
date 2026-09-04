@@ -1,0 +1,16 @@
+{
+"name":"Kavro",
+"short_name":"Kavro",
+"description":"Nepal's Trusted Gaming Topup Platform",
+"start_url":"/",
+"display":"standalone",
+"background_color":"#ffffff",
+"theme_color":"#2563eb",
+"icons":[
+{
+"src":"assets/images/logo.png",
+"sizes":"512x512",
+"type":"image/png"
+}
+]
+}

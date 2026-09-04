@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta name="robots" content="index,follow">
+
+<meta name="author" content="Kavro">
+
+<meta name="theme-color" content="#2563eb">
+
+<link rel="manifest" href="manifest.json">
+
+<meta property="og:type" content="website">
+
+<meta property="og:site_name" content="Kavro">
+
+<meta property="og:image" content="assets/images/logo.png">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Complete Order | Kavro</title>
+
+<meta name="description" content="Complete your gaming topup order securely with eSewa or Bank Transfer on Kavro Nepal.">
+
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="order.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="canonical" href="https://YOURDOMAIN/order.html">
+
+<script type="application/ld+json">
+{
+"@context":"https://schema.org",
+"@type":"WebPage",
+"name":"Complete Order",
+"url":"https://YOURDOMAIN/order.html"
+}
+</script>
+
+</head>
+
+<body>
+
+<!--================ HEADER ================-->
+
+<header class="header">
+
+<div class="container">
+
+<nav class="navbar">
+
+<a href="index.html" class="logo">
+
+<img src="assets/images/logo.png" alt="Kavro">
+
+<span>Kavro</span>
+
+</a>
+
+<ul class="nav-links">
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="products.html" class="active">Products</a></li>
+
+<li><a href="about.html">About</a></li>
+
+<li><a href="contact.html">Contact</a></li>
+
+</ul>
+
+<a href="contact.html" class="btn-primary">
+
+Need Help?
+
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+<!--================ ORDER HERO ================-->
+
+<section class="order-hero">
+
+<div class="container">
+
+<div class="order-hero-content">
+
+<span class="order-badge">
+
+🛒 Secure Checkout
+
+</span>
+
+<h1>
+
+Complete Your Order
+
+</h1>
+
+<p>
+
+Review your selected package, enter your account details, and complete your payment securely. Most orders are delivered within <strong>5–30 minutes</strong> after payment verification.
+
+</p>
+
+<div class="order-features">
+
+<div>⚡ Fast Delivery</div>
+
+<div>🔒 Secure Payment</div>
+
+<div>💬 24/7 Support</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+<!--================ ORDER SECTION ================-->
+
+<!--================ ORDER SECTION ================-->
+
+<section class="order-section">
+
+<div class="container">
+
+<div class="checkout-grid">
+
+<!-- LEFT -->
+
+<div class="checkout-left">
+
+<div class="order-card">
+
+<div class="card-title">
+
+<h2>Order Details</h2>
+
+<p>Verify your selected package before payment.</p>
+
+</div>
+
+<div class="summary-card">
+
+<div class="summary-row">
+
+<span>🎮 Product</span>
+
+<strong id="orderProduct">Free Fire</strong>
+
+</div>
+
+<div class="summary-row">
+
+<span>💎 Package</span>
+
+<strong id="orderPackage">25 Diamonds</strong>
+
+</div>
+
+<div class="summary-row total">
+
+<span>Total</span>
+
+<strong id="orderPrice">NPR 85</strong>
+
+</div>
+
+</div>
+
+<form
+class="order-form"
+id="orderForm"
+action="https://api.web3forms.com/submit"
+method="POST"
+enctype="multipart/form-data">
+
+<input
+type="hidden"
+name="access_key"
+value="5b6c69ec-9b55-4433-a84a-de9c89523835">
+
+<input
+type="hidden"
+name="subject"
+value="New Kavro Order">
+
+<input
+type="hidden"
+name="from_name"
+value="Kavro Website">
+
+<input
+type="hidden"
+name="redirect"
+value="success.html">
+
+<div class="form-group">
+
+<label id="uidLabel">
+
+Player UID / Username
+
+</label>
+
+<div class="uid-verification-row">
+
+<input
+type="text"
+id="uid"
+name="UID"
+placeholder="Enter your UID"
+inputmode="numeric"
+autocomplete="off"
+required>
+
+<button
+type="button"
+id="verifyUidBtn"
+class="verify-uid-btn"
+style="display:none;">
+
+Verify UID
+
+</button>
+
+</div>
+
+<input
+type="hidden"
+id="uidVerificationToken"
+name="uidVerificationToken">
+
+<div
+id="uidVerificationResult"
+class="uid-verification-result"
+role="status"
+aria-live="polite"
+style="display:none;"></div>
+
+</div>
+
+<div class="form-group">
+
+<label>Email Address</label>
+
+<input
+type="email"
+id="email"
+name="Email"
+placeholder="Enter your email address"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>Select Payment Method</label>
+
+<div class="payment-options">
+
+<label class="pay-option">
+
+    <input type="radio"
+           name="Payment Method"
+           value="eSewa"
+           required>
+
+    <img src="assets/images/esewa.png" alt="eSewa">
+
+    <div class="pay-info">
+        <strong>eSewa</strong>
+        <small>Fast & Secure</small>
+    </div>
+
+</label>
+
+<label class="pay-option">
+
+    <input type="radio"
+           name="Payment Method"
+           value="Bank Transfer">
+
+    <img src="assets/images/bank.png" alt="Bank">
+
+    <div class="pay-info">
+        <strong>Bank Transfer</strong>
+        <small>Direct Deposit</small>
+    </div>
+
+</label>
+
+</div>
+
+</div>
+
+<div class="form-group">
+
+<label>Transaction ID</label>
+
+<input
+type="text"
+id="transaction"
+name="transaction"
+placeholder="Example: 6AB4X92"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>Payment Screenshot</label>
+
+<div class="upload-box">
+
+<input
+type="file"
+id="paymentScreenshot"
+name="Screenshot"
+accept="image/*"
+required>
+
+<p>
+
+📷 Click to upload payment screenshot
+
+</p>
+
+<small id="fileName">
+
+No file selected
+
+</small>
+
+<img
+id="previewImage"
+src=""
+alt="Preview"
+style="
+display:none;
+width:100%;
+margin-top:15px;
+border-radius:12px;
+border:1px solid #ddd;
+max-height:300px;
+object-fit:contain;
+">
+
+</div>
+
+</div>
+
+<div class="form-group">
+
+<label>Additional Note</label>
+
+<textarea
+rows="4"
+id="note"
+name="Note"
+placeholder="Optional message"></textarea>
+
+</div>
+
+<button
+type="submit"
+class="btn-primary place-order-btn"
+id="submitBtn">
+
+<span id="btnText">
+
+Complete Order
+
+</span>
+
+<span
+id="btnLoader"
+style="display:none;">
+
+⏳ Processing...
+
+</span>
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="checkout-right">
+
+<div class="payment-card" id="paymentCard" style="display:none;">
+
+<h3>💳 Payment Details</h3> 
+<h4>click on qr to download</h4>
+
+<div class="qr-box">
+
+    <img
+        id="paymentQR"
+        src="assets/images/qrcode.jpeg"
+        class="payment-qr"
+        alt="Payment QR">
+
+</div>
+
+<div class="payment-info">
+<p><strong>Payment Method</strong></p>
+<p id="paymentMethodName">eSewa</p>
+</div>
+
+<div class="payment-info">
+<p><strong>Payment Number</strong></p>
+<p id="paymentNumber">9747687660</p>
+</div>
+
+<div class="payment-info">
+<p><strong>Account Name</strong></p>
+<p id="paymentAccount">Nirmala Kathayat</p>
+</div>
+
+<div
+class="payment-info"
+id="bankNameBox"
+style="display:none;">
+
+<p><strong>Bank Name</strong></p>
+
+<p id="bankName">
+Agricultural Development Bank (ADBL)
+</p>
+
+</div>
+
+<button
+type="button"
+id="downloadQR2"
+class="btn-primary"
+style="width:100%;margin-top:15px;">
+
+Download QR
+
+</button>
+
+<hr>
+
+<div class="payment-note">
+<p>
+⚠️ Complete the payment first, then upload the screenshot.
+</p>
+</div>
+
+</div>
+
+<div class="trust-card">
+
+<h3>
+
+Why Choose Kavro?
+
+</h3>
+
+<ul>
+
+<li>⚡ Delivery within 5–30 Minutes</li>
+
+<li>🔒 Secure Payment</li>
+
+<li>✅ Verified Seller</li>
+
+<li>💬 24/7 Support</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!--================ MOBILE STICKY BAR ================-->
+
+<div class="mobile-buy-bar">
+
+<div class="mobile-price">
+
+<span>Selected</span>
+
+<strong id="mobilePackage">
+
+25 Diamonds • NPR 85
+
+</strong>
+
+</div>
+
+<a href="#" id="mobileBuyButton" class="btn-primary">
+
+Buy Now
+
+</a>
+
+</div>
+
+<!--================ PAYMENT GUIDE ================-->
+
+<section class="payment-guide">
+
+<div class="container">
+
+<div class="section-heading">
+
+<span>Payment Guide</span>
+
+<h2>How to Complete Your Payment</h2>
+
+<p>
+Follow these simple steps to receive your top-up quickly.
+</p>
+
+</div>
+
+<div class="guide-grid">
+
+<div class="guide-card">
+
+<div class="guide-icon">1️⃣</div>
+
+<h3>Select Package</h3>
+
+<p>
+Choose your preferred package from the previous page.
+</p>
+
+</div>
+
+<div class="guide-card">
+
+<div class="guide-icon">2️⃣</div>
+
+<h3>Make Payment</h3>
+
+<p>
+Pay using eSewa or Bank Transfer.
+</p>
+
+</div>
+
+<div class="guide-card">
+
+<div class="guide-icon">3️⃣</div>
+
+<h3>Fill Details</h3>
+
+<p>
+Enter your UID and Transaction ID carefully.
+</p>
+
+</div>
+
+<div class="guide-card">
+
+<div class="guide-icon">4️⃣</div>
+
+<h3>Instant Delivery</h3>
+
+<p>
+Most orders are delivered within 5–30 minutes after verification.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+<!--================ PAYMENT METHODS ================-->
+
+<section class="payment-section">
+
+<div class="container">
+
+<div class="section-heading">
+
+<span>Payment Methods</span>
+
+<h2>Available Payment Options</h2>
+
+<p>
+Choose any payment method below.
+</p>
+
+</div>
+
+<div class="payment-grid">
+
+<div class="payment-card">
+
+<img src="assets/images/esewa.png" alt="eSewa">
+
+<h3>eSewa</h3>
+
+<p>Fast & Secure</p>
+
+</div>
+
+<div class="payment-card">
+
+<img src="assets/images/bank.png" alt="Bank">
+
+<h3>Bank Transfer</h3>
+
+<p>Direct Deposit</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+<!--================ ORDER NOTICE ================-->
+
+<section class="order-notice">
+
+<div class="container">
+
+<div class="notice-box">
+
+<h2>Important Information</h2>
+
+<ul>
+
+<li>✅ This page is only for Garena Free Fire Bangladesh Server.</li>
+
+<li>✅ Double-check your UID before placing an order.</li>
+
+<li>✅ Wrong UID may result in delivery failure.</li>
+
+<li>✅ Orders are processed after payment verification.</li>
+
+<li>✅ Contact support if your order is delayed.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+<!--================ FAQ ================-->
+
+<section class="faq">
+
+<div class="container">
+
+<div class="section-heading">
+
+<span>FAQ</span>
+
+<h2>Frequently Asked Questions</h2>
+
+<p>
+Everything you need to know before placing your order.
+</p>
+
+</div>
+
+<div class="faq-list">
+
+<div class="faq-item">
+
+<h3>How long does delivery take?</h3>
+
+<p>
+Most Free Fire top-ups are delivered within 5–30 minutes after payment verification.
+</p>
+
+</div>
+
+<div class="faq-item">
+
+<h3>Which server is supported?</h3>
+
+<p>
+This page is only for Garena Free Fire Bangladesh Server.
+</p>
+
+</div>
+
+<div class="faq-item">
+
+<h3>Which payment methods do you accept?</h3>
+
+<p>
+We accept only eSewa and Bank Transfer for now.
+</p>
+
+</div>
+
+<div class="faq-item">
+
+<h3>What if I enter the wrong UID?</h3>
+
+<p>
+Please double-check your UID before placing the order. Wrong information may delay or fail delivery.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+<!--================ FOOTER ================-->
+
+<footer class="footer">
+
+<div class="container">
+
+<div class="footer-grid">
+
+<div>
+
+<h3>Kavro</h3>
+
+<p>
+Nepal's trusted digital marketplace for game top-ups and gift cards.
+</p>
+
+</div>
+
+<div>
+
+<h4>Quick Links</h4>
+
+<ul>
+
+<li><a href="index.html">Home</a></li>
+
+<li><a href="products.html">Products</a></li>
+
+<li><a href="about.html">About</a></li>
+
+<li><a href="contact.html">Contact</a></li>
+
+</ul>
+
+</div>
+
+<div>
+
+<h4>Support</h4>
+
+<p>Email: nirmalktht@gmail.com</p>
+
+<p>Available: 24/7</p>
+
+</div>
+
+</div>
+
+<div class="footer-bottom">
+
+<p>
+
+© 2025 Kavro. All Rights Reserved.
+
+</p>
+
+</div>
+
+</div>
+
+</footer>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const product = params.get("product");
+const pack = params.get("package");
+const price = params.get("price");
+
+if(product){
+    document.getElementById("orderProduct").textContent = product;
+}
+
+if(pack){
+    document.getElementById("orderPackage").textContent = pack;
+}
+
+if(price){
+    document.getElementById("orderPrice").textContent = price;
+}
+
+const uidLabel = document.getElementById("uidLabel");
+const uidInput = document.getElementById("uid");
+const verifyUidBtn = document.getElementById("verifyUidBtn");
+const uidVerificationResult = document.getElementById("uidVerificationResult");
+const uidVerificationToken = document.getElementById("uidVerificationToken");
+let freeFireVerificationRequired = false;
+let freeFireVerificationReady = product !== "Free Fire";
+
+function resetUidVerification() {
+    uidVerificationToken.value = "";
+
+    if (
+        product === "Free Fire" &&
+        freeFireVerificationReady &&
+        !freeFireVerificationRequired
+    ) {
+        uidVerificationResult.style.display = "block";
+        uidVerificationResult.className = "uid-verification-result checking";
+        uidVerificationResult.textContent =
+            "Player-name check is temporarily offline. Your UID will be checked manually.";
+        return;
+    }
+
+    uidVerificationResult.style.display = "none";
+    uidVerificationResult.className = "uid-verification-result";
+    uidVerificationResult.textContent = "";
+
+    if (product === "Free Fire") {
+        verifyUidBtn.textContent = "Verify UID";
+    }
+}
+
+if(product === "Free Fire"){
+    uidLabel.textContent = "Free Fire UID";
+    uidInput.placeholder = "Enter your Free Fire UID";
+    uidInput.inputMode = "numeric";
+    uidInput.pattern = "[0-9]{6,12}";
+    verifyUidBtn.style.display = "inline-flex";
+    verifyUidBtn.disabled = true;
+    verifyUidBtn.textContent = "Loading...";
+
+    fetch("https://kavro-api.onrender.com/api/game-accounts/free-fire/config")
+        .then(response => response.json())
+        .then(config => {
+            freeFireVerificationRequired = Boolean(config.enabled);
+            freeFireVerificationReady = true;
+
+            if (freeFireVerificationRequired) {
+                verifyUidBtn.disabled = false;
+                verifyUidBtn.textContent = "Verify UID";
+                return;
+            }
+
+            verifyUidBtn.style.display = "none";
+            uidVerificationResult.style.display = "block";
+            uidVerificationResult.className = "uid-verification-result checking";
+            uidVerificationResult.textContent =
+                "Player-name check is temporarily offline. Your UID will be checked manually.";
+        })
+        .catch(() => {
+            freeFireVerificationRequired = false;
+            freeFireVerificationReady = true;
+            verifyUidBtn.style.display = "none";
+            uidVerificationResult.style.display = "block";
+            uidVerificationResult.className = "uid-verification-result checking";
+            uidVerificationResult.textContent =
+                "Player-name check is temporarily offline. Your UID will be checked manually.";
+        });
+}
+
+else if(product === "PUBG Mobile"){
+    uidLabel.textContent = "PUBG Player ID";
+    uidInput.placeholder = "Enter your PUBG Player ID";
+    uidInput.removeAttribute("pattern");
+}
+
+else if(product === "Roblox"){
+    uidLabel.textContent = "Roblox Username";
+    uidInput.placeholder = "Enter your Roblox Username";
+    uidInput.removeAttribute("pattern");
+}
+
+else{
+
+    uidLabel.textContent = "Player UID / Username";
+    uidInput.placeholder = "Enter your UID or Username";
+
+}
+
+uidInput.addEventListener("input", resetUidVerification);
+
+verifyUidBtn.addEventListener("click", async function () {
+    const uid = uidInput.value.trim();
+
+    if (!/^\d{6,12}$/.test(uid)) {
+        uidVerificationResult.style.display = "block";
+        uidVerificationResult.className = "uid-verification-result error";
+        uidVerificationResult.textContent =
+            "Enter a valid numeric Free Fire UID.";
+        return;
+    }
+
+    verifyUidBtn.disabled = true;
+    verifyUidBtn.textContent = "Checking...";
+    uidVerificationResult.style.display = "block";
+    uidVerificationResult.className = "uid-verification-result checking";
+    uidVerificationResult.textContent = "Checking Bangladesh server...";
+
+    try {
+        const response = await fetch(
+            "https://kavro-api.onrender.com/api/game-accounts/free-fire/verify",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ uid })
+            }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "UID verification failed.");
+        }
+
+        if (uidInput.value.trim() !== result.uid) {
+            resetUidVerification();
+            return;
+        }
+
+        uidVerificationToken.value = result.verificationToken;
+        uidVerificationResult.className = "uid-verification-result success";
+        uidVerificationResult.textContent =
+            `✓ ${result.playerName} • ${result.playerRegion} Server`;
+        verifyUidBtn.textContent = "Verified ✓";
+    } catch (error) {
+        uidVerificationToken.value = "";
+        uidVerificationResult.className = "uid-verification-result error";
+        uidVerificationResult.textContent = error.message;
+        verifyUidBtn.textContent = "Try Again";
+    } finally {
+        verifyUidBtn.disabled = false;
+    }
+});
+
+</script>
+
+<script>
+const CLOUD_NAME = "f0rpqupr";
+const UPLOAD_PRESET = "kavro_upload";
+</script>
+
+<script>
+const form = document.getElementById("orderForm");
+
+if (form) {
+
+form.addEventListener("submit", async function(e){
+
+e.preventDefault();
+
+const submitBtn = document.getElementById("submitBtn");
+const btnText = document.getElementById("btnText");
+const btnLoader = document.getElementById("btnLoader");
+
+const uid = document.getElementById("uid").value.trim();
+const email = document.getElementById("email").value.trim();
+const payment = document.querySelector(
+'input[name="Payment Method"]:checked'
+)?.value;
+const txn = document.getElementById("transaction").value.trim();
+const screenshot = document.getElementById("paymentScreenshot").files;
+
+// Validation
+if(uid === ""){
+    alert("Please enter your UID or Username.");
+    return;
+}
+
+if(
+    product === "Free Fire" &&
+    !freeFireVerificationReady
+){
+    alert("Please wait while UID verification loads.");
+    return;
+}
+
+if(
+    product === "Free Fire" &&
+    freeFireVerificationRequired &&
+    document.getElementById("uidVerificationToken").value === ""
+){
+    alert("Please click Verify UID and confirm the player name first.");
+    return;
+}
+
+if(email === ""){
+    alert("Please enter your email.");
+    return;
+}
+
+if(!payment){
+    alert("Please select a payment method.");
+    return;
+}
+
+if(txn === ""){
+    alert("Please enter your Transaction ID.");
+    return;
+}
+
+if(screenshot.length === 0){
+    alert("Please upload your payment screenshot.");
+    return;
+}
+
+// Show loading only after validation passes
+submitBtn.disabled = true;
+btnText.style.display = "none";
+btnLoader.style.display = "inline";
+
+const screenshotFile =
+document.getElementById("paymentScreenshot").files[0];
+
+const uploadData = new FormData();
+
+uploadData.append("file", screenshotFile);
+uploadData.append("upload_preset", UPLOAD_PRESET);
+
+console.log(CLOUD_NAME);
+console.log(UPLOAD_PRESET);
+
+for (const pair of uploadData.entries()) {
+    console.log(pair[0], pair[1]);
+}
+
+const uploadResponse = await fetch(
+"https://api.cloudinary.com/v1_1/f0rpqupr/image/upload",
+{
+    method: "POST",
+    body: uploadData
+});
+
+const uploadResult = await uploadResponse.json();
+
+console.log("Cloudinary Response:", uploadResult);
+
+if (!uploadResult.secure_url) {
+
+    submitBtn.disabled = false;
+    btnText.style.display = "inline";
+    btnLoader.style.display = "none";
+
+    alert(uploadResult.error.message);
+    return;
+}
+
+const screenshotURL = uploadResult.secure_url;
+
+try {
+
+    const response = await fetch("https://kavro-api.onrender.com/api/orders", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            product: document.getElementById("orderProduct").textContent,
+
+            package: document.getElementById("orderPackage").textContent,
+
+            price: document.getElementById("orderPrice").textContent,
+
+            uid: uid,
+
+            uidVerificationToken:
+                document.getElementById("uidVerificationToken").value,
+
+            email: email,
+
+            paymentMethod: payment,
+
+            transactionId: txn,
+
+            screenshot: screenshotURL,
+
+            note: document.getElementById("note").value
+
+        })
+
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+
+        window.location.href = "success.html";
+
+    } else {
+
+        alert(result.message);
+
+        submitBtn.disabled = false;
+        btnText.style.display = "inline";
+        btnLoader.style.display = "none";
+
+    }
+
+} catch (error) {
+
+    console.error(error);
+
+    submitBtn.disabled = false;
+    btnText.style.display = "inline";
+    btnLoader.style.display = "none";
+
+    alert("Unable to connect to server.");
+
+}
+
+});
+
+}
+</script>
+
+<script>
+
+const paymentData = {
+
+    "eSewa": {
+
+        qr: "assets/images/qrcode.jpeg",
+
+        number: "9747687660",
+
+        account: "Nirmala Kathayat",
+
+        bank: ""
+
+    },
+
+    "Bank Transfer": {
+
+        qr: "assets/images/qrcode.jpeg",
+
+        number: "9708567948",
+
+        account: "Nirmal Kathayat",
+
+        bank: "Agricultural Development Bank (ADBL)"
+
+    }
+
+};
+
+document.querySelectorAll('input[name="Payment Method"]').forEach(option => {
+
+    option.addEventListener("change", function () {
+
+        const data = paymentData[this.value];
+
+        document.getElementById("paymentQR").src = data.qr;
+        document.getElementById("paymentMethodName").textContent = this.value;
+        document.getElementById("paymentNumber").textContent = data.number;
+        document.getElementById("paymentAccount").textContent = data.account;
+
+        if (data.bank) {
+            document.getElementById("bankNameBox").style.display = "block";
+            document.getElementById("bankName").textContent = data.bank;
+        } else {
+            document.getElementById("bankNameBox").style.display = "none";
+        }
+
+        // Open QR popup only AFTER user selects payment
+        popup.src = data.qr;
+        modal.classList.add("active");
+
+    });
+
+});
+
+document.querySelectorAll('input[name="Payment Method"]').forEach(option=>{
+
+option.addEventListener("change",function(){
+
+const data=paymentData[this.value];
+document.getElementById("paymentCard").style.display = "block";
+
+// Open QR popup automatically
+popup.src = data.qr;
+modal.classList.add("active");
+
+document.getElementById("paymentQR").src=data.qr;
+
+document.getElementById("paymentMethodName").textContent=this.value;
+
+document.getElementById("paymentNumber").textContent=data.number;
+
+document.getElementById("paymentAccount").textContent=data.account;
+
+if(data.bank){
+
+document.getElementById("bankNameBox").style.display="block";
+
+document.getElementById("bankName").textContent=data.bank;
+
+}
+
+else{
+
+document.getElementById("bankNameBox").style.display="none";
+
+}
+
+});
+
+});
+
+</script>
+
+<script src="script.js"></script>
+
+<script>
+
+const screenshotInput = document.getElementById("paymentScreenshot");
+const fileName = document.getElementById("fileName");
+const preview = document.getElementById("previewImage");
+
+if (screenshotInput) {
+
+    screenshotInput.addEventListener("change", function () {
+
+        if (this.files.length > 0) {
+
+            const file = this.files[0];
+
+            fileName.textContent = "Selected: " + file.name;
+
+            const reader = new FileReader();
+
+            reader.onload = function(e){
+
+                preview.src = e.target.result;
+
+                preview.style.display = "block";
+
+            };
+
+            reader.readAsDataURL(file);
+
+        }
+
+        else{
+
+            fileName.textContent = "No file selected";
+
+            preview.style.display = "none";
+
+        }
+
+    });
+
+}
+
+</script>
+
+<script>
+
+function downloadQR(){
+
+    const a=document.createElement("a");
+
+    a.href=document.getElementById("paymentQR").src;
+
+    a.download="Kavro-Payment-QR.jpeg";
+
+    a.click();
+
+}
+
+const btn1 = document.getElementById("downloadQR");
+const btn2 = document.getElementById("downloadQR2");
+
+if (btn1) btn1.onclick = downloadQR;
+if (btn2) btn2.onclick = downloadQR;
+
+</script>
+
+<div id="qrModal" class="qr-modal">
+
+    <div class="qr-modal-content">
+
+        <button id="closeQR" class="close-btn">✕</button>
+
+        <img id="popupQR" src="" alt="Payment QR">
+
+        <button id="downloadPopupQR" class="download-popup-btn">
+            ⬇ Download QR
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+const qr = document.getElementById("paymentQR");
+const modal = document.getElementById("qrModal");
+const popup = document.getElementById("popupQR");
+
+qr.onclick = function(){
+
+    popup.src = this.src;
+
+    modal.classList.add("active");
+
+};
+
+document.getElementById("closeQR").onclick=function(){
+
+    modal.classList.remove("active");
+
+};
+
+modal.onclick=function(e){
+
+    if(e.target===modal){
+
+        modal.classList.remove("active");
+
+    }
+
+};
+
+document.getElementById("downloadPopupQR").onclick=function(){
+
+    const a=document.createElement("a");
+
+    a.href=popup.src;
+
+    a.download="Kavro-Payment-QR.jpeg";
+
+    a.click();
+
+};
+</script>
+
+</body>
+
+</html>

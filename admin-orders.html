@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kavro Admin | Orders</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/admin-panels.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- Sidebar -->
+
+<aside class="sidebar">
+
+<div class="logo">
+<h2>KAVRO</h2>
+<span>ADMIN PANEL</span>
+</div>
+
+<ul>
+
+<li onclick="location.href='admin-dashboard.html'">
+📊 Dashboard
+</li>
+
+<li onclick="location.href='admin-products.html'">
+📦 Products
+</li>
+
+<li onclick="location.href='admin-product-items.html'">
+📋 Product Items
+</li>
+
+<li class="active">
+🛒 Orders
+</li>
+
+</ul>
+
+<button id="logoutBtn">
+🚪 Logout
+</button>
+
+</aside>
+
+<!-- Main -->
+
+<main class="main">
+
+<header class="topbar">
+
+<h1>Orders</h1>
+
+<p>Manage customer orders</p>
+
+</header>
+
+<section class="orders">
+
+<div class="table-header">
+
+<h2>All Orders</h2>
+
+<input
+type="text"
+id="search"
+placeholder="Search Orders...">
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Game</th>
+<th>UID</th>
+<th>Payment</th>
+<th>Price</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody id="ordersTable">
+
+<tr>
+
+<td colspan="6">
+
+Loading...
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</section>
+
+</main>
+
+</div>
+
+<!-- Order Details Modal -->
+
+<div id="orderModal" class="modal">
+
+    <div class="modal-content order-modal">
+
+        <span class="close" onclick="closeModal()">&times;</span>
+
+        <h2>Order Details</h2>
+
+        <div class="order-info">
+
+            <p><strong>Product:</strong> <span id="mProduct"></span></p>
+
+            <p><strong>Package:</strong> <span id="mPackage"></span></p>
+
+            <p><strong>UID:</strong> <span id="mUid"></span></p>
+
+            <p><strong>Player:</strong> <span id="mPlayer"></span></p>
+
+            <p><strong>Server:</strong> <span id="mRegion"></span></p>
+
+            <p><strong>Payment:</strong> <span id="mPayment"></span></p>
+
+            <p><strong>Transaction:</strong> <span id="mTransaction"></span></p>
+
+            <p><strong>Price:</strong> <span id="mPrice"></span></p>
+
+            <p><strong>Status:</strong> <span id="mStatus"></span></p>
+
+        </div>
+
+        <h3>Payment Screenshot</h3>
+
+        <a id="mScreenshotLink" target="_blank">
+
+        <img
+            id="mScreenshot"
+            src=""
+            alt="Screenshot"
+            class="payment-preview">
+
+        </a>
+
+        <h3>Customer Note</h3>
+
+        <div id="mNote" class="note-box"></div>
+
+        <div class="modal-buttons">
+
+            <button
+                id="deliverBtn"
+                class="action-btn">
+
+                Mark Delivered
+
+            </button>
+
+            <button
+                onclick="closeModal()"
+                class="action-btn delete">
+
+                Close
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://kavro-api.onrender.com/socket.io/socket.io.js"></script>
+<script src="assets/js/admin-orders.js"></script>
+
+</body>
+
+</html>

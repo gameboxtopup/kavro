@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kavro Admin Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Inter",sans-serif;
+}
+
+body{
+
+background:linear-gradient(135deg,#0f172a,#1e3a8a);
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+min-height:100vh;
+
+padding:20px;
+
+}
+
+.login-card{
+
+width:100%;
+max-width:420px;
+
+background:#fff;
+
+padding:40px;
+
+border-radius:24px;
+
+box-shadow:0 25px 60px rgba(0,0,0,.18);
+
+}
+
+.logo{
+
+text-align:center;
+
+margin-bottom:30px;
+
+}
+
+.logo img{
+
+width:70px;
+
+margin-bottom:12px;
+
+}
+
+.logo h2{
+
+font-size:30px;
+
+color:#0f172a;
+
+}
+
+.logo p{
+
+color:#64748b;
+
+margin-top:8px;
+
+}
+
+.form-group{
+
+margin-bottom:20px;
+
+}
+
+label{
+
+display:block;
+
+font-weight:600;
+
+margin-bottom:8px;
+
+color:#334155;
+
+}
+
+input{
+
+width:100%;
+
+padding:14px 16px;
+
+border:1px solid #cbd5e1;
+
+border-radius:12px;
+
+font-size:15px;
+
+outline:none;
+
+transition:.3s;
+
+}
+
+input:focus{
+
+border-color:#2563eb;
+
+box-shadow:0 0 0 4px rgba(37,99,235,.15);
+
+}
+
+button{
+
+width:100%;
+
+padding:15px;
+
+background:#2563eb;
+
+color:#fff;
+
+border:none;
+
+border-radius:12px;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+button:hover{
+
+background:#1d4ed8;
+
+}
+
+button:disabled{
+
+opacity:.7;
+
+cursor:not-allowed;
+
+}
+
+#error{
+
+margin-top:18px;
+
+text-align:center;
+
+font-weight:600;
+
+color:#dc2626;
+
+}
+
+.footer{
+
+margin-top:28px;
+
+text-align:center;
+
+font-size:14px;
+
+color:#64748b;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="login-card">
+
+<div class="logo">
+
+<img src="assets/images/logo.png">
+
+<h2>Kavro Admin</h2>
+
+<p>Secure Administrator Login</p>
+
+</div>
+
+<form id="loginForm" autocomplete="off">
+
+<div class="form-group">
+
+<label>Username</label>
+
+<input
+type="text"
+id="username"
+required
+autocomplete="off"
+>
+
+</div>
+
+<div class="form-group">
+
+<label>Password</label>
+
+<input
+type="password"
+id="password"
+required
+autocomplete="off"
+>
+
+</div>
+
+<button
+type="submit"
+id="loginBtn">
+
+Login
+
+</button>
+
+<div id="error"></div>
+
+</form>
+
+<div class="footer">
+
+© <span id="year"></span> Kavro
+
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("year").textContent=new Date().getFullYear();
+
+const form=document.getElementById("loginForm");
+
+form.addEventListener("submit",async(e)=>{
+
+e.preventDefault();
+
+const btn=document.getElementById("loginBtn");
+
+const error=document.getElementById("error");
+
+error.textContent="";
+
+btn.disabled=true;
+
+btn.textContent="Logging in...";
+
+try{
+
+const response=await fetch("https://kavro-api.onrender.com/api/admin/login",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+username:document.getElementById("username").value.trim(),
+
+password:document.getElementById("password").value
+
+})
+
+});
+
+const result=await response.json();
+
+if(result.success){
+
+localStorage.setItem("adminToken",result.token);
+
+window.location.href="admin-dashboard.html";
+
+}else{
+
+error.textContent=result.message;
+
+}
+
+}catch(err){
+
+console.error(err);
+
+error.textContent="Cannot connect to server.";
+
+}
+
+btn.disabled=false;
+
+btn.textContent="Login";
+
+});
+
+</script>
+
+</body>
+
+</html>

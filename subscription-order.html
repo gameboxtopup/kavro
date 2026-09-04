@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Subscription Checkout | Kavro</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="assets/css/subscription-order.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<header class="header">
+
+<div class="container">
+
+<nav class="navbar">
+
+<a href="index.html" class="logo">
+
+<img src="assets/images/logo.png">
+
+<span>Kavro</span>
+
+</a>
+
+</nav>
+
+</div>
+
+</header>
+
+<section class="checkout-section">
+
+<div class="container">
+
+<div class="checkout-card">
+
+<h2>
+
+Subscription Checkout
+
+</h2>
+
+<div class="order-summary">
+
+<h3 id="checkoutProduct"></h3>
+
+<p id="checkoutPackage"></p>
+
+<h2 id="checkoutPrice"></h2>
+
+</div>
+
+<form id="checkoutForm">
+
+<div class="form-group">
+
+<label>Email Address</label>
+
+<input
+
+type="email"
+
+id="email"
+
+required
+
+placeholder="Enter your email">
+
+</div>
+
+<div class="form-group">
+
+<label>Your Name</label>
+
+<input
+
+type="text"
+
+id="customerName"
+
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>Phone Number</label>
+
+<input
+
+type="text"
+
+id="phone"
+
+required>
+
+</div>
+
+<div class="form-group">
+
+    <label>Payment Method</label>
+
+    <select id="payment" required>
+
+        <option value="eSewa">eSewa</option>
+
+        <option value="Bank Transfer">
+            Bank Transfer
+        </option>
+
+    </select>
+
+</div>
+
+<!-- PAYMENT DETAILS -->
+
+<div id="paymentDetails" class="payment-details">
+
+    <!-- eSEWA -->
+
+    <div id="esewaDetails" class="payment-info">
+
+        <h3>📱 Pay with eSewa</h3>
+
+        <img
+            src="assets/images/qrcode.jpeg"
+            alt="eSewa QR Code"
+            class="payment-qr">
+
+        <p>
+            Scan this QR code using the eSewa app.
+        </p>
+
+        <strong>
+            eSewa ID: 9747687660
+        </strong>
+
+    </div>
+
+
+    <!-- BANK -->
+
+    <div
+        id="bankDetails"
+        class="payment-info"
+        style="display:none;">
+
+        <h3>🏦 Bank Transfer</h3>
+
+        <img
+            src="assets/images/apple.webp"
+            alt="Bank QR Code"
+            class="payment-qr">
+
+        <p>
+            Scan the QR code to make the payment.
+        </p>
+
+        <div class="bank-information">
+
+            <p>
+                <strong>Bank:</strong>
+                Agricultural Development Bank(ADBL)
+            </p>
+
+            <p>
+                <strong>Account Name:</strong>
+                Nirmal Kathayat
+            </p>
+
+            <p>
+                <strong>Account Number:</strong>
+                0822505745231019
+            </p>
+
+            <p>
+                <strong>Branch:</strong>
+                Dhangadhi
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="form-group">
+
+    <label for="transactionId">
+        Transaction ID
+    </label>
+
+    <input
+        type="text"
+        id="transactionId"
+        placeholder="Enter transaction ID"
+        required>
+
+</div>
+
+
+<div class="form-group">
+
+    <label for="screenshot">
+        Payment Screenshot
+    </label>
+
+    <input
+        type="file"
+        id="screenshot"
+        accept="image/png,image/jpeg,image/webp"
+        required>
+
+    <small class="upload-help">
+        Upload a clear screenshot of your payment.
+    </small>
+
+</div>
+
+<div class="form-group">
+    <label>Note</label>
+    <textarea
+        id="note"
+        placeholder="Any additional information?"></textarea>
+</div>
+
+<button
+
+type="submit"
+
+class="btn-primary">
+
+Place Order
+
+</button>
+<div
+    id="orderError"
+    style="
+        display:none;
+        margin-top:15px;
+        padding:12px 14px;
+        border-radius:10px;
+        background:#fef2f2;
+        border:1px solid #fecaca;
+        color:#b91c1c;
+        font-size:14px;
+        font-weight:600;
+    "
+></div>
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+<script src="assets/js/subscription-checkout.js"></script>
+
+</body>
+
+</html>

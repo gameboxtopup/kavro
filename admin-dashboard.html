@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kavro Admin Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/admin-panels.css">
+
+</head>
+
+<body>
+
+<script>
+const token = localStorage.getItem("adminToken");
+
+if (!token) {
+    window.location.href = "admin-login.html";
+}
+</script>
+
+<div class="container">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>KAVRO</h2>
+            <span>ADMIN PANEL</span>
+        </div>
+
+        <ul>
+
+            <li class="active" onclick="location.href='admin-dashboard.html'">
+                📊 Dashboard
+            </li>
+
+            <li onclick="location.href='admin-products.html'">
+                📦 Products
+            </li>
+
+            <li onclick="location.href='admin-product-items.html'">
+                📋 Product Items
+            </li>
+
+            <li onclick="location.href='admin-orders.html'">
+                🛒 Orders
+            </li>
+
+        </ul>
+
+        <button id="logoutBtn">🚪 Logout</button>
+
+    </aside>
+
+    <main class="content">
+
+        <header class="topbar">
+
+            <h1>Admin Dashboard</h1>
+            <p>Welcome back, Admin 👋</p>
+
+        </header>
+
+        <section class="cards">
+
+            <div class="card">
+                <h3>Total Orders</h3>
+                <h2 id="totalOrders">0</h2>
+            </div>
+
+            <div class="card">
+                <h3>Pending</h3>
+                <h2 id="pendingOrders">0</h2>
+            </div>
+
+            <div class="card">
+                <h3>Delivered</h3>
+                <h2 id="deliveredOrders">0</h2>
+            </div>
+
+            <div class="card">
+                <h3>Revenue</h3>
+                <h2 id="revenue">NPR 0</h2>
+            </div>
+
+        </section>
+
+        <section class="orders">
+
+            <div class="table-header">
+
+                <h2>Latest Orders</h2>
+
+                <input
+                    type="text"
+                    id="search"
+                    placeholder="Search Orders...">
+
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Product</th>
+                        <th>Customer UID</th>
+                        <th>Payment</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="ordersTable">
+
+                    <tr>
+                        <td colspan="6">Loading Orders...</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="https://kavro-api.onrender.com/socket.io/socket.io.js"></script>
+<script src="assets/js/admin.js"></script>
+
+</body>
+
+</html>
