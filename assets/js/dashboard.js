@@ -114,7 +114,7 @@ async function loadOrders() {
     try {
 
         const response = await fetch(
-            `${API_URL}/api/orders/my`,
+            `${API_URL}/api/orders/my-orders`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`

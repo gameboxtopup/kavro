@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kavro Admin | Customer Chat</title>
+<link rel="stylesheet" href="assets/css/admin-panels.css">
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo"><h2>KAVRO</h2><span>ADMIN PANEL</span></div>
+        <ul>
+            <li onclick="location.href='admin-dashboard.html'">📊 Dashboard</li>
+            <li onclick="location.href='admin-products.html'">📦 Products</li>
+            <li onclick="location.href='admin-product-items.html'">📋 Product Items</li>
+            <li onclick="location.href='admin-orders.html'">🛒 Orders</li>
+            <li class="active">💬 Customer Chat</li>
+        </ul>
+        <button id="logoutBtn">🚪 Logout</button>
+    </aside>
+
+    <main class="content">
+        <header class="topbar">
+            <div><h1>Customer Chat</h1><p>Read and reply to customer messages</p></div>
+        </header>
+
+        <section class="admin-chat-layout">
+            <aside class="conversation-panel">
+                <div class="conversation-heading">
+                    <h2>Conversations</h2>
+                    <button id="refreshChat" type="button">Refresh</button>
+                </div>
+                <div id="conversationList" class="conversation-list">
+                    <p class="chat-placeholder">Loading conversations...</p>
+                </div>
+            </aside>
+
+            <section class="admin-chat-panel">
+                <header id="selectedCustomer" class="selected-customer">
+                    Select a customer to open the conversation
+                </header>
+                <div id="adminChatMessages" class="admin-chat-messages">
+                    <p class="chat-placeholder">No conversation selected.</p>
+                </div>
+                <form id="adminReplyForm" class="admin-reply-form">
+                    <input id="adminReplyInput" maxlength="500"
+                        placeholder="Write a reply..." autocomplete="off" disabled>
+                    <button type="submit" disabled>Send Reply</button>
+                </form>
+            </section>
+        </section>
+    </main>
+</div>
+
+<script src="https://kavro-api.onrender.com/socket.io/socket.io.js"></script>
+<script src="assets/js/admin-chat.js"></script>
+</body>
+</html>

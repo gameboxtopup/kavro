@@ -407,6 +407,47 @@ cursor:pointer;
     line-height:1.7;
 }
 
+/* Admin customer chat */
+.admin-chat-layout{
+    display:grid;
+    grid-template-columns:320px minmax(0, 1fr);
+    min-height:650px;
+    overflow:hidden;
+    border-radius:16px;
+    background:#111827;
+}
+
+.conversation-panel{border-right:1px solid #253047;}
+.conversation-heading{display:flex;align-items:center;justify-content:space-between;padding:18px;}
+.conversation-heading button{padding:7px 10px;border:0;border-radius:7px;cursor:pointer;}
+.conversation-list{max-height:590px;overflow-y:auto;}
+.conversation-item{display:block;width:100%;padding:15px 18px;border:0;border-top:1px solid #253047;background:transparent;color:#fff;text-align:left;cursor:pointer;}
+.conversation-item:hover,.conversation-item.active{background:#1e3a8a;}
+.conversation-item strong,.conversation-item small,.conversation-item span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.conversation-item small{margin:4px 0;color:#94a3b8;}
+.conversation-item span{color:#cbd5e1;font-size:13px;}
+.admin-chat-panel{display:grid;grid-template-rows:auto 1fr auto;min-width:0;}
+.selected-customer{padding:18px 20px;border-bottom:1px solid #253047;}
+.selected-customer strong,.selected-customer small{display:block;}
+.selected-customer small{margin-top:4px;color:#94a3b8;}
+.admin-chat-messages{padding:20px;overflow-y:auto;max-height:520px;}
+.admin-chat-message{max-width:75%;margin-bottom:14px;}
+.admin-chat-message div{padding:11px 14px;border-radius:14px;background:#1e293b;line-height:1.45;}
+.admin-chat-message small{display:block;margin-top:4px;color:#94a3b8;font-size:11px;}
+.admin-chat-message.sent{margin-left:auto;text-align:right;}
+.admin-chat-message.sent div{background:#2563eb;}
+.admin-reply-form{display:grid;grid-template-columns:1fr auto;gap:10px;padding:16px;border-top:1px solid #253047;}
+.admin-reply-form input{padding:13px;border:1px solid #334155;border-radius:9px;background:#1e293b;color:#fff;}
+.admin-reply-form button{padding:0 20px;border:0;border-radius:9px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer;}
+.admin-reply-form button:disabled{opacity:.55;cursor:not-allowed;}
+.chat-placeholder{padding:24px;color:#94a3b8;text-align:center;}
+
+@media(max-width:900px){
+    .admin-chat-layout{grid-template-columns:1fr;}
+    .conversation-panel{border-right:0;border-bottom:1px solid #253047;}
+    .conversation-list{max-height:240px;}
+}
+
 @media(max-width:900px){
 
 .cards{

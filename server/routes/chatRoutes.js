@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const ChatMessage = require("../models/ChatMessage");
 const Admin = require("../models/Admin");
+const { requireAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -192,7 +193,7 @@ router.get("/", async (req, res) => {
 // ADMIN SEND REPLY
 // =========================================
 
-router.post("/admin/reply", async (req, res) => {
+router.post("/admin/reply", requireAdmin, async (req, res) => {
 
     try {
 
@@ -337,7 +338,7 @@ router.post("/admin/reply", async (req, res) => {
 // ADMIN GET ALL CHAT MESSAGES
 // =========================================
 
-router.get("/admin/all", async (req, res) => {
+router.get("/admin/all", requireAdmin, async (req, res) => {
 
     try {
 
@@ -392,6 +393,7 @@ router.get("/admin/all", async (req, res) => {
         const messages =
             await ChatMessage
                 .find()
+                .populate("userId", "name email")
                 .sort({
                     createdAt: 1
                 });

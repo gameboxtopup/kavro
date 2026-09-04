@@ -67,6 +67,15 @@ async function loadOrders() {
 
         const data = await response.json();
 
+        if (!response.ok || !Array.isArray(data)) {
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem("adminToken");
+                window.location.href = "admin-login.html";
+                return;
+            }
+            throw new Error(data.message || "Failed to load orders.");
+        }
+
         allOrders = data;
 
         displayOrders(allOrders);
@@ -108,10 +117,12 @@ function updateCards(orders) {
         if (order.status === "Pending")
             pending++;
 
-        if (order.status === "Delivered")
+        if (order.status === "Delivered" || order.status === "Completed")
             delivered++;
 
-        revenue += Number(order.price || 0);
+        if (order.status === "Delivered" || order.status === "Completed") {
+            revenue += Number(String(order.price || 0).replace(/[^0-9.]/g, "")) || 0;
+        }
 
     });
 
@@ -164,7 +175,7 @@ function displayOrders(orders) {
 
 <td>
 
-<span class="status ${order.status.toLowerCase()}">
+<span class="status ${String(order.status || "Pending").toLowerCase().replace(/\s+/g, "-")}">
 
 ${order.status}
 
