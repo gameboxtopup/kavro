@@ -171,6 +171,9 @@ function viewOrder(id){
 
     document.getElementById("mProduct").textContent = order.product;
 
+    document.getElementById("mOrderNumber").textContent =
+        order.orderNumber || "Legacy order";
+
     document.getElementById("mPackage").textContent = order.package;
 
     document.getElementById("mUid").textContent = order.uid;

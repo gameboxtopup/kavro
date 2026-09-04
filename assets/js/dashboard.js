@@ -211,6 +211,11 @@ async function loadOrders() {
                         </div>
 
                         <p>
+                            Order:
+                            ${escapeHtml(order.orderNumber || "Legacy order")}
+                        </p>
+
+                        <p>
                             Plan:
                             ${escapeHtml(
                                 order.package

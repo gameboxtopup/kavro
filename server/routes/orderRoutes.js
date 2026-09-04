@@ -1,5 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const { Resend } = require("resend");
 
 const router = express.Router();
@@ -32,6 +33,40 @@ router.post("/", async (req, res) => {
 
         const orderType =
             req.body.type || "game";
+
+        let linkedUser = null;
+        const authHeader = req.headers.authorization || "";
+        const bearerToken = authHeader.startsWith("Bearer ")
+            ? authHeader.slice(7)
+            : "";
+
+        if (bearerToken) {
+            try {
+                const decoded = jwt.verify(bearerToken, process.env.JWT_SECRET);
+                linkedUser = await User.findById(decoded.id);
+                if (!linkedUser) throw new Error("User not found.");
+            } catch (error) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Your login expired. Please sign in again or continue as guest."
+                });
+            }
+        }
+
+        const customerEmail = String(
+            linkedUser?.email || req.body.email || ""
+        ).trim().toLowerCase();
+
+        const trackingCode = crypto.randomBytes(5).toString("hex").toUpperCase();
+        const trackingCodeHash = crypto
+            .createHash("sha256")
+            .update(trackingCode)
+            .digest("hex");
+
+        const orderNumber = `KAV-${Date.now().toString(36).toUpperCase()}-${crypto
+            .randomBytes(2)
+            .toString("hex")
+            .toUpperCase()}`;
 
         const transactionId =
             (req.body.transactionId || "").trim();
@@ -110,6 +145,12 @@ router.post("/", async (req, res) => {
         const order =
             new Order({
 
+                orderNumber,
+
+                trackingCodeHash,
+
+                userId: linkedUser?._id || null,
+
                 product:
                     req.body.product,
 
@@ -128,7 +169,7 @@ router.post("/", async (req, res) => {
                 uidVerifiedAt,
 
                 email:
-                    req.body.email || "",
+                    customerEmail,
 
                 customerName:
                     req.body.customerName || "",
@@ -565,7 +606,17 @@ router.post("/", async (req, res) => {
             message:
                 "Order placed successfully.",
 
-            order
+            order: {
+                orderNumber: order.orderNumber,
+                product: order.product,
+                package: order.package,
+                price: order.price,
+                status: order.status
+            },
+
+            trackingCode,
+
+            linkedToAccount: Boolean(linkedUser)
 
         });
 
@@ -684,10 +735,10 @@ router.get("/my-orders", async (req, res) => {
 
         const orders =
             await Order.find({
-
-                email:
-                    user.email
-
+                $or: [
+                    { userId: user._id },
+                    { email: String(user.email).trim().toLowerCase() }
+                ]
             })
             .sort({
 
@@ -727,6 +778,50 @@ router.get("/my-orders", async (req, res) => {
 
     }
 
+});
+
+
+// =====================================================
+// GUEST ORDER TRACKING
+// =====================================================
+
+router.post("/track", async (req, res) => {
+    try {
+        const orderNumber = String(req.body.orderNumber || "").trim().toUpperCase();
+        const trackingCode = String(req.body.trackingCode || "").trim().toUpperCase();
+
+        if (!orderNumber || !trackingCode) {
+            return res.status(400).json({
+                success: false,
+                message: "Order number and tracking code are required."
+            });
+        }
+
+        const trackingCodeHash = crypto
+            .createHash("sha256")
+            .update(trackingCode)
+            .digest("hex");
+
+        const order = await Order.findOne({
+            orderNumber,
+            trackingCodeHash
+        }).select("orderNumber product package price status createdAt paymentVerifiedAt processingStartedAt completedAt");
+
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: "Order not found. Check both codes and try again."
+            });
+        }
+
+        return res.json({ success: true, order });
+    } catch (error) {
+        console.error("TRACK ORDER ERROR:", error.message);
+        return res.status(500).json({
+            success: false,
+            message: "Could not track this order right now."
+        });
+    }
 });
 
 

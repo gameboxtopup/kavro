@@ -218,6 +218,22 @@
     color: #fca5a5;
 }
 
+.checkout-account-note{
+    margin-bottom:10px;
+    padding:10px 12px;
+    border-radius:9px;
+    background:rgba(59,130,246,.1);
+    color:#bfdbfe;
+    font-size:13px;
+}
+
+.checkout-account-note.linked{
+    background:rgba(34,197,94,.1);
+    color:#86efac;
+}
+
+.checkout-account-note a{color:inherit;font-weight:700;}
+
 /* ================================
    PAYMENT OPTIONS
 ================================ */

@@ -1,4 +1,5 @@
 const item = JSON.parse(localStorage.getItem("selectedProduct"));
+const checkoutToken = localStorage.getItem("kavroToken");
 
 if (!item) {
     alert("No subscription selected.");
@@ -19,6 +20,27 @@ document.getElementById("checkoutPackage").textContent =
 
 document.getElementById("checkoutPrice").textContent =
     "Price: " + item.price;
+
+if (checkoutToken) {
+    fetch("https://kavro-api.onrender.com/api/auth/me", {
+        headers: { Authorization: `Bearer ${checkoutToken}` }
+    })
+        .then(response => response.json().then(data => ({ response, data })))
+        .then(({ response, data }) => {
+            if (!response.ok || !data.success) throw new Error("Session expired");
+            const emailInput = document.getElementById("email");
+            emailInput.value = data.user.email || "";
+            emailInput.readOnly = true;
+            const note = document.getElementById("subscriptionAccountNote");
+            note.textContent = "✓ Signed in — this order will appear in your dashboard.";
+            note.classList.add("linked");
+        })
+        .catch(() => {
+            localStorage.removeItem("kavroToken");
+            document.getElementById("subscriptionAccountNote").textContent =
+                "Your session expired. Continue as guest or sign in again.";
+        });
+}
 
 
 // =========================================
@@ -266,7 +288,10 @@ document
                         method: "POST",
 
                         headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            ...(localStorage.getItem("kavroToken")
+                                ? { Authorization: `Bearer ${localStorage.getItem("kavroToken")}` }
+                                : {})
                         },
 
                         body:
@@ -422,6 +447,16 @@ document
                             ${order.transactionId}
                         </p>
 
+                        <p>
+                            <strong>Order Number:</strong>
+                            ${data.order.orderNumber}
+                        </p>
+
+                        <p>
+                            <strong>Private Tracking Code:</strong>
+                            ${data.trackingCode}
+                        </p>
+
                         <div class="order-status">
                             🕐 Order Status: <strong>Pending Review</strong>
                         </div>
@@ -429,22 +464,14 @@ document
                     </div>
 
                     <p class="redirect-message">
-                        Redirecting you to the home page in
-                        <strong>5 seconds...</strong>
+                        Save your order number and private tracking code.
                     </p>
+
+                    <a href="track-order.html" class="btn-primary">Track Order</a>
 
                 </div>
 
             `;
-
-
-            // Redirect after 5 seconds
-            setTimeout(() => {
-
-                window.location.href =
-                    "index.html";
-
-            }, 5000);
 
 
         }

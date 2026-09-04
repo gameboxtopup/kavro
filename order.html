@@ -257,6 +257,10 @@ style="display:none;"></div>
 
 <label>Email Address</label>
 
+<div id="checkoutAccountNote" class="checkout-account-note">
+Guest checkout is available. Sign in to keep this order in your dashboard.
+</div>
+
 <input
 type="email"
 id="email"
@@ -832,6 +836,8 @@ const uidInput = document.getElementById("uid");
 const verifyUidBtn = document.getElementById("verifyUidBtn");
 const uidVerificationResult = document.getElementById("uidVerificationResult");
 const uidVerificationToken = document.getElementById("uidVerificationToken");
+const checkoutToken = localStorage.getItem("kavroToken");
+const checkoutAccountNote = document.getElementById("checkoutAccountNote");
 let freeFireVerificationRequired = false;
 let freeFireVerificationReady = product !== "Free Fire";
 
@@ -971,6 +977,27 @@ verifyUidBtn.addEventListener("click", async function () {
     }
 });
 
+if (checkoutToken) {
+    fetch("https://kavro-api.onrender.com/api/auth/me", {
+        headers: { Authorization: `Bearer ${checkoutToken}` }
+    })
+        .then(response => response.json().then(data => ({ response, data })))
+        .then(({ response, data }) => {
+            if (!response.ok || !data.success) throw new Error("Session expired");
+            const emailInput = document.getElementById("email");
+            emailInput.value = data.user.email || "";
+            emailInput.readOnly = true;
+            checkoutAccountNote.textContent =
+                "✓ Signed in — this order will appear in your Kavro dashboard.";
+            checkoutAccountNote.classList.add("linked");
+        })
+        .catch(() => {
+            localStorage.removeItem("kavroToken");
+            checkoutAccountNote.innerHTML =
+                'Your session expired. <a href="login.html">Sign in again</a> or continue as guest.';
+        });
+}
+
 </script>
 
 <script>
@@ -1092,7 +1119,10 @@ try {
         method: "POST",
 
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            ...(localStorage.getItem("kavroToken")
+                ? { Authorization: `Bearer ${localStorage.getItem("kavroToken")}` }
+                : {})
         },
 
         body: JSON.stringify({
@@ -1125,6 +1155,11 @@ try {
     const result = await response.json();
 
     if (result.success) {
+        sessionStorage.setItem("kavroLastOrder", JSON.stringify({
+            ...result.order,
+            trackingCode: result.trackingCode,
+            linkedToAccount: result.linkedToAccount
+        }));
 
         window.location.href = "success.html";
 
