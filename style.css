@@ -342,9 +342,9 @@ box-shadow:0 15px 35px rgba(0,0,0,.35);font-size:12px;font-weight:700;transition
 /* PROFILE */
 
 .profile-icon-btn {
-    width: 44px !important;
-    min-width: 44px !important;
-    padding: 0 !important;
+    width: auto !important;
+    min-width: 78px !important;
+    padding: 0 16px !important;
 
     background: #111a2d !important;
     border: 1px solid #263452 !important;
