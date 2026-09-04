@@ -1,68 +1,71 @@
 const grid = document.getElementById("productGrid");
+const searchInput = document.getElementById("searchInput");
+const categoryButtons = document.querySelectorAll(".category-btn");
+let loadedProducts = [];
+let activeCategory = "all";
+
+function normalize(value) {
+    return String(value || "").toLowerCase().replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function productLink(product) {
+    if (product.category === "Subscriptions") return `subscription.html?slug=${product.slug}`;
+    if (product.slug === "ff") return "freefire.html";
+    if (product.slug === "pubg") return "pubg.html";
+    if (product.slug === "roblox") return "roblox.html";
+    if (product.slug === "unipin") return "unipin.html";
+    if (product.slug === "mlbb") return "mobile-legends.html";
+    return "#";
+}
+
+function renderProducts() {
+    const search = normalize(searchInput?.value);
+    const filtered = loadedProducts.filter(product => {
+        const category = normalize(product.category);
+        const searchable = normalize(`${product.name} ${product.description} ${product.slug} ${product.category}`);
+        const categoryMatches = activeCategory === "all" || category.includes(activeCategory) || searchable.includes(activeCategory);
+        return product.active && categoryMatches && (!search || searchable.includes(search));
+    });
+
+    if (!filtered.length) {
+        grid.innerHTML = `<div class="store-empty"><span>⌕</span><strong>No products found</strong><p>Try another search or category.</p></div>`;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(product => {
+        const link = productLink(product);
+        return `
+        <a class="product-card" href="${link}" data-category="${normalize(product.category)}">
+            <div class="product-card-media">
+                <img src="${product.image}" alt="${product.name}" loading="lazy">
+                <span class="product-live-badge">Available</span>
+            </div>
+            <div class="product-card-copy">
+                <h3>${product.name}</h3>
+                <p>${product.description || "Fast and secure delivery"}</p>
+                <span class="product-card-action">View packages <b>›</b></span>
+            </div>
+        </a>`;
+    }).join("");
+}
 
 async function loadProducts() {
 
     const res = await fetch("https://kavro-api.onrender.com/api/products");
 
-    const products = await res.json();
-
-    grid.innerHTML = "";
-
-    products.forEach(product => {
-
-        if (!product.active) return;
-
-        // Decide which page to open
-        let link = "#";
-
-        if (product.category === "Subscriptions") {
-
-            link = `subscription.html?slug=${product.slug}`;
-
-        } else if (product.slug === "ff") {
-
-            link = "freefire.html";
-
-        } else if (product.slug === "pubg") {
-
-            link = "pubg.html";
-
-        } else if (product.slug === "roblox") {
-
-            link = "roblox.html";
-
-        } else if (product.slug === "unipin") {
-
-            link = "unipin.html";
-
-        } else if (product.slug === "mlbb") {
-
-            link = "mobile-legends.html";
-
-        }
-
-        grid.innerHTML += `
-
-        <div class="product-card">
-
-            <img src="${product.image}" alt="${product.name}">
-
-            <h3>${product.name}</h3>
-
-            <p>${product.description || ""}</p>
-
-            <a href="${link}" class="btn-primary">
-
-                View Products
-
-            </a>
-
-        </div>
-
-        `;
-
-    });
+    loadedProducts = await res.json();
+    renderProducts();
 
 }
 
-loadProducts();
+searchInput?.addEventListener("input", renderProducts);
+categoryButtons.forEach(button => button.addEventListener("click", () => {
+    categoryButtons.forEach(item => item.classList.remove("active"));
+    button.classList.add("active");
+    activeCategory = normalize(button.dataset.category) || "all";
+    renderProducts();
+}));
+
+loadProducts().catch(() => {
+    grid.innerHTML = `<div class="store-empty"><span>!</span><strong>Products unavailable</strong><p>Please refresh and try again.</p></div>`;
+});
