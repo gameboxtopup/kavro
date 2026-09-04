@@ -98,17 +98,25 @@ router.post("/", async (req, res) => {
             if (!productItem) {
                 const matchingItems = await ProductItem
                     .find({
-                        title: orderPackage,
                         active: true
                     })
                     .populate("product", "name slug");
+
+                const normalizedPackage = orderPackage
+                    .trim()
+                    .replace(/\s+/g, " ")
+                    .toLowerCase();
 
                 productItem = matchingItems.find(item =>
                     item.product &&
                     (
                         item.product.slug === "unipin" ||
                         item.product.name === orderProduct
-                    )
+                    ) &&
+                    String(item.title || "")
+                        .trim()
+                        .replace(/\s+/g, " ")
+                        .toLowerCase() === normalizedPackage
                 ) || null;
             }
 
