@@ -19,6 +19,7 @@ logoutBtn.onclick = () => {
 };
 
 let allOrders = [];
+let allProductItems = [];
 let currentOrderId = null;
 const notificationSound = new Audio("assets/sounds/notification.mp3");
 notificationSound.volume = 1;
@@ -67,15 +68,20 @@ async function loadOrders(){
 
     try{
 
-        const res = await fetch("https://kavro-api.onrender.com/api/orders",{
-
-            headers:{
-                Authorization:"Bearer " + token
-            }
-
-        });
+        const [res, itemsRes] = await Promise.all([
+            fetch("https://kavro-api.onrender.com/api/orders", {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            }),
+            fetch("https://kavro-api.onrender.com/api/product-items")
+        ]);
 
         const data = await res.json();
+
+        if (itemsRes.ok) {
+            allProductItems = await itemsRes.json();
+        }
 
         if (!res.ok || !Array.isArray(data)) {
             throw new Error(data.message || "Could not load orders.");
@@ -93,6 +99,40 @@ async function loadOrders(){
 
     }
 
+}
+
+function getDisplayedQuantity(order) {
+    const savedQuantity = Number.parseInt(order.quantity, 10) || 1;
+
+    if (savedQuantity > 1 || order.product !== "UniPin BD Voucher") {
+        return savedQuantity;
+    }
+
+    // Recover orders placed while the old Render backend was still running.
+    const matchingItem = allProductItems.find(item =>
+        item.title === order.package &&
+        item.product &&
+        item.product.name === order.product
+    );
+
+    if (!matchingItem) {
+        return savedQuantity;
+    }
+
+    const unitPrice =
+        matchingItem.discountPrice > 0 &&
+        matchingItem.discountPrice < matchingItem.price
+            ? matchingItem.discountPrice
+            : matchingItem.price;
+
+    const total = Number(
+        String(order.price || "").replace(/[^0-9.]/g, "")
+    );
+    const calculatedQuantity = total / unitPrice;
+
+    return Number.isInteger(calculatedQuantity) && calculatedQuantity > 1
+        ? calculatedQuantity
+        : savedQuantity;
 }
 
 function displayOrders(orders){
@@ -126,7 +166,7 @@ function displayOrders(orders){
 
 <td>${escapeHtml(order.paymentMethod)}</td>
 
-<td>${escapeHtml(order.quantity || 1)}</td>
+<td>${escapeHtml(getDisplayedQuantity(order))}</td>
 
 <td>${escapeHtml(order.price)}</td>
 
@@ -175,7 +215,7 @@ function viewOrder(id){
 
     document.getElementById("mPackage").textContent = order.package;
 
-    document.getElementById("mQuantity").textContent = order.quantity || 1;
+    document.getElementById("mQuantity").textContent = getDisplayedQuantity(order);
 
     document.getElementById("mUid").textContent = order.uid;
 
