@@ -21,6 +21,10 @@ const EMAIL_FROM =
     process.env.RESEND_FROM_EMAIL ||
     "Kavro <orders@kavronepal.vercel.app>";
 
+// Email is handled manually by the Kavro admin.
+// Keep automated admin/customer messages disabled.
+const AUTOMATIC_ORDER_EMAILS_ENABLED = false;
+
 
 // =====================================================
 // CREATE NEW ORDER
@@ -222,7 +226,7 @@ router.post("/", async (req, res) => {
         // NEW ORDER EMAIL TO ADMIN
         // =================================================
 
-        resend.emails.send({
+        if (AUTOMATIC_ORDER_EMAILS_ENABLED) resend.emails.send({
 
             from:
                 EMAIL_FROM,
@@ -958,6 +962,7 @@ router.patch("/:id", requireAdmin, async (req, res) => {
         // =================================================
 
         if (
+            AUTOMATIC_ORDER_EMAILS_ENABLED &&
             requestedStatus === "Completed" &&
             order.email
         ) {
