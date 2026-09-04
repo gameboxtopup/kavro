@@ -1,8 +1,6 @@
 const API_URL =
     "https://kavro-api.onrender.com/api/auth";
 
-const GOOGLE_CLIENT_ID =
-    "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
 
 const form =
     document.getElementById("loginForm");
@@ -140,7 +138,8 @@ if (form) {
 }
 
 
-// ==========================================
+/* Google sign-in is handled by google-auth.js on both auth pages. */
+/* ==========================================
 // GOOGLE LOGIN
 // ==========================================
 
@@ -295,3 +294,4 @@ document.addEventListener(
     "DOMContentLoaded",
     initializeGoogleLogin
 );
+*/

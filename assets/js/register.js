@@ -2,8 +2,6 @@ const API_URL = "https://kavro-api.onrender.com/api/auth";
 
 const form = document.getElementById("registerForm");
 
-const googleButton =
-    document.querySelector(".google-button");
 
 
 if (form) {
@@ -186,29 +184,3 @@ if (form) {
 }
 
 
-// =========================================
-// GOOGLE LOGIN
-// =========================================
-//
-// Google authentication is NOT implemented
-// on your backend yet, so don't call a fake
-// /api/auth/google endpoint.
-//
-// For now show a clear message instead of
-// having a button that appears broken.
-//
-
-if (googleButton) {
-
-    googleButton.addEventListener(
-        "click",
-        function () {
-
-            alert(
-                "Google login is not connected yet."
-            );
-
-        }
-    );
-
-}
