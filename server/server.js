@@ -10,6 +10,7 @@ const productItemRoutes = require("./routes/productItemRoutes");
 const authRoutes = require("./routes/authRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const gameAccountRoutes = require("./routes/gameAccountRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/product-items", productItemRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/game-accounts", gameAccountRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 
 // Connect to MongoDB

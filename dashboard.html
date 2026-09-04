@@ -111,6 +111,30 @@
 
         </div>
 
+        <div id="reviewPanel" class="review-panel" hidden>
+            <div class="review-panel-heading">
+                <div>
+                    <h3>Enjoyed your order?</h3>
+                    <p>Share your experience after a completed purchase.</p>
+                </div>
+                <span>★</span>
+            </div>
+            <form id="reviewForm" class="review-form">
+                <label for="reviewOrder">Completed order</label>
+                <select id="reviewOrder" required></select>
+                <label for="reviewRating">Rating</label>
+                <select id="reviewRating" required>
+                    <option value="5">★★★★★ Excellent</option>
+                    <option value="4">★★★★ Very good</option>
+                    <option value="3">★★★ Good</option>
+                    <option value="2">★★ Needs improvement</option>
+                    <option value="1">★ Poor</option>
+                </select>
+                <textarea id="reviewComment" maxlength="500" minlength="3" placeholder="How was your Kavro experience?" required></textarea>
+                <button type="submit">Submit verified review</button>
+            </form>
+        </div>
+
     </section>
 
 

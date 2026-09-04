@@ -94,6 +94,8 @@ background:rgba(37,99,235,.13);border:1px solid rgba(59,130,246,.2);border-radiu
 .stat-card{text-align:center}.stat-card h3{font-family:"Space Grotesk";font-size:36px}.stat-card p{color:#8290a6;font-size:12px;font-weight:600}
 .testimonial-card{min-height:190px}.testimonial-card>p:first-child{color:#fbbf24;letter-spacing:2px}
 .testimonial-card>p:nth-child(2){margin:13px 0 18px;color:#aab6c8;font-size:13px}.testimonial-card h4{font-size:12px}
+.review-summary{display:table;margin:-28px auto 28px;padding:7px 13px;border:1px solid rgba(251,191,36,.25);border-radius:999px;background:rgba(251,191,36,.08);color:#fbbf24;font-size:11px;font-weight:800}
+.review-stars{color:#fbbf24!important;letter-spacing:2px}.verified-review{display:block;margin-top:10px;color:#4ade80;font-size:10px;font-weight:700}.review-loading{display:block;grid-column:1/-1;min-height:0;text-align:center;color:#94a3b8}
 
 /* FAQ */
 .faq-container{max-width:850px;margin:auto;display:grid;gap:11px}.faq-item{padding:20px 23px}.faq-item h3{font-family:"Space Grotesk";font-size:15px}
@@ -2117,6 +2119,9 @@ box-shadow:0 15px 35px rgba(0,0,0,.35);font-size:12px;font-weight:700;transition
     display: none;
 }
 
+.review-panel{margin-top:20px;padding:18px;border:1px solid rgba(96,165,250,.2);border-radius:15px;background:rgba(37,99,235,.06)}
+.review-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.review-panel-heading h3{font-size:16px}.review-panel-heading p{margin-top:3px;color:#94a3b8;font-size:11px}.review-panel-heading>span{display:grid;place-items:center;width:35px;height:35px;border-radius:50%;background:rgba(251,191,36,.14);color:#fbbf24;font-size:18px}.review-form{display:grid;gap:7px}.review-form label{color:#cbd5e1;font-size:11px;font-weight:700}.review-form select,.review-form textarea{width:100%;padding:10px;border:1px solid rgba(148,163,184,.2);border-radius:9px;background:#0a111f;color:#fff;font-size:12px}.review-form textarea{min-height:75px;resize:vertical}.review-form button{padding:10px;border:0;border-radius:9px;background:#2563eb;color:#fff;font-size:11px;font-weight:800}
+
 .home-store-card {
     display: flex;
     flex-direction: column;
@@ -2544,13 +2549,55 @@ box-shadow:0 15px 35px rgba(0,0,0,.35);font-size:12px;font-weight:700;transition
     .home-page .why-kavro,
     .home-page .steps,
     .home-page .stats,
-    .home-page .testimonials,
     .home-page .faq,
     .home-page .home-blog,
     .home-page .newsletter,
     .home-page .cta,
     .home-page .footer {
         display: none;
+    }
+
+    .home-page .testimonials {
+        display: block;
+        padding: 34px 0 40px;
+    }
+
+    .home-page .testimonials .section-heading {
+        margin-bottom: 14px;
+    }
+
+    .home-page .testimonials .testimonial-grid {
+        display: flex;
+        overflow-x: auto;
+        gap: 9px;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+    }
+
+    .home-page .testimonials .testimonial-grid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .home-page .testimonials .testimonial-card {
+        flex: 0 0 78%;
+        min-height: 0;
+        padding: 13px;
+        border-radius: 12px;
+    }
+
+    .home-page .testimonials .testimonial-card > p:nth-child(2) {
+        margin: 8px 0 12px;
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+    .home-page .testimonials .testimonial-card h4 {
+        font-size: 10px;
+    }
+
+    .home-page .review-summary {
+        margin: -8px 0 13px;
+        font-size: 9px;
     }
 
     .home-page .floating-chat-btn {

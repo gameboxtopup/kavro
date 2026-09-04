@@ -34,6 +34,11 @@ const chatForm =
 
 const chatInput =
     document.getElementById("chatInput");
+const reviewPanel = document.getElementById("reviewPanel");
+const reviewForm = document.getElementById("reviewForm");
+const reviewOrder = document.getElementById("reviewOrder");
+const reviewRating = document.getElementById("reviewRating");
+const reviewComment = document.getElementById("reviewComment");
 
 
 // =========================================
@@ -247,6 +252,16 @@ async function loadOrders() {
                 `;
 
             }).join("");
+
+        const completed = orders.filter(order =>
+            ["completed", "delivered"].includes(String(order.status || "").toLowerCase())
+        );
+        if (reviewPanel && completed.length) {
+            reviewOrder.innerHTML = completed.map(order =>
+                `<option value="${escapeHtml(order._id || order.id)}">${escapeHtml(order.product)} — ${escapeHtml(order.package)}</option>`
+            ).join("");
+            reviewPanel.hidden = false;
+        }
 
     }
 
@@ -654,6 +669,30 @@ function activateDashboardTab(selected, updateHash = true) {
             });
         }, 50);
     }
+}
+
+if (reviewForm) {
+    reviewForm.addEventListener("submit", async event => {
+        event.preventDefault();
+        const submit = reviewForm.querySelector("button[type=submit]");
+        submit.disabled = true;
+        try {
+            const response = await fetch(`${API_URL}/api/reviews`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ orderId: reviewOrder.value, rating: Number(reviewRating.value), comment: reviewComment.value.trim() })
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || "Could not submit review.");
+            alert("Thank you! Your verified review has been published.");
+            reviewPanel.hidden = true;
+            reviewForm.reset();
+        } catch (error) {
+            alert(error.message || "Could not submit review.");
+        } finally {
+            submit.disabled = false;
+        }
+    });
 }
 
 tabs.forEach(tab => {
