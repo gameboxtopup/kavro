@@ -310,6 +310,14 @@ async function loadChat() {
             error
         );
 
+        chatMessages.innerHTML = `
+            <div class="chat-empty">
+                <div class="chat-icon">⚠️</div>
+                <p>Could not load your messages.</p>
+                <small>Please check your connection and open Chat again.</small>
+            </div>
+        `;
+
     }
 
 }
@@ -482,13 +490,15 @@ chatForm.addEventListener(
 // SOCKET.IO
 // =========================================
 
-const socket =
-    io(API_URL);
+if (typeof io === "function") {
 
+    const socket = io(API_URL, {
+        transports: ["websocket", "polling"]
+    });
 
-socket.on(
-    "chatMessage",
-    function (message) {
+    socket.on(
+        "chatMessage",
+        function (message) {
 
         const currentUserId =
             localStorage.getItem("userId");
@@ -507,10 +517,11 @@ socket.on(
         }
 
 
-        loadChat();
+            loadChat();
 
-    }
-);
+        }
+    );
+}
 
 
 // =========================================
@@ -588,37 +599,79 @@ const passwordTab =
 const chatTab =
     document.getElementById("chatTab");
 
+const floatingChatBtn =
+    document.getElementById("floatingChatBtn");
+
+const validTabs = ["orders", "password", "chat"];
+
+function activateDashboardTab(selected, updateHash = true) {
+
+    if (!validTabs.includes(selected)) {
+        selected = "orders";
+    }
+
+    tabs.forEach(tab => {
+        tab.classList.toggle(
+            "active",
+            tab.dataset.tab === selected
+        );
+    });
+
+    ordersTab.style.display =
+        selected === "orders" ? "block" : "none";
+
+    passwordTab.style.display =
+        selected === "password" ? "block" : "none";
+
+    chatTab.style.display =
+        selected === "chat" ? "block" : "none";
+
+    if (floatingChatBtn) {
+        floatingChatBtn.style.display =
+            selected === "chat" ? "none" : "flex";
+    }
+
+    if (updateHash) {
+        history.replaceState(null, "", `#${selected}`);
+    }
+
+    if (selected === "chat") {
+        loadChat();
+        setTimeout(() => {
+            chatInput.focus();
+            chatTab.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }, 50);
+    }
+}
+
 tabs.forEach(tab => {
 
     tab.addEventListener("click", () => {
-
-        tabs.forEach(t =>
-            t.classList.remove("active")
-        );
-
-        tab.classList.add("active");
-
-        const selected =
-            tab.dataset.tab;
-
-        ordersTab.style.display =
-            selected === "orders"
-                ? "block"
-                : "none";
-
-        passwordTab.style.display =
-            selected === "password"
-                ? "block"
-                : "none";
-
-        chatTab.style.display =
-            selected === "chat"
-                ? "block"
-                : "none";
-
+        activateDashboardTab(tab.dataset.tab);
     });
 
 });
+
+if (floatingChatBtn) {
+    floatingChatBtn.addEventListener("click", () => {
+        activateDashboardTab("chat");
+    });
+}
+
+window.addEventListener("hashchange", () => {
+    activateDashboardTab(
+        window.location.hash.slice(1),
+        false
+    );
+});
+
+activateDashboardTab(
+    window.location.hash.slice(1) || "orders",
+    false
+);
 
 
 // =========================================
