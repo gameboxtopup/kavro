@@ -70,6 +70,14 @@ Our team will verify your payment and process your top-up shortly.
 
 <div>
 
+<strong>Quantity</strong>
+
+<p id="successQuantity">1</p>
+
+</div>
+
+<div>
+
 <strong>Total Price</strong>
 
 <p id="successPrice">-</p>
@@ -122,6 +130,9 @@ savedOrder?.product || params.get("product") || "-";
 
 document.getElementById("successPackage").textContent =
 savedOrder?.package || params.get("package") || "-";
+
+document.getElementById("successQuantity").textContent =
+savedOrder?.quantity || params.get("quantity") || "1";
 
 document.getElementById("successPrice").textContent =
 savedOrder?.price || params.get("price") || "-";

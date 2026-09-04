@@ -1205,7 +1205,8 @@ try {
         sessionStorage.setItem("kavroLastOrder", JSON.stringify({
             product: result.order.product,
             package: result.order.package,
-            price: result.order.price
+            price: result.order.price,
+            quantity: result.order.quantity || 1
         }));
 
         window.location.href = "success.html";

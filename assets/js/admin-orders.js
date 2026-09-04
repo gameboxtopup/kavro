@@ -110,7 +110,8 @@ function getDisplayedQuantity(order) {
 
     // Recover orders placed while the old Render backend was still running.
     const matchingItem = allProductItems.find(item =>
-        item.title === order.package &&
+        String(item.title || "").trim().replace(/\s+/g, " ").toLowerCase() ===
+            String(order.package || "").trim().replace(/\s+/g, " ").toLowerCase() &&
         item.product &&
         item.product.name === order.product
     );

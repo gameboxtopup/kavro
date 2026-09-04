@@ -140,7 +140,10 @@ router.post("/", async (req, res) => {
                     ? productItem.discountPrice
                     : productItem.price;
 
-            if (!req.body.quantity) {
+            // Older/cached checkout links may send a total but omit the item ID
+            // and incorrectly fall back to quantity 1. Recover the intended
+            // quantity from the submitted total in that case.
+            if (!req.body.item || !req.body.quantity) {
                 const submittedTotal = Number(
                     String(req.body.price || "")
                         .replace(/[^0-9.]/g, "")
