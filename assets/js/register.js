@@ -137,7 +137,7 @@ if (form) {
             // Use the same token name as dashboard.js
 
             localStorage.setItem(
-                "token",
+                "kavroToken",
                 data.token
             );
 
@@ -154,7 +154,9 @@ if (form) {
                 "Account Created ✓";
 
 
-            window.location.href = "index.html";
+            const checkoutReturn = sessionStorage.getItem("kavroCheckoutReturn");
+            sessionStorage.removeItem("kavroCheckoutReturn");
+            window.location.href = checkoutReturn || "index.html";
 
         }
 

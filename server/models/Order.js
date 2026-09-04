@@ -2,19 +2,6 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema({
 
-    orderNumber: {
-        type: String,
-        unique: true,
-        sparse: true,
-        index: true
-    },
-
-    trackingCodeHash: {
-        type: String,
-        default: "",
-        select: false
-    },
-
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

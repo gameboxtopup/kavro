@@ -53,23 +53,11 @@ Our team will verify your payment and process your top-up shortly.
 <div class="success-details">
 
 <div>
-<strong>Order Number</strong>
-<p id="successOrderNumber">-</p>
-</div>
-
-<div>
 
 <strong>Product</strong>
 
 <p id="successProduct">-</p>
 
-</div>
-
-<div id="trackingDetails" class="tracking-details">
-<strong>Private Tracking Code</strong>
-<p id="successTrackingCode">-</p>
-<button id="copyTrackingBtn" type="button">Copy Both Codes</button>
-<small>Save this code. Anyone with both codes can view this order's status.</small>
 </div>
 
 <div>
@@ -112,8 +100,8 @@ Continue Shopping
 
 </a>
 
-<a href="track-order.html" class="btn-secondary">
-Track Order
+<a href="dashboard.html" class="btn-secondary">
+View My Orders
 </a>
 
 </div>
@@ -137,25 +125,6 @@ savedOrder?.package || params.get("package") || "-";
 
 document.getElementById("successPrice").textContent =
 savedOrder?.price || params.get("price") || "-";
-
-document.getElementById("successOrderNumber").textContent =
-savedOrder?.orderNumber || "-";
-
-document.getElementById("successTrackingCode").textContent =
-savedOrder?.trackingCode || "-";
-
-if (savedOrder?.linkedToAccount) {
-    document.getElementById("trackingDetails").querySelector("small").textContent =
-        "This order is also linked to your Kavro dashboard.";
-}
-
-document.getElementById("copyTrackingBtn").onclick = async function () {
-    if (!savedOrder?.orderNumber || !savedOrder?.trackingCode) return;
-    await navigator.clipboard.writeText(
-        `Order: ${savedOrder.orderNumber}\nTracking: ${savedOrder.trackingCode}`
-    );
-    this.textContent = "Copied ✓";
-};
 
 </script>
 

@@ -1,6 +1,11 @@
 const item = JSON.parse(localStorage.getItem("selectedProduct"));
 const checkoutToken = localStorage.getItem("kavroToken");
 
+if (!checkoutToken) {
+    sessionStorage.setItem("kavroCheckoutReturn", window.location.href);
+    window.location.replace("login.html");
+}
+
 if (!item) {
     alert("No subscription selected.");
     window.location.href = "products.html";
@@ -37,8 +42,8 @@ if (checkoutToken) {
         })
         .catch(() => {
             localStorage.removeItem("kavroToken");
-            document.getElementById("subscriptionAccountNote").textContent =
-                "Your session expired. Continue as guest or sign in again.";
+            sessionStorage.setItem("kavroCheckoutReturn", window.location.href);
+            window.location.replace("login.html");
         });
 }
 
@@ -447,16 +452,6 @@ document
                             ${order.transactionId}
                         </p>
 
-                        <p>
-                            <strong>Order Number:</strong>
-                            ${data.order.orderNumber}
-                        </p>
-
-                        <p>
-                            <strong>Private Tracking Code:</strong>
-                            ${data.trackingCode}
-                        </p>
-
                         <div class="order-status">
                             🕐 Order Status: <strong>Pending Review</strong>
                         </div>
@@ -464,10 +459,10 @@ document
                     </div>
 
                     <p class="redirect-message">
-                        Save your order number and private tracking code.
+                        This order is saved in your Kavro dashboard.
                     </p>
 
-                    <a href="track-order.html" class="btn-primary">Track Order</a>
+                    <a href="dashboard.html" class="btn-primary">View My Orders</a>
 
                 </div>
 

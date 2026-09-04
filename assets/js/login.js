@@ -112,10 +112,9 @@ if (form) {
                 button.textContent =
                     "Login Successful ✓";
 
-                // Go to main website
-                window.location.replace(
-                    "index.html"
-                );
+                const checkoutReturn = sessionStorage.getItem("kavroCheckoutReturn");
+                sessionStorage.removeItem("kavroCheckoutReturn");
+                window.location.replace(checkoutReturn || "index.html");
 
             }
 
@@ -200,9 +199,9 @@ async function handleGoogleLogin(
 
         saveKavroSession(data);
 
-        window.location.replace(
-            "index.html"
-        );
+        const checkoutReturn = sessionStorage.getItem("kavroCheckoutReturn");
+        sessionStorage.removeItem("kavroCheckoutReturn");
+        window.location.replace(checkoutReturn || "index.html");
 
     }
 

@@ -258,7 +258,7 @@ style="display:none;"></div>
 <label>Email Address</label>
 
 <div id="checkoutAccountNote" class="checkout-account-note">
-Guest checkout is available. Sign in to keep this order in your dashboard.
+Checking your Kavro account...
 </div>
 
 <input
@@ -841,6 +841,11 @@ const checkoutAccountNote = document.getElementById("checkoutAccountNote");
 let freeFireVerificationRequired = false;
 let freeFireVerificationReady = product !== "Free Fire";
 
+if (!checkoutToken) {
+    sessionStorage.setItem("kavroCheckoutReturn", window.location.href);
+    window.location.replace("login.html");
+}
+
 function resetUidVerification() {
     uidVerificationToken.value = "";
 
@@ -993,8 +998,8 @@ if (checkoutToken) {
         })
         .catch(() => {
             localStorage.removeItem("kavroToken");
-            checkoutAccountNote.innerHTML =
-                'Your session expired. <a href="login.html">Sign in again</a> or continue as guest.';
+            sessionStorage.setItem("kavroCheckoutReturn", window.location.href);
+            window.location.replace("login.html");
         });
 }
 
@@ -1156,9 +1161,9 @@ try {
 
     if (result.success) {
         sessionStorage.setItem("kavroLastOrder", JSON.stringify({
-            ...result.order,
-            trackingCode: result.trackingCode,
-            linkedToAccount: result.linkedToAccount
+            product: result.order.product,
+            package: result.order.package,
+            price: result.order.price
         }));
 
         window.location.href = "success.html";
