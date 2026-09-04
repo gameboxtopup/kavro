@@ -622,6 +622,10 @@ function activateDashboardTab(selected, updateHash = true) {
         );
     });
 
+    document.querySelectorAll("[data-dashboard-nav]").forEach(link => {
+        link.classList.toggle("active", link.dataset.dashboardNav === selected);
+    });
+
     ordersTab.style.display =
         selected === "orders" ? "block" : "none";
 

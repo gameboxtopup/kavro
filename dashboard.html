@@ -6,8 +6,7 @@
 
     <title>Kavro - My Dashboard</title>
 
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260904-back">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260904-mobile-dark-v2">
 </head>
 
 <body>
@@ -20,7 +19,7 @@
         </div>
 
         <a href="index.html" class="back-to-site-btn">
-            ← Back to Website
+            ← Store
         </a>
     </div>
 
@@ -45,21 +44,21 @@
         class="dashboard-tab active"
         data-tab="orders"
     >
-        📦 My Orders
+        <span>▤</span> Orders
     </button>
 
     <button
         class="dashboard-tab"
         data-tab="password"
     >
-        🔒 Change Password
+        <span>◆</span> Password
     </button>
 
     <button
         class="dashboard-tab"
         data-tab="chat"
     >
-        💬 Chat with Admin
+        <span>●</span> Support
     </button>
 
 </nav>
@@ -178,7 +177,7 @@
             </h2>
 
             <span class="online-dot">
-                ● Admin
+                Kavro Support
             </span>
 
         </div>
@@ -236,16 +235,14 @@
 
 <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 
-<script src="assets/js/dashboard.js?v=20260904-quantity"></script>
+<script src="assets/js/dashboard.js?v=20260904-mobile-dark-v2"></script>
 
-<button
-    type="button"
-    id="floatingChatBtn"
-    class="floating-chat-btn"
->
-    💬
-    <span>Chat with Admin</span>
-</button>
+<nav class="dashboard-mobile-nav" aria-label="Mobile navigation">
+    <a href="index.html"><span>⌂</span><small>Home</small></a>
+    <a href="products.html"><span>▦</span><small>Products</small></a>
+    <a href="dashboard.html#orders" data-dashboard-nav="orders" class="active"><span>▤</span><small>Orders</small></a>
+    <a href="dashboard.html#password" data-dashboard-nav="password"><span>●</span><small>Profile</small></a>
+</nav>
 
 </body>
 </html>

@@ -821,3 +821,309 @@ body {
     background: rgba(234, 88, 12, 0.15);
     color: #fb923c;
 }
+
+/* =========================================
+   KAVRO DARK CUSTOMER PORTAL
+========================================= */
+
+body {
+    color: #f8fafc;
+    background:
+        radial-gradient(circle at 85% 0, rgba(37,99,235,.18), transparent 30%),
+        #070b14;
+}
+
+.dashboard-header {
+    background: rgba(8,13,28,.94);
+    border-color: rgba(148,163,184,.14);
+    box-shadow: 0 8px 24px rgba(0,0,0,.18);
+    backdrop-filter: blur(18px);
+}
+
+.logo a,
+.logo {
+    color: #f8fafc;
+}
+
+.back-to-site-btn {
+    border-color: rgba(148,163,184,.18);
+    background: #111a2d;
+    color: #bfdbfe;
+}
+
+.back-to-site-btn:hover {
+    border-color: rgba(96,165,250,.45);
+    background: #172554;
+    color: #fff;
+}
+
+.user-info strong {
+    color: #f8fafc;
+}
+
+.user-info small {
+    color: #94a3b8;
+}
+
+.logout-btn {
+    border: 1px solid rgba(248,113,113,.25);
+    background: rgba(127,29,29,.18);
+    color: #fecaca;
+}
+
+.dashboard-nav,
+.dashboard-card {
+    border-color: rgba(148,163,184,.14);
+    background: rgba(16,24,39,.94);
+    box-shadow: 0 14px 35px rgba(0,0,0,.2);
+}
+
+.dashboard-tab {
+    color: #94a3b8;
+}
+
+.dashboard-tab:hover {
+    background: rgba(37,99,235,.1);
+    color: #bfdbfe;
+}
+
+.dashboard-tab.active {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+}
+
+.welcome-section {
+    background: linear-gradient(135deg, #1d4ed8, #4338ca);
+    box-shadow: 0 15px 40px rgba(37,99,235,.16);
+}
+
+.order-card {
+    border-color: rgba(148,163,184,.14);
+    background: #0d1626;
+}
+
+.order-card p,
+.order-card small,
+.loading,
+.chat-empty {
+    color: #94a3b8;
+}
+
+.chat-empty p {
+    color: #e2e8f0;
+}
+
+#changePasswordForm label {
+    color: #cbd5e1;
+}
+
+#changePasswordForm input,
+.chat-form input {
+    border-color: rgba(148,163,184,.2);
+    background: #0a111f;
+    color: #fff;
+}
+
+.chat-messages {
+    border-color: rgba(148,163,184,.14);
+    background: #0a111f;
+}
+
+.admin-message .chat-bubble {
+    border-color: rgba(148,163,184,.18);
+    background: #172033;
+    color: #e2e8f0;
+}
+
+.dashboard-mobile-nav {
+    display: none;
+}
+
+@media (max-width: 700px) {
+    body {
+        padding-bottom: 72px;
+    }
+
+    .dashboard-header {
+        height: 58px;
+        padding: 0 14px;
+    }
+
+    .logo a,
+    .logo {
+        font-size: 20px;
+    }
+
+    .header-left {
+        gap: 9px;
+    }
+
+    .back-to-site-btn {
+        min-height: 32px;
+        padding: 6px 9px;
+        font-size: 10px;
+    }
+
+    .back-to-site-btn::after {
+        content: none;
+    }
+
+    .logout-btn {
+        padding: 7px 10px;
+        font-size: 10px;
+    }
+
+    .dashboard-nav {
+        width: calc(100% - 24px);
+        margin-top: 12px;
+        gap: 5px;
+        padding: 5px;
+        overflow: visible;
+    }
+
+    .dashboard-tab {
+        min-width: 0;
+        padding: 9px 4px;
+        font-size: 9px;
+        white-space: nowrap;
+    }
+
+    .dashboard-tab span {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 13px;
+    }
+
+    .dashboard-container {
+        width: calc(100% - 24px);
+        margin: 12px auto 24px;
+    }
+
+    .welcome-section {
+        margin-bottom: 12px;
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .welcome-section h1 {
+        margin: 0 0 3px;
+        font-size: 20px;
+    }
+
+    .welcome-section p {
+        margin: 0;
+        font-size: 10px;
+    }
+
+    .dashboard-card {
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    .card-header {
+        margin-bottom: 13px;
+    }
+
+    .card-header h2 {
+        font-size: 15px;
+    }
+
+    .refresh-btn {
+        padding: 7px 9px;
+        font-size: 10px;
+    }
+
+    .order-card {
+        padding: 13px;
+        border-radius: 12px;
+    }
+
+    .order-top {
+        align-items: center;
+        flex-direction: row;
+        margin-bottom: 8px;
+    }
+
+    .order-top strong {
+        font-size: 12px;
+    }
+
+    .status {
+        padding: 4px 7px;
+        font-size: 8px;
+    }
+
+    .order-card p {
+        margin: 3px 0;
+        font-size: 10px;
+    }
+
+    .order-card small {
+        margin-top: 7px;
+        font-size: 8px;
+    }
+
+    .chat-messages {
+        height: min(360px, 48vh);
+        padding: 11px;
+    }
+
+    .chat-bubble {
+        padding: 9px 11px;
+        font-size: 11px;
+    }
+
+    .chat-form input {
+        padding: 10px;
+        font-size: 11px;
+    }
+
+    .chat-form button {
+        padding: 0 12px;
+        font-size: 10px;
+    }
+
+    .floating-chat-btn {
+        display: none !important;
+    }
+
+    .dashboard-mobile-nav {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1200;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        min-height: 62px;
+        padding: 7px 8px calc(6px + env(safe-area-inset-bottom));
+        border-top: 1px solid rgba(148,163,184,.18);
+        background: rgba(8,13,28,.97);
+        box-shadow: 0 -12px 28px rgba(0,0,0,.3);
+        backdrop-filter: blur(18px);
+    }
+
+    .dashboard-mobile-nav a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1px;
+        color: #7f8da4;
+        text-decoration: none;
+    }
+
+    .dashboard-mobile-nav a span {
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    .dashboard-mobile-nav a small {
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+    .dashboard-mobile-nav a.active {
+        color: #60a5fa;
+    }
+}
