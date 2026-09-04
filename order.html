@@ -255,7 +255,7 @@ style="display:none;"></div>
 
 <div class="form-group">
 
-<label>Email Address</label>
+<label id="emailLabel">Email Address</label>
 
 <div id="checkoutAccountNote" class="checkout-account-note">
 Checking your Kavro account...
@@ -267,6 +267,10 @@ id="email"
 name="Email"
 placeholder="Enter your email address"
 required>
+
+<small id="deliveryEmailHelp" style="display:none; margin-top:8px; color:#93c5fd;">
+The UniPin redeem code will be delivered to this email address. You can change it for this order.
+</small>
 
 </div>
 
@@ -815,9 +819,14 @@ Nepal's trusted digital marketplace for game top-ups and gift cards.
 
 const params = new URLSearchParams(window.location.search);
 
-const product = params.get("product");
+let product = params.get("product");
 const pack = params.get("package");
 const price = params.get("price");
+
+// Repair checkout links created by the older UniPin page.
+if (product === "Free Fire" && /UPBD|UNIPIN/i.test(pack || "")) {
+    product = "UniPin BD Voucher";
+}
 
 if(product){
     document.getElementById("orderProduct").textContent = product;
@@ -925,6 +934,9 @@ else if(product === "UniPin BD Voucher"){
     uidInput.value = "Digital voucher delivery";
     uidInput.removeAttribute("required");
     uidInput.removeAttribute("pattern");
+    document.getElementById("emailLabel").textContent = "Redeem Code Delivery Email";
+    document.getElementById("email").placeholder = "Enter the Gmail/email for code delivery";
+    document.getElementById("deliveryEmailHelp").style.display = "block";
 }
 
 else{
@@ -998,9 +1010,10 @@ if (checkoutToken) {
             if (!response.ok || !data.success) throw new Error("Session expired");
             const emailInput = document.getElementById("email");
             emailInput.value = data.user.email || "";
-            emailInput.readOnly = true;
             checkoutAccountNote.textContent =
-                "✓ Signed in — this order will appear in your Kavro dashboard.";
+                product === "UniPin BD Voucher"
+                    ? "✓ Signed in — you may change the email below for redeem-code delivery."
+                    : "✓ Signed in — this order will appear in your Kavro dashboard.";
             checkoutAccountNote.classList.add("linked");
         })
         .catch(() => {

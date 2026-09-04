@@ -58,8 +58,15 @@ router.post("/", async (req, res) => {
         }
 
         const customerEmail = String(
-            linkedUser?.email || req.body.email || ""
+            req.body.email || linkedUser?.email || ""
         ).trim().toLowerCase();
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+            return res.status(400).json({
+                success: false,
+                message: "Please enter a valid delivery email address."
+            });
+        }
 
         const transactionId =
             (req.body.transactionId || "").trim();
