@@ -2117,6 +2117,51 @@ box-shadow:0 15px 35px rgba(0,0,0,.35);font-size:12px;font-weight:700;transition
     display: none;
 }
 
+.home-store-card {
+    display: flex;
+    flex-direction: column;
+    color: inherit;
+}
+
+.home-store-card .card-image {
+    position: relative;
+}
+
+.home-available-badge {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    padding: 4px 8px;
+    border: 1px solid rgba(134,239,172,.28);
+    border-radius: 999px;
+    background: rgba(6,78,59,.9);
+    color: #bbf7d0;
+    font-size: 9px;
+    font-weight: 800;
+}
+
+.home-card-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    color: #93c5fd;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.home-card-link b {
+    font-size: 20px;
+}
+
+.home-products-loading {
+    grid-column: 1 / -1;
+    padding: 35px 15px;
+    color: #94a3b8;
+    text-align: center;
+    font-size: 12px;
+}
+
 @media (max-width: 700px) {
     .store-page {
         padding-bottom: 70px;
@@ -2468,6 +2513,23 @@ box-shadow:0 15px 35px rgba(0,0,0,.35);font-size:12px;font-weight:700;transition
     .home-page .card-content > p,
     .home-page .card-content ul {
         display: none;
+    }
+
+    .home-page .home-available-badge {
+        top: 6px;
+        right: 6px;
+        padding: 3px 6px;
+        font-size: 7px;
+    }
+
+    .home-page .home-card-link {
+        margin-top: 7px;
+        font-size: 8px;
+    }
+
+    .home-page .home-card-link b {
+        font-size: 15px;
+        line-height: 1;
     }
 
     .home-page .card-content .btn-primary {
