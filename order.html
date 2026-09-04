@@ -171,6 +171,14 @@ Review your selected package, enter your account details, and complete your paym
 
 </div>
 
+<div class="summary-row" id="orderQuantityRow" style="display:none;">
+
+<span>🛒 Quantity</span>
+
+<strong id="orderQuantity">1</strong>
+
+</div>
+
 <div class="summary-row total">
 
 <span>Total</span>
@@ -239,14 +247,6 @@ Verify UID
 
 </div>
 
-<div class="summary-row" id="orderQuantityRow" style="display:none;">
-
-<span>🛒 Quantity</span>
-
-<strong id="orderQuantity">1</strong>
-
-</div>
-
 <input
 type="hidden"
 id="uidVerificationToken"
@@ -258,6 +258,20 @@ class="uid-verification-result"
 role="status"
 aria-live="polite"
 style="display:none;"></div>
+
+</div>
+
+<div class="form-group" id="zoneIdGroup" style="display:none;">
+
+<label for="zoneId">Zone / Server ID</label>
+
+<input
+type="text"
+id="zoneId"
+name="Zone ID"
+placeholder="Enter your Zone / Server ID"
+inputmode="numeric"
+autocomplete="off">
 
 </div>
 
@@ -856,6 +870,11 @@ if(product === "UniPin BD Voucher"){
     document.getElementById("orderQuantity").textContent = quantity;
 }
 
+if(product === "Mobile Legends"){
+    document.getElementById("orderQuantityRow").style.display = "flex";
+    document.getElementById("orderQuantity").textContent = quantity;
+}
+
 const uidLabel = document.getElementById("uidLabel");
 const uidInput = document.getElementById("uid");
 const verifyUidBtn = document.getElementById("verifyUidBtn");
@@ -953,6 +972,18 @@ else if(product === "UniPin BD Voucher"){
     document.getElementById("emailLabel").textContent = "Redeem Code Delivery Email";
     document.getElementById("email").placeholder = "Enter the Gmail/email for code delivery";
     document.getElementById("deliveryEmailHelp").style.display = "block";
+}
+
+else if(product === "Mobile Legends"){
+    uidLabel.textContent = "Mobile Legends Player ID";
+    uidInput.placeholder = "Enter your Player ID";
+    uidInput.inputMode = "numeric";
+    uidInput.pattern = "[0-9]{4,20}";
+
+    const zoneIdInput = document.getElementById("zoneId");
+    document.getElementById("zoneIdGroup").style.display = "block";
+    zoneIdInput.required = true;
+    zoneIdInput.pattern = "[0-9]{1,10}";
 }
 
 else{
@@ -1061,6 +1092,7 @@ const btnLoader = document.getElementById("btnLoader");
 
 const uid = document.getElementById("uid").value.trim();
 const email = document.getElementById("email").value.trim();
+const zoneId = document.getElementById("zoneId").value.trim();
 const payment = document.querySelector(
 'input[name="Payment Method"]:checked'
 )?.value;
@@ -1092,6 +1124,11 @@ if(
 
 if(email === ""){
     alert("Please enter your email.");
+    return;
+}
+
+if(product === "Mobile Legends" && !/^\d{1,10}$/.test(zoneId)){
+    alert("Please enter a valid numeric Zone / Server ID.");
     return;
 }
 
@@ -1181,6 +1218,8 @@ try {
             item: productItemId,
 
             uid: uid,
+
+            zoneId: zoneId,
 
             uidVerificationToken:
                 document.getElementById("uidVerificationToken").value,

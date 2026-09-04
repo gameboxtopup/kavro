@@ -389,7 +389,10 @@ function selectPackage(
     const quantityInput =
         document.getElementById("voucherQuantityInput");
 
-    if (PRODUCT_SLUG === "unipin" && quantityInput) {
+    if (
+        (PRODUCT_SLUG === "unipin" || PRODUCT_SLUG === "mlbb") &&
+        quantityInput
+    ) {
         const availableStock = Math.max(1, Number(item.stock) || 1);
         quantityInput.max = String(availableStock);
         quantity = Math.min(
@@ -463,7 +466,10 @@ function selectPackage(
         const calculation =
             document.getElementById("priceCalculation");
 
-        if (calculation && PRODUCT_SLUG === "unipin") {
+        if (
+            calculation &&
+            (PRODUCT_SLUG === "unipin" || PRODUCT_SLUG === "mlbb")
+        ) {
             calculation.textContent =
                 `${quantity} × Rs. ${finalPrice} = Total`;
         }
@@ -484,10 +490,12 @@ function selectPackage(
     // ==========================================
 
     if (buyButton) {
-        if (PRODUCT_SLUG === "ff" || PRODUCT_SLUG === "unipin") {
-            const checkoutProduct = PRODUCT_SLUG === "unipin"
-                ? "UniPin BD Voucher"
-                : "Free Fire";
+        if (["ff", "unipin", "mlbb"].includes(PRODUCT_SLUG)) {
+            const checkoutProduct = {
+                ff: "Free Fire",
+                unipin: "UniPin BD Voucher",
+                mlbb: "Mobile Legends"
+            }[PRODUCT_SLUG];
             const params = new URLSearchParams({
                 product: checkoutProduct,
                 package: item.title,

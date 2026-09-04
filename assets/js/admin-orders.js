@@ -223,6 +223,10 @@ function viewOrder(id){
 
     document.getElementById("mUid").textContent = order.uid;
 
+    document.getElementById("mZone").textContent = order.zoneId || "N/A";
+    document.getElementById("mZoneRow").style.display =
+        order.product === "Mobile Legends" ? "block" : "none";
+
     document.getElementById("mPlayer").textContent =
         order.playerName || "Not verified";
 

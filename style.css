@@ -415,6 +415,45 @@ box-shadow:0 15px 35px rgba(0,0,0,.35);font-size:12px;font-weight:700;transition
     margin: 0;
 }
 
+.mlbb-visual {
+    min-height: 290px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid rgba(96,165,250,.35);
+    border-radius: 22px;
+    background: radial-gradient(circle at 50% 20%, rgba(59,130,246,.34), transparent 55%), linear-gradient(145deg, #172554, #07101f 70%);
+    color: #fff;
+}
+
+.mlbb-mark {
+    display: grid;
+    place-items: center;
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    border: 3px solid #fbbf24;
+    background: linear-gradient(145deg, #2563eb, #0f172a);
+    color: #fef3c7;
+    font-size: 38px;
+    font-weight: 900;
+    box-shadow: 0 0 36px rgba(59,130,246,.45);
+}
+
+.mlbb-visual strong {
+    font-size: clamp(24px, 4vw, 38px);
+    letter-spacing: .04em;
+}
+
+.mlbb-visual span {
+    color: #93c5fd;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .18em;
+}
+
 /* LOGOUT */
 
 .nav-logout-btn {

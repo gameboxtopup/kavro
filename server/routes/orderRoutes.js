@@ -85,7 +85,14 @@ router.post("/", async (req, res) => {
             Number.parseInt(req.body.quantity || "1", 10) || 1
         );
 
-        if (orderProduct === "UniPin BD Voucher") {
+        const managedProductSlugs = {
+            "UniPin BD Voucher": "unipin",
+            "Mobile Legends": "mlbb"
+        };
+
+        const managedProductSlug = managedProductSlugs[orderProduct];
+
+        if (managedProductSlug) {
             let productItem = null;
 
             if (req.body.item) {
@@ -110,7 +117,7 @@ router.post("/", async (req, res) => {
                 productItem = matchingItems.find(item =>
                     item.product &&
                     (
-                        item.product.slug === "unipin" ||
+                        item.product.slug === managedProductSlug ||
                         item.product.name === orderProduct
                     ) &&
                     String(item.title || "")
@@ -123,7 +130,20 @@ router.post("/", async (req, res) => {
             if (!productItem || !productItem.active) {
                 return res.status(400).json({
                     success: false,
-                    message: "This UniPin package is not available."
+                    message: "This package is not available."
+                });
+            }
+
+            if (
+                !productItem.product ||
+                (
+                    productItem.product.slug !== managedProductSlug &&
+                    productItem.product.name !== orderProduct
+                )
+            ) {
+                return res.status(400).json({
+                    success: false,
+                    message: "The selected package does not match this product."
                 });
             }
 
@@ -174,6 +194,22 @@ router.post("/", async (req, res) => {
 
         const uid =
             (req.body.uid || "").trim();
+
+        const zoneId =
+            String(req.body.zoneId || "").trim();
+
+        if (
+            orderProduct === "Mobile Legends" &&
+            (
+                !/^\d{4,20}$/.test(uid) ||
+                !/^\d{1,10}$/.test(zoneId)
+            )
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Please enter a valid Player ID and Zone / Server ID."
+            });
+        }
 
         let playerName = "";
         let playerRegion = "";
@@ -262,6 +298,8 @@ router.post("/", async (req, res) => {
                 quantity,
 
                 uid,
+
+                zoneId,
 
                 playerName,
 

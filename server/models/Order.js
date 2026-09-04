@@ -44,6 +44,11 @@ const orderSchema = new mongoose.Schema({
         default: ""
     },
 
+    zoneId: {
+        type: String,
+        default: ""
+    },
+
     playerName: {
         type: String,
         default: ""

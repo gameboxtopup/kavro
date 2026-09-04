@@ -35,6 +35,10 @@ async function loadProducts() {
 
             link = "unipin.html";
 
+        } else if (product.slug === "mlbb") {
+
+            link = "mobile-legends.html";
+
         }
 
         grid.innerHTML += `
