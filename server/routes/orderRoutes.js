@@ -69,14 +69,16 @@ router.post("/", async (req, res) => {
         const whatsapp = String(req.body.whatsapp || "").trim();
         const requestedProduct = String(req.body.product || "").trim();
 
-        if (requestedProduct !== "Roblox" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+        const digitalCodeProduct = ["Roblox", "Steam Gift Card Global"].includes(requestedProduct);
+
+        if (!digitalCodeProduct && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
             return res.status(400).json({
                 success: false,
                 message: "Please enter a valid delivery email address."
             });
         }
 
-        if (requestedProduct === "Roblox" && !whatsapp && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+        if (digitalCodeProduct && !whatsapp && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
             return res.status(400).json({ success: false, message: "Enter either a WhatsApp number or delivery email." });
         }
 

@@ -221,6 +221,9 @@ function viewOrder(id){
     document.getElementById("mEmail").textContent =
         order.email || "No delivery email provided";
 
+    document.getElementById("mWhatsapp").textContent =
+        order.whatsapp || "No WhatsApp number provided";
+
     document.getElementById("mUid").textContent = order.uid;
 
     document.getElementById("mZone").textContent = order.zoneId || "N/A";
