@@ -318,6 +318,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 else if (
                     window.location.pathname
                         .toLowerCase()
+                        .includes("steam")
+                ) {
+
+                    product =
+                        "Steam Gift Card Global";
+
+                }
+
+                else if (
+                    window.location.pathname
+                        .toLowerCase()
                         .includes("freefire")
                 ) {
 
