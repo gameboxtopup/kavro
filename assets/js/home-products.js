@@ -17,7 +17,8 @@ function getHomeProductLink(product) {
         pubg: "pubg.html",
         roblox: "roblox.html",
         unipin: "unipin.html",
-        mlbb: "mobile-legends.html"
+        mlbb: "mobile-legends.html",
+        steam: "steam.html"
     };
 
     return links[product.slug] || "products.html";

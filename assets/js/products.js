@@ -15,6 +15,7 @@ function productLink(product) {
     if (product.slug === "roblox") return "roblox.html";
     if (product.slug === "unipin") return "unipin.html";
     if (product.slug === "mlbb") return "mobile-legends.html";
+    if (product.slug === "steam") return "steam.html";
     return "#";
 }
 
