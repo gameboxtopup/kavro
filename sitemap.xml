@@ -3,48 +3,68 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-<loc>https://YOUR-DOMAIN/</loc>
+<loc>https://kavronepal.vercel.app/</loc>
 <priority>1.0</priority>
 </url>
 
 <url>
-<loc>https://YOUR-DOMAIN/products.html</loc>
+<loc>https://kavronepal.vercel.app/products.html</loc>
 <priority>0.9</priority>
 </url>
 
 <url>
-<loc>https://YOUR-DOMAIN/blog.html</loc>
+<loc>https://kavronepal.vercel.app/blog.html</loc>
 <priority>0.9</priority>
 </url>
 
 <url>
-<loc>https://YOUR-DOMAIN/free-fire-diamonds-nepal.html</loc>
+<loc>https://kavronepal.vercel.app/freefire.html</loc>
 <priority>0.8</priority>
 </url>
 
 <url>
-<loc>https://YOUR-DOMAIN/pubg-uc-nepal.html</loc>
+<loc>https://kavronepal.vercel.app/pubg.html</loc>
 <priority>0.8</priority>
 </url>
 
 <url>
-<loc>https://YOUR-DOMAIN/contact.html</loc>
+<loc>https://kavronepal.vercel.app/contact.html</loc>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://YOUR-DOMAIN/about.html</loc>
+<loc>https://kavronepal.vercel.app/about.html</loc>
 <priority>0.7</priority>
 </url>
 
 <url>
-<loc>https://YOUR-DOMAIN/unipin.html</loc>
+<loc>https://kavronepal.vercel.app/unipin.html</loc>
 <priority>0.8</priority>
 </url>
 
 <url>
-<loc>https://YOUR-DOMAIN/mobile-legends.html</loc>
+<loc>https://kavronepal.vercel.app/mobile-legends.html</loc>
 <priority>0.8</priority>
+</url>
+
+<url>
+<loc>https://kavronepal.vercel.app/roblox.html</loc>
+<priority>0.8</priority>
+</url>
+
+<url>
+<loc>https://kavronepal.vercel.app/steam.html</loc>
+<priority>0.8</priority>
+</url>
+
+<url>
+<loc>https://kavronepal.vercel.app/blog/free-fire-top-up-nepal.html</loc>
+<priority>0.7</priority>
+</url>
+
+<url>
+<loc>https://kavronepal.vercel.app/blog/pubg-uc-nepal.html</loc>
+<priority>0.7</priority>
 </url>
 
 </urlset>

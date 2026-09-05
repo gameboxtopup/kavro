@@ -2,4 +2,4 @@ User-agent: *
 
 Allow: /
 
-Sitemap: https://YOUR-DOMAIN/sitemap.xml
+Sitemap: https://kavronepal.vercel.app/sitemap.xml
