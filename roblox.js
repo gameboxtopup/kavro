@@ -82,7 +82,7 @@ document.getElementById("buyButton").onclick = function (e) {
 
     }));
 
-    window.location.href = "checkout.html";
+    window.location.href = `order.html?product=Roblox&package=${encodeURIComponent(document.getElementById("packageName").textContent)}&price=${encodeURIComponent(document.getElementById("packagePrice").textContent)}`;
 
 };
 
