@@ -68,7 +68,7 @@ function initializeCards() {
 
 loadPackages();
 
-document.getElementById("whatsappBuy").onclick = function (e) {
+document.getElementById("buyButton").onclick = function (e) {
 
     e.preventDefault();
 
@@ -86,20 +86,4 @@ document.getElementById("whatsappBuy").onclick = function (e) {
 
 };
 
-document.getElementById("facebookBuy").onclick = function (e) {
-
-    e.preventDefault();
-
-    localStorage.setItem("selectedProduct", JSON.stringify({
-
-        product: "Roblox",
-
-        package: document.getElementById("packageName").textContent,
-
-        price: document.getElementById("packagePrice").textContent
-
-    }));
-
-    window.location.href = "checkout.html";
-
-};
+document.getElementById("ctaBuyButton").onclick = document.getElementById("buyButton").onclick;
