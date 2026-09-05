@@ -5,7 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const profileBtn = document.getElementById("profileBtn");
     const logoutBtn = document.getElementById("navLogoutBtn");
 
-    const token = localStorage.getItem("token");
+    // Keep the header in sync with the token used by login.js/dashboard.js.
+    const token = localStorage.getItem("kavroToken");
 
     if (token) {
 
@@ -54,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function kavroLogout() {
 
     localStorage.removeItem("token");
+    localStorage.removeItem("kavroToken");
     localStorage.removeItem("user");
     localStorage.removeItem("currentUser");
 
