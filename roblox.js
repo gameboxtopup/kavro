@@ -68,22 +68,3 @@ function initializeCards() {
 
 loadPackages();
 
-document.getElementById("buyButton").onclick = function (e) {
-
-    e.preventDefault();
-
-    localStorage.setItem("selectedProduct", JSON.stringify({
-
-        product: "Roblox",
-
-        package: document.getElementById("packageName").textContent,
-
-        price: document.getElementById("packagePrice").textContent
-
-    }));
-
-    window.location.href = `order.html?product=Roblox&package=${encodeURIComponent(document.getElementById("packageName").textContent)}&price=${encodeURIComponent(document.getElementById("packagePrice").textContent)}`;
-
-};
-
-document.getElementById("ctaBuyButton").onclick = document.getElementById("buyButton").onclick;
