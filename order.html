@@ -296,6 +296,12 @@ The UniPin redeem code will be delivered to this email address. You can change i
 
 </div>
 
+<div class="form-group" id="whatsappGroup" style="display:none;">
+<label for="whatsapp">WhatsApp Number</label>
+<input type="tel" id="whatsapp" name="WhatsApp" placeholder="e.g. +9779800000000" autocomplete="tel">
+<small id="whatsappHelp" style="display:block; margin-top:8px; color:#93c5fd;">We can send your Roblox code here. Delivery may take a little longer while we verify payment.</small>
+</div>
+
 <div class="form-group">
 
 <label>Select Payment Method</label>
@@ -960,8 +966,13 @@ else if(product === "PUBG Mobile"){
 
 else if(product === "Roblox"){
     uidLabel.textContent = "Roblox Username";
-    uidInput.placeholder = "Enter your Roblox Username";
+    uidInput.placeholder = "Optional: enter your Roblox Username";
     uidInput.removeAttribute("pattern");
+    uidInput.removeAttribute("required");
+    document.getElementById("emailLabel").textContent = "Delivery Email (optional)";
+    document.getElementById("email").placeholder = "Optional if you provide WhatsApp";
+    document.getElementById("email").removeAttribute("required");
+    document.getElementById("whatsappGroup").style.display = "block";
 }
 
 else if(product === "UniPin BD Voucher"){
@@ -1092,6 +1103,7 @@ const btnLoader = document.getElementById("btnLoader");
 
 const uid = document.getElementById("uid").value.trim();
 const email = document.getElementById("email").value.trim();
+const whatsapp = document.getElementById("whatsapp").value.trim();
 const zoneId = document.getElementById("zoneId").value.trim();
 const payment = document.querySelector(
 'input[name="Payment Method"]:checked'
@@ -1100,7 +1112,7 @@ const txn = document.getElementById("transaction").value.trim();
 const screenshot = document.getElementById("paymentScreenshot").files;
 
 // Validation
-if(uid === ""){
+if(uid === "" && product !== "Roblox"){
     alert("Please enter your UID or Username.");
     return;
 }
@@ -1122,8 +1134,8 @@ if(
     return;
 }
 
-if(email === ""){
-    alert("Please enter your email.");
+if(email === "" && whatsapp === ""){
+    alert("Please enter either a WhatsApp number or delivery email.");
     return;
 }
 
@@ -1225,6 +1237,8 @@ try {
                 document.getElementById("uidVerificationToken").value,
 
             email: email,
+
+            whatsapp: whatsapp,
 
             paymentMethod: payment,
 

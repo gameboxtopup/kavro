@@ -66,11 +66,18 @@ router.post("/", async (req, res) => {
             req.body.email || linkedUser?.email || ""
         ).trim().toLowerCase();
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+        const whatsapp = String(req.body.whatsapp || "").trim();
+        const requestedProduct = String(req.body.product || "").trim();
+
+        if (requestedProduct !== "Roblox" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
             return res.status(400).json({
                 success: false,
                 message: "Please enter a valid delivery email address."
             });
+        }
+
+        if (requestedProduct === "Roblox" && !whatsapp && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+            return res.status(400).json({ success: false, message: "Enter either a WhatsApp number or delivery email." });
         }
 
         const transactionId =
@@ -315,6 +322,8 @@ router.post("/", async (req, res) => {
 
                 phone:
                     req.body.phone || "",
+
+                whatsapp,
 
                 paymentMethod:
                     req.body.paymentMethod ||

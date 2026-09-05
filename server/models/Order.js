@@ -83,6 +83,11 @@ const orderSchema = new mongoose.Schema({
         default: ""
     },
 
+    whatsapp: {
+        type: String,
+        default: ""
+    },
+
     paymentMethod: {
         type: String,
         default: ""
