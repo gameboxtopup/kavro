@@ -37,13 +37,18 @@
         }
     }
 
+    function showNotConfigured() {
+        button.addEventListener("click", () => alert("Google sign-in is not configured yet. Paste your Google Web Client ID in login.html and register.html."));
+    }
+
+    if (clientId.startsWith("YOUR_")) {
+        showNotConfigured();
+        return;
+    }
+
     function init() {
         if (!window.google?.accounts?.id) {
             setTimeout(init, 250);
-            return;
-        }
-        if (clientId.startsWith("YOUR_")) {
-            button.addEventListener("click", () => alert("Google sign-in is not configured yet. Add the Google client ID to this site."), { once: true });
             return;
         }
         google.accounts.id.initialize({ client_id: clientId, callback: handleCredential, auto_select: false });

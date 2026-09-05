@@ -365,3 +365,14 @@ body {
     }
 
 }
+
+/* Kavro dark auth theme */
+body { background: #070d1d; color: #f8fafc; background-image: radial-gradient(circle at 10% 0%, rgba(37,99,235,.22), transparent 38%), linear-gradient(135deg, #070d1d, #0d1b3b); }
+.auth-card { background: rgba(15,29,58,.94); border: 1px solid rgba(96,165,250,.22); box-shadow: 0 22px 60px rgba(0,0,0,.35); }
+.auth-card h1 { color: #f8fafc; }
+.subtitle, .bottom-text { color: #a8b7d6; }
+.auth-card label { color: #dbeafe; }
+.auth-card input { border-color: #2d426b; background: #0a1530; color: #f8fafc; }
+.divider::before, .divider::after { background: #2d426b; }
+.google-button { border-color: #41618f; background: #102042; color: #f8fafc; }
+.google-button:active { background: #1a315b; }
