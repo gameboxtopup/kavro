@@ -9,6 +9,7 @@ function normalize(value) {
 }
 
 function productLink(product) {
+    if (product.slug === "freefire-bots") return "freefire-bots.html";
     if (product.category === "Subscriptions") return `subscription.html?slug=${product.slug}`;
     if (product.slug === "ff") return "freefire.html";
     if (product.slug === "pubg") return "pubg.html";
