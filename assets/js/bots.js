@@ -1,7 +1,7 @@
 (function(){
   const API='https://kavro-api.onrender.com/api/products/slug/';
   const whatsapp='9779747687660';
-  const facebook='https://www.facebook.com/messages/';
+  const facebook='https://www.facebook.com/profile.php?id=61574738600137';
   // This matches the existing Admin product slug.
   const slug='freefire-bots';
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
