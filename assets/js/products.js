@@ -4,6 +4,15 @@ const categoryButtons = document.querySelectorAll(".category-btn");
 let loadedProducts = [];
 let activeCategory = "all";
 
+if (grid) {
+    grid.innerHTML = `
+        <div class="kavro-loader" aria-label="Loading products">
+            <span></span>
+            <small>Loading products…</small>
+        </div>
+    `;
+}
+
 function normalize(value) {
     return String(value || "").toLowerCase().replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
 }

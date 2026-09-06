@@ -2654,3 +2654,36 @@ box-shadow:0 15px 35px rgba(0,0,0,.35);font-size:12px;font-weight:700;transition
 .community-popup{position:relative;width:min(100%,420px);padding:30px 26px 24px;border:1px solid rgba(148,163,184,.25);border-radius:22px;background:#101827;color:#f8fafc;box-shadow:0 24px 80px rgba(0,0,0,.45);text-align:center}
 .community-popup-icon{font-size:30px;margin-bottom:8px}.community-popup h2{margin:0;font-size:23px}.community-popup p{margin:12px 0 22px;color:#b8c4d8;line-height:1.55}.community-popup-close{position:absolute;top:10px;right:13px;border:0;background:transparent;color:#94a3b8;font-size:28px;cursor:pointer}.community-popup-join{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 25px;border-radius:11px;background:#22c55e;color:#04130a;font-weight:800;text-decoration:none}.community-popup-later,.community-popup-never{display:block;margin:14px auto 0;border:0;background:transparent;color:#94a3b8;cursor:pointer}.community-popup-never{font-size:12px}.community-popup-never input{accent-color:#22c55e;margin-right:6px}
 @media(max-width:520px){.community-popup{padding:26px 20px 21px}.community-popup h2{font-size:20px}}
+
+
+.kavro-loader {
+    min-height: 170px;
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #9ba8c2;
+    text-align: center;
+}
+
+.kavro-loader span {
+    width: 34px;
+    height: 34px;
+    border: 4px solid rgba(96, 165, 250, 0.22);
+    border-top-color: #3b82f6;
+    border-right-color: #60a5fa;
+    border-radius: 50%;
+    animation: kavroSpin 0.8s linear infinite;
+}
+
+.kavro-loader small {
+    font-size: 13px;
+}
+
+@keyframes kavroSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
