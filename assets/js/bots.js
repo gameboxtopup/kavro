@@ -1,0 +1,12 @@
+(function(){
+  const API='https://kavro-api.onrender.com/api/products/slug/';
+  const whatsapp='9779747687660';
+  const facebook='https://www.facebook.com/messages/';
+  // This matches the existing Admin product slug.
+  const slug='freefire-bots';
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function buttons(title,price,type){const text=encodeURIComponent(`Hello Kavro, I want to order ${title} for NPR ${price}. Service: ${type}.`);return `<div class="bot-actions"><a class="bot-wa" target="_blank" rel="noopener" href="https://wa.me/${whatsapp}?text=${text}">WhatsApp</a><a class="bot-fb" target="_blank" rel="noopener" href="${facebook}">Facebook</a></div>`}
+  async function load(){try{const res=await fetch(API+encodeURIComponent(slug));if(!res.ok)throw Error();const product=await res.json();const all=await (await fetch('https://kavro-api.onrender.com/api/product-items')).json();const plans=all.filter(x=>x.active&&x.product&&x.product._id===product._id);['likes','glory'].forEach(key=>{const grid=document.getElementById(key+'Grid');const marker=key==='likes'?'[LIKE]':'[GLORY]';const selected=plans.filter(x=>String(x.title).toUpperCase().startsWith(marker));grid.innerHTML=selected.length?selected.map(x=>{const title=String(x.title).replace(/^\[(LIKE|GLORY)\]\s*/i,'');return `<article class="bot-card"><h3>${esc(title)}</h3><div class="bot-price">NPR ${esc(x.price)}</div><div class="bot-meta">${key==='likes'?'Guaranteed quantity • automatic delivery':'Approx. 100k–200k glory per squad'}</div>${buttons(title,x.price,key==='likes'?'Boost Like':'Guild Glory')}</article>`}).join(''):'<div class="bot-empty">No packages available in this tab yet.</div>'})}catch(e){['likes','glory'].forEach(key=>document.getElementById(key+'Grid').innerHTML='<div class="bot-empty">Add the Free Fire Bot Services product and active packages in Admin.</div>')}}
+  document.querySelectorAll('.bot-tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.bot-tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.bot-panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active')}));
+  load();
+})();
