@@ -199,8 +199,8 @@ router.post("/", async (req, res) => {
             unitPrice = `Rs. ${finalUnitPrice}`;
             orderPrice = `Rs. ${finalUnitPrice * quantity}`;
         } else if (orderType !== "smm") {
-        quantity = 1;
-    }
+            quantity = 1;
+        }
 
         const uid =
             (req.body.uid || "").trim();
@@ -342,17 +342,11 @@ router.post("/", async (req, res) => {
                 note:
                     req.body.note || "",
 
-                type: orderType,
+                type:
+                    orderType,
 
-                serviceId:
-                    String(req.body.serviceId || "").trim(),
-
-                targetUrl:
-                    String(req.body.targetUrl || "").trim(),
-
-                providerOrderId: "",
-
-                providerStatus: ""
+                serviceId: String(req.body.serviceId || "").trim(),
+                targetUrl: String(req.body.targetUrl || "").trim()
 
             });
 

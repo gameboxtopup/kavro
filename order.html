@@ -225,7 +225,7 @@ value="success.html">
 </div>
 <div class="form-group">
 <label for="smmQuantity">Quantity</label>
-<input id="smmQuantity" type="number" min="10" value="1000">
+<input id="smmQuantity" type="number" min="10" value="1000" readonly aria-readonly="true">
 </div>
 </div>
 
@@ -235,7 +235,7 @@ Player UID / Username
 
 </label>
 
-<div class="uid-verification-row">
+<div class="uid-verification-row" id="uidRow">
 
 <input
 type="text"
@@ -876,7 +876,18 @@ if(product){
     document.getElementById("orderProduct").textContent = product;
 }
 
-if (isSmmOrder) document.getElementById("smmFields").style.display = "block";
+if (isSmmOrder) {
+    document.getElementById("smmFields").style.display = "block";
+
+    document.getElementById("uidLabel").style.display = "none";
+    document.getElementById("uidRow").style.display = "none";
+    document.getElementById("uid").required = false;
+    document.getElementById("uidLabel").style.display = "none";
+    document.getElementById("uidRow").style.display = "none";
+    document.getElementById("uidLabel").hidden = true;
+    document.getElementById("uidRow").hidden = true;
+    document.getElementById("uid").required = false;
+}
 
 if(pack){
     document.getElementById("orderPackage").textContent = pack;
@@ -1030,7 +1041,9 @@ else{
 
 }
 
-uidInput.addEventListener("input", resetUidVerification);
+if (uidInput) {
+    uidInput.addEventListener("input", resetUidVerification);
+}
 
 verifyUidBtn.addEventListener("click", async function () {
     const uid = uidInput.value.trim();
@@ -1551,5 +1564,25 @@ document.getElementById("downloadPopupQR").onclick=function(){
 </script>
 
 </body>
+
+<script>
+// Final SMM-only UI guard (runs independently of the checkout logic).
+if (new URLSearchParams(location.search).get("type") === "smm") {
+  const label = document.getElementById("uidLabel");
+  const row = document.getElementById("uidRow");
+  const uid = document.getElementById("uid");
+  const qty = document.getElementById("smmQuantity");
+  if (label) label.remove();
+  if (row) row.remove();
+  if (uid) uid.remove();
+  if (qty) {
+    const q = Number(new URLSearchParams(location.search).get("quantity")) ||
+      Number((new URLSearchParams(location.search).get("package") || "").replace(/[^0-9]/g, "")) || 1;
+    qty.value = q;
+    qty.readOnly = true;
+    qty.disabled = true;
+  }
+}
+</script>
 
 </html>
