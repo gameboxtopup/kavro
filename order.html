@@ -225,7 +225,7 @@ value="success.html">
 </div>
 <div class="form-group">
 <label for="smmQuantity">Quantity</label>
-<input id="smmQuantity" type="number" min="10" value="1000">
+<input id="smmQuantity" type="number" min="10" value="1000" readonly>
 </div>
 </div>
 
@@ -235,7 +235,7 @@ Player UID / Username
 
 </label>
 
-<div class="uid-verification-row">
+<div class="uid-verification-row" id="uidRow">
 
 <input
 type="text"
@@ -876,7 +876,27 @@ if(product){
     document.getElementById("orderProduct").textContent = product;
 }
 
-if (isSmmOrder) document.getElementById("smmFields").style.display = "block";
+if (isSmmOrder) {
+    document.getElementById("smmFields").style.display = "block";
+
+    document.getElementById("uidLabel").remove();
+    document.getElementById("uidRow").remove();
+
+    const uidInput = document.getElementById("uid");
+    if (uidInput) {
+        uidInput.remove();
+    }
+
+    const quantityInput = document.getElementById("smmQuantity");
+    if (quantityInput) {
+        const packageQuantity =
+            Number((pack || "").replace(/[^0-9]/g, "")) || 1000;
+
+        quantityInput.value = packageQuantity;
+        quantityInput.readOnly = true;
+        quantityInput.disabled = true;
+    }
+}
 
 if(pack){
     document.getElementById("orderPackage").textContent = pack;
