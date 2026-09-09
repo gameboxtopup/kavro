@@ -9,6 +9,10 @@ const User = require("../models/User");
 const ProductItem = require("../models/ProductItem");
 const { requireAdmin } = require("../middleware/auth");
 
+const {
+  addOrder: addSmmOrder
+} = require("../services/smmNepali");
+
 
 // =====================================================
 // RESEND EMAIL
@@ -1105,6 +1109,36 @@ router.patch("/:id", requireAdmin, async (req, res) => {
             });
 
         }
+
+        if (
+  requestedStatus === "Payment Verified" &&
+  order.type === "smm" &&
+  order.serviceId &&
+  order.targetUrl
+) {
+  try {
+    const provider = await addSmmOrder(
+      order.serviceId,
+      order.targetUrl,
+      order.quantity
+    );
+
+    order.providerOrderId = String(provider.order || "");
+    order.providerStatus = "submitted";
+    order.status = "Processing";
+    order.processingStartedAt = new Date();
+
+    await order.save();
+  } catch (error) {
+    order.providerStatus = `error: ${error.message}`;
+    await order.save();
+
+    return res.status(502).json({
+      success: false,
+      message: "Payment verified, but SMM order failed."
+    });
+  }
+}
 
 
         // =================================================
