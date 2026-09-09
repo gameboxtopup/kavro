@@ -218,6 +218,17 @@ value="success.html">
 
 <div class="form-group" id="gameAccountGroup">
 
+<div id="smmFields" style="display:none;">
+<div class="form-group">
+<label for="smmTarget">Instagram post/profile link</label>
+<input id="smmTarget" type="url" placeholder="https://instagram.com/...">
+</div>
+<div class="form-group">
+<label for="smmQuantity">Quantity</label>
+<input id="smmQuantity" type="number" min="10" value="1000">
+</div>
+</div>
+
 <label id="uidLabel">
 
 Player UID / Username
@@ -853,6 +864,8 @@ const price = params.get("price");
 const quantity = Math.max(1, Number.parseInt(params.get("quantity") || "1", 10) || 1);
 const unitPrice = params.get("unitPrice") || "";
 const productItemId = params.get("item") || "";
+const smmServiceId = params.get("serviceId") || "";
+const isSmmOrder = params.get("type") === "smm" || /instagram|tiktok|facebook|youtube|followers|likes|views|comments/i.test(product || "");
 
 // Repair checkout links created by the older UniPin page.
 if (product === "Free Fire" && /UPBD|UNIPIN/i.test(pack || "")) {
@@ -862,6 +875,8 @@ if (product === "Free Fire" && /UPBD|UNIPIN/i.test(pack || "")) {
 if(product){
     document.getElementById("orderProduct").textContent = product;
 }
+
+if (isSmmOrder) document.getElementById("smmFields").style.display = "block";
 
 if(pack){
     document.getElementById("orderPackage").textContent = pack;
@@ -1113,6 +1128,8 @@ const btnText = document.getElementById("btnText");
 const btnLoader = document.getElementById("btnLoader");
 
 const uid = document.getElementById("uid").value.trim();
+const smmTarget = document.getElementById("smmTarget")?.value.trim() || "";
+const smmQuantity = Number.parseInt(document.getElementById("smmQuantity")?.value || quantity, 10) || quantity;
 const email = document.getElementById("email").value.trim();
 const whatsapp = document.getElementById("whatsapp").value.trim();
 const zoneId = document.getElementById("zoneId").value.trim();
@@ -1124,8 +1141,12 @@ const screenshot = document.getElementById("paymentScreenshot").files;
 
 // Validation
 if(uid === "" && !["Roblox", "Steam Gift Card Global"].includes(product)){
+    if (isSmmOrder) {
+        if (!smmTarget) { alert("Please enter your Instagram link."); return; }
+    } else {
     alert("Please enter your UID or Username.");
     return;
+    }
 }
 
 if(
@@ -1240,9 +1261,15 @@ try {
 
             item: productItemId,
 
+            type: isSmmOrder ? "smm" : "game",
+            serviceId: smmServiceId,
+            targetUrl: smmTarget,
+
             uid: uid,
 
             zoneId: zoneId,
+
+            quantity: isSmmOrder ? smmQuantity : quantity,
 
             uidVerificationToken:
                 document.getElementById("uidVerificationToken").value,
