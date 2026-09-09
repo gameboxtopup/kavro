@@ -1572,9 +1572,9 @@ if (new URLSearchParams(location.search).get("type") === "smm") {
   const row = document.getElementById("uidRow");
   const uid = document.getElementById("uid");
   const qty = document.getElementById("smmQuantity");
-  if (label) label.remove();
-  if (row) row.remove();
-  if (uid) uid.remove();
+  if (label) label.style.display = "none";
+  if (row) row.style.display = "none";
+  if (uid) { uid.required = false; uid.value = ""; }
   if (qty) {
     const q = Number(new URLSearchParams(location.search).get("quantity")) ||
       Number((new URLSearchParams(location.search).get("package") || "").replace(/[^0-9]/g, "")) || 1;
