@@ -110,6 +110,7 @@ form.addEventListener("submit", async (e) => {
         price: Number(document.getElementById("price").value),
 
         discountPrice: Number(document.getElementById("discountPrice").value) || 0,
+        serviceId: document.getElementById("serviceId").value.trim(),
 
         description: document.getElementById("description").value,
 
@@ -185,6 +186,7 @@ async function editItem(id) {
     document.getElementById("price").value = item.price;
     document.getElementById("discountPrice").value =
     item.discountPrice || "";
+    document.getElementById("serviceId").value = item.serviceId || "";
 
     document.getElementById("description").value =
     item.description || "";

@@ -17,6 +17,7 @@ const productItemSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    serviceId: { type: String, default: "" },
 
     discountPrice: {
         type: Number,

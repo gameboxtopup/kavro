@@ -4,20 +4,14 @@ const categoryButtons = document.querySelectorAll(".category-btn");
 let loadedProducts = [];
 let activeCategory = "all";
 
-if (grid) {
-    grid.innerHTML = `
-        <div class="kavro-loader" aria-label="Loading products">
-            <span></span>
-            <small>Loading products…</small>
-        </div>
-    `;
-}
+if (grid) grid.innerHTML = `<div class="kavro-loader" aria-label="Loading products"><span></span><small>Loading products…</small></div>`;
 
 function normalize(value) {
     return String(value || "").toLowerCase().replace(/[-_]/g, " ").replace(/\s+/g, " ").trim();
 }
 
 function productLink(product) {
+    if (normalize(product.category).includes("smm") || /instagram|tiktok|facebook|youtube/i.test(product.name || "")) return `smm.html?product=${encodeURIComponent(product.slug || product.name)}`;
     if (product.slug === "freefire-bots") return "freefire-bots.html";
     if (product.category === "Subscriptions") return `subscription.html?slug=${product.slug}`;
     if (product.slug === "ff") return "freefire.html";

@@ -113,6 +113,12 @@ const orderSchema = new mongoose.Schema({
         default: "game"
     },
 
+    // SMM orders (submitted first, delivered only after payment verification)
+    serviceId: { type: String, default: "" },
+    targetUrl: { type: String, default: "" },
+    providerOrderId: { type: String, default: "" },
+    providerStatus: { type: String, default: "" },
+
     status: {
         type: String,
         default: "Pending"
