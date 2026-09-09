@@ -1140,12 +1140,14 @@ const submitBtn = document.getElementById("submitBtn");
 const btnText = document.getElementById("btnText");
 const btnLoader = document.getElementById("btnLoader");
 
-const uid = document.getElementById("uid").value.trim();
+const uid =
+    document.getElementById("uid")?.value.trim() || "";
 const smmTarget = document.getElementById("smmTarget")?.value.trim() || "";
 const smmQuantity = Number.parseInt(document.getElementById("smmQuantity")?.value || quantity, 10) || quantity;
 const email = document.getElementById("email").value.trim();
 const whatsapp = document.getElementById("whatsapp").value.trim();
-const zoneId = document.getElementById("zoneId").value.trim();
+const zoneId =
+    document.getElementById("zoneId")?.value.trim() || "";
 const payment = document.querySelector(
 'input[name="Payment Method"]:checked'
 )?.value;
