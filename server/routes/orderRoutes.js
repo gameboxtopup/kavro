@@ -1120,9 +1120,15 @@ router.patch("/:id", requireAdmin, async (req, res) => {
                 order.processingStartedAt = new Date();
                 await order.save();
             } catch (providerError) {
+                console.error("SMM PROVIDER ERROR:", providerError);
+
                 order.providerStatus = `error: ${providerError.message}`;
                 await order.save();
-                return res.status(502).json({ success: false, message: "Payment verified, but provider order could not be submitted." });
+
+                return res.status(502).json({
+                    success: false,
+                    message: `SMM provider error: ${providerError.message}`
+                });
             }
         }
 
