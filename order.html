@@ -865,6 +865,7 @@ const quantity = Math.max(1, Number.parseInt(params.get("quantity") || "1", 10) 
 const unitPrice = params.get("unitPrice") || "";
 const productItemId = params.get("item") || "";
 const smmServiceId = params.get("serviceId") || "";
+const smmTargetFromUrl = params.get("targetUrl") || "";
 const isSmmOrder = params.get("type") === "smm" || /instagram|tiktok|facebook|youtube|followers|likes|views|comments/i.test(product || "");
 
 // Repair checkout links created by the older UniPin page.
@@ -1169,6 +1170,11 @@ const screenshot = document.getElementById("paymentScreenshot").files;
 // Validation
 if(uid === "" && !["Roblox", "Steam Gift Card Global"].includes(product)){
     if (isSmmOrder) {
+        const smmTargetInput = document.getElementById("smmTarget");
+
+            if (smmTargetInput && smmTargetFromUrl) {
+                smmTargetInput.value = smmTargetFromUrl;
+            }
         if (!smmTarget) { alert("Please enter your Instagram link."); return; }
     } else {
     alert("Please enter your UID or Username.");
