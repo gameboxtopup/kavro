@@ -1,13 +1,13 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SMM Services | Kavro</title>
   <link rel="stylesheet" href="style.css">
 
   <style>
-    .wrap {
+    .smm-page {
       max-width: 1000px;
       margin: 60px auto;
       padding: 20px;
@@ -15,78 +15,95 @@
 
     .tabs {
       display: flex;
-      gap: 10px;
+      gap: 12px;
+      margin: 25px 0;
     }
 
-    .tabs button {
+    .tab {
       flex: 1;
-      padding: 14px;
+      padding: 15px;
       border: 1px solid #334155;
-      border-radius: 10px;
+      border-radius: 12px;
       background: #111827;
       color: white;
       font-weight: 700;
       cursor: pointer;
     }
 
-    .tabs button.active {
+    .tab.active {
       background: #2563eb;
     }
 
-    .panel {
-      display: none;
-    }
-
-    .panel.active {
-      display: block;
-    }
-
-    .grid {
+    .services {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 15px;
-      margin-top: 20px;
     }
 
-    .card {
+    .service-card {
       padding: 18px;
       border: 1px solid #334155;
       border-radius: 14px;
       background: #0f172a;
+      cursor: pointer;
     }
 
-    .card strong {
+    .service-card.selected {
+      border-color: #60a5fa;
+      background: #172554;
+    }
+
+    .service-card h3 {
+      margin: 0 0 10px;
+    }
+
+    .service-rate {
+      color: #60a5fa;
+      font-weight: 800;
+    }
+
+    .order-box {
+      display: none;
+      margin-top: 25px;
+      padding: 22px;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      background: #111827;
+    }
+
+    .order-box.active {
       display: block;
-      margin-bottom: 8px;
     }
 
-    .card input {
+    .order-box input {
       width: 100%;
       box-sizing: border-box;
-      padding: 10px;
       margin: 12px 0;
-      background: #111827;
-      color: white;
-      border: 1px solid #475569;
+      padding: 14px;
       border-radius: 8px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: white;
+      font-size: 16px;
     }
 
-    .price {
+    .total {
       display: block;
+      margin: 12px 0;
       color: #60a5fa;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
-      margin-bottom: 12px;
     }
 
-    .buy {
-      display: block;
-      text-align: center;
+    .continue-btn {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 8px;
       background: #2563eb;
       color: white;
-      padding: 10px;
-      border-radius: 8px;
-      text-decoration: none;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     @media (max-width: 600px) {
@@ -98,139 +115,240 @@
 </head>
 
 <body>
-  <main class="wrap">
+  <main class="smm-page">
     <a href="products.html">← Products</a>
 
     <h1>SMM Services</h1>
-
-    <p>
-      Choose a service and quantity. Payment is verified manually.
-    </p>
+    <p>Select a service, then enter your required quantity.</p>
 
     <div class="tabs">
-      <button class="active" data-tab="instagram">
+      <button class="tab active" data-platform="instagram">
         Instagram Services
       </button>
 
-      <button data-tab="tiktok">
+      <button class="tab" data-platform="tiktok">
         TikTok Services
       </button>
     </div>
 
-    <section id="instagram" class="panel active">
-      <div id="instagramGrid" class="grid">
-        Loading...
-      </div>
-    </section>
+    <div id="services" class="services">
+      Loading services...
+    </div>
 
-    <section id="tiktok" class="panel">
-      <div id="tiktokGrid" class="grid">
-        Loading...
-      </div>
-    </section>
+    <div id="orderBox" class="order-box">
+      <h2 id="selectedName">Select a service</h2>
+
+      <p id="selectedRate"></p>
+
+      <label for="targetUrl">
+        Instagram/TikTok link
+      </label>
+
+      <input
+        id="targetUrl"
+        type="url"
+        placeholder="https://instagram.com/..."
+        required
+      >
+
+      <label for="quantity">
+        Enter quantity
+      </label>
+
+      <input
+        id="quantity"
+        type="number"
+        placeholder="Example: 5000"
+        min="10"
+        required
+      >
+
+      <small id="quantityHelp"></small>
+
+      <span id="totalPrice" class="total">
+        Total: NPR 0
+      </span>
+
+      <button id="continueBtn" class="continue-btn">
+        Continue to Order
+      </button>
+    </div>
   </main>
 
   <script>
     const API = "https://kavro-api.onrender.com";
 
-    const slug =
-      new URLSearchParams(location.search).get("product") ||
-      "smmservices";
+    const params = new URLSearchParams(location.search);
+    const slug = params.get("product") || "smmservices";
 
-    document.querySelectorAll(".tabs button").forEach(button => {
-      button.onclick = () => {
-        document
-          .querySelectorAll(".tabs button, .panel")
-          .forEach(element => element.classList.remove("active"));
+    const servicesBox = document.getElementById("services");
+    const orderBox = document.getElementById("orderBox");
+    const selectedName = document.getElementById("selectedName");
+    const selectedRate = document.getElementById("selectedRate");
+    const quantityInput = document.getElementById("quantity");
+    const quantityHelp = document.getElementById("quantityHelp");
+    const totalPrice = document.getElementById("totalPrice");
+    const targetUrl = document.getElementById("targetUrl");
+    const continueBtn = document.getElementById("continueBtn");
 
-        button.classList.add("active");
+    let productData = null;
+    let allServices = [];
+    let activePlatform = "instagram";
+    let selectedService = null;
 
-        document
-          .getElementById(button.dataset.tab)
-          .classList.add("active");
-      };
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(item => {
+          item.classList.remove("active");
+        });
+
+        tab.classList.add("active");
+        activePlatform = tab.dataset.platform;
+        selectedService = null;
+        orderBox.classList.remove("active");
+
+        renderServices();
+      });
     });
 
-    function makeCard(item, product) {
-      const name = item.name || item.title || "SMM Service";
-      const rate = Number(item.price) || 0;
-      const minimum = item.minQuantity || 10;
-      const maximum = item.maxQuantity || 1000000;
-      const serviceId = item.serviceId || "";
+    function getServicePlatform(service) {
+      const text = String(
+        service.name || service.title || ""
+      ).toLowerCase();
 
-      return `
-        <article class="card">
-          <strong>${name}</strong>
+      if (text.includes("instagram")) return "instagram";
+      if (text.includes("tiktok")) return "tiktok";
 
-          <small>
-            Rate: NPR ${rate} per 1,000
-          </small>
-
-          <input
-            class="qty"
-            type="number"
-            min="${minimum}"
-            max="${maximum}"
-            value="${minimum}"
-            data-rate="${rate}"
-            data-service="${serviceId}"
-            data-name="${name}"
-          >
-
-          <span class="price">
-            NPR ${Math.ceil(minimum * rate / 1000)}
-          </span>
-
-          <a class="buy" href="#">
-            Continue
-          </a>
-        </article>
-      `;
+      return "";
     }
 
-    function connectCards(container, product) {
-      container.querySelectorAll(".card").forEach(card => {
-        const quantityInput = card.querySelector(".qty");
-        const price = card.querySelector(".price");
-        const buyButton = card.querySelector(".buy");
+    function renderServices() {
+      const visibleServices = allServices.filter(service =>
+        getServicePlatform(service) === activePlatform
+      );
 
-        function updatePrice() {
-          let quantity =
-            Number(quantityInput.value) ||
-            Number(quantityInput.min);
+      if (!visibleServices.length) {
+        servicesBox.innerHTML =
+          "<p>No services available for this platform.</p>";
+        return;
+      }
 
-          quantity = Math.max(
-            Number(quantityInput.min),
-            Math.min(Number(quantityInput.max), quantity)
+      servicesBox.innerHTML = visibleServices.map(service => {
+        const name = service.name || service.title;
+        const rate = Number(service.price) || 0;
+
+        return `
+          <article
+            class="service-card"
+            data-id="${service._id}"
+          >
+            <h3>${name}</h3>
+            <div class="service-rate">
+              NPR ${rate} per 1,000
+            </div>
+            <small>Click to select</small>
+          </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".service-card").forEach(card => {
+        card.addEventListener("click", () => {
+          const service = allServices.find(
+            item => item._id === card.dataset.id
           );
 
-          quantityInput.value = quantity;
-
-          const total = Math.ceil(
-            quantity * Number(quantityInput.dataset.rate) / 1000
-          );
-
-          price.textContent = `NPR ${total}`;
-
-          buyButton.href =
-            "order.html" +
-            "?type=smm" +
-            "&serviceId=" +
-            encodeURIComponent(quantityInput.dataset.service) +
-            "&product=" +
-            encodeURIComponent(product.name) +
-            "&package=" +
-            encodeURIComponent(quantityInput.dataset.name) +
-            "&price=" +
-            encodeURIComponent(`NPR ${total}`) +
-            "&quantity=" +
-            quantity;
-        }
-
-        quantityInput.addEventListener("input", updatePrice);
-        updatePrice();
+          selectService(service, card);
+        });
       });
     }
+
+    function selectService(service, card) {
+      document.querySelectorAll(".service-card").forEach(item => {
+        item.classList.remove("selected");
+      });
+
+      card.classList.add("selected");
+      selectedService = service;
+
+      const name = service.name || service.title;
+      const rate = Number(service.price) || 0;
+      const minimum = Number(service.minQuantity) || 10;
+      const maximum = Number(service.maxQuantity) || 1000000;
+
+      selectedName.textContent = name;
+      selectedRate.textContent =
+        `Rate: NPR ${rate} per 1,000`;
+
+      quantityInput.min = minimum;
+      quantityInput.max = maximum;
+      quantityInput.value = "";
+      quantityHelp.textContent =
+        `Minimum: ${minimum} | Maximum: ${maximum}`;
+
+      totalPrice.textContent = "Total: NPR 0";
+      orderBox.classList.add("active");
+
+      window.scrollTo({
+        top: orderBox.offsetTop - 30,
+        behavior: "smooth"
+      });
+    }
+
+    quantityInput.addEventListener("input", () => {
+      if (!selectedService) return;
+
+      const quantity = Number(quantityInput.value) || 0;
+      const rate = Number(selectedService.price) || 0;
+
+      if (quantity > 0) {
+        const total = Math.ceil(quantity * rate / 1000);
+        totalPrice.textContent = `Total: NPR ${total}`;
+      } else {
+        totalPrice.textContent = "Total: NPR 0";
+      }
+    });
+
+    continueBtn.addEventListener("click", () => {
+      if (!selectedService) {
+        alert("Please select a service first.");
+        return;
+      }
+
+      const link = targetUrl.value.trim();
+      const quantity = Number(quantityInput.value);
+
+      if (!link) {
+        alert("Please enter the Instagram/TikTok link.");
+        return;
+      }
+
+      if (!quantity || quantity < Number(quantityInput.min)) {
+        alert(`Minimum quantity is ${quantityInput.min}.`);
+        return;
+      }
+
+      if (quantity > Number(quantityInput.max)) {
+        alert(`Maximum quantity is ${quantityInput.max}.`);
+        return;
+      }
+
+      const name = selectedService.name || selectedService.title;
+      const rate = Number(selectedService.price) || 0;
+      const total = Math.ceil(quantity * rate / 1000);
+      const serviceId = selectedService.serviceId || "";
+
+      const url =
+        "order.html" +
+        "?type=smm" +
+        "&serviceId=" + encodeURIComponent(serviceId) +
+        "&product=" + encodeURIComponent(productData.name) +
+        "&package=" + encodeURIComponent(name) +
+        "&price=" + encodeURIComponent(`NPR ${total}`) +
+        "&quantity=" + quantity +
+        "&targetUrl=" + encodeURIComponent(link);
+
+      window.location.href = url;
+    });
 
     async function loadServices() {
       try {
@@ -238,66 +356,28 @@
           `${API}/api/products/slug/${encodeURIComponent(slug)}`
         );
 
-        const product = await productResponse.json();
+        productData = await productResponse.json();
 
         const itemsResponse = await fetch(
-          `${API}/api/product-items/product/${product._id}`
+          `${API}/api/product-items/product/${productData._id}`
         );
 
         const result = await itemsResponse.json();
 
-        const items =
+        allServices =
           result.items ||
           result.data ||
           result;
 
-        const activeItems = Array.isArray(items)
-          ? items.filter(item => item.active !== false)
-          : [];
-
-        const instagramItems = activeItems.filter(item =>
-          String(item.name || item.title || "")
-            .toLowerCase()
-            .includes("instagram")
+        allServices = allServices.filter(
+          service => service.active !== false
         );
 
-        const tiktokItems = activeItems.filter(item =>
-          String(item.name || item.title || "")
-            .toLowerCase()
-            .includes("tiktok")
-        );
-
-        const instagramGrid =
-          document.getElementById("instagramGrid");
-
-        const tiktokGrid =
-          document.getElementById("tiktokGrid");
-
-        instagramGrid.innerHTML =
-          instagramItems.length
-            ? instagramItems
-                .map(item => makeCard(item, product))
-                .join("")
-            : "<p>No Instagram services available.</p>";
-
-        tiktokGrid.innerHTML =
-          tiktokItems.length
-            ? tiktokItems
-                .map(item => makeCard(item, product))
-                .join("")
-            : "<p>No TikTok services available.</p>";
-
-        connectCards(instagramGrid, product);
-        connectCards(tiktokGrid, product);
-
+        renderServices();
       } catch (error) {
         console.error(error);
-
-        document.getElementById("instagramGrid").innerHTML =
-          "<p>Unable to load Instagram services.</p>";
-
-        document.getElementById("tiktokGrid").innerHTML =
-          "<p>Unable to load TikTok services.</p>";
+        servicesBox.innerHTML =
+          "<p>Unable to load SMM services.</p>";
       }
     }
 
