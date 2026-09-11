@@ -879,6 +879,11 @@ if(product){
 
 if (isSmmOrder) {
     document.getElementById("smmFields").style.display = "block";
+        const smmTargetInput = document.getElementById("smmTarget");
+
+    if (smmTargetInput && smmTargetFromUrl) {
+        smmTargetInput.value = smmTargetFromUrl;
+    }
 
     document.getElementById("uidLabel").style.display = "none";
     document.getElementById("uidRow").style.display = "none";
@@ -1145,7 +1150,8 @@ const uid =
     document.getElementById("uid")?.value.trim() || "";
 
 const smmTarget =
-    document.getElementById("smmTarget")?.value.trim() || "";
+    document.getElementById("smmTarget")?.value.trim() ||
+    smmTargetFromUrl;
 
 const smmQuantity =
     Number.parseInt(
