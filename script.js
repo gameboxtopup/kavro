@@ -1,5 +1,145 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+const reviewToken = localStorage.getItem("kavroToken");
+
+if (reviewToken && !document.getElementById("kavroReviewPopup")) {
+    const style = document.createElement("style");
+
+    style.textContent = `
+        @keyframes kavroReviewPop {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 25px) scale(.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0) scale(1);
+            }
+        }
+
+        .kavro-review-popup {
+            position: fixed;
+            z-index: 99999;
+            left: 50%;
+            bottom: 24px;
+            width: min(420px, calc(100% - 28px));
+            padding: 22px;
+            border: 1px solid #60a5fa;
+            border-radius: 18px;
+            background: #101d35;
+            color: #f8fafc;
+            box-shadow: 0 20px 60px #0009;
+            animation: kavroReviewPop .35s ease-out;
+        }
+
+        .kavro-review-popup h3 {
+            margin: 0 0 8px;
+            font-size: 20px;
+        }
+
+        .kavro-review-popup p {
+            margin: 0 0 16px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .kavro-review-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .kavro-review-actions a,
+        .kavro-review-actions button {
+            flex: 1;
+            border: 0;
+            border-radius: 9px;
+            padding: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .kavro-review-actions a {
+            background: #2563eb;
+            color: white;
+        }
+
+        .kavro-review-actions button {
+            background: #263754;
+            color: #cbd5e1;
+        }
+    `;
+
+    document.head.appendChild(style);
+
+    fetch("https://kavro-api.onrender.com/api/orders/my-orders", {
+        headers: {
+            Authorization: `Bearer ${reviewToken}`
+        }
+    })
+    .then(response => response.ok ? response.json() : null)
+    .then(data => {
+        const orders = data?.orders || data?.data || [];
+
+        const completedOrder = orders.find(order =>
+            ["completed", "delivered"].includes(
+                String(order.status || "").toLowerCase()
+            ) &&
+            !localStorage.getItem(
+                `kavroReviewedPrompt:${order._id}`
+            )
+        );
+
+        if (!completedOrder) return;
+
+        const popup = document.createElement("div");
+
+        popup.id = "kavroReviewPopup";
+        popup.className = "kavro-review-popup";
+
+        popup.innerHTML = `
+            <h3>🎉 Your order is complete!</h3>
+
+            <p>
+                Your ${completedOrder.product || "Kavro"} order
+                has been delivered. Please leave us a review.
+            </p>
+
+            <div class="kavro-review-actions">
+                <a href="dashboard.html#reviewPanel">
+                    Give a Review
+                </a>
+
+                <button type="button" id="closeKavroReview">
+                    Later
+                </button>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+        document
+            .getElementById("closeKavroReview")
+            .onclick = () => {
+                localStorage.setItem(
+                    `kavroReviewedPrompt:${completedOrder._id}`,
+                    "1"
+                );
+
+                popup.remove();
+            };
+
+        popup.querySelector("a").onclick = () => {
+            localStorage.setItem(
+                `kavroReviewedPrompt:${completedOrder._id}`,
+                "1"
+            );
+        };
+    })
+    .catch(error => {
+        console.error("Review popup error:", error);
+    });
     /* =========================
        MOBILE NAVIGATION
     ========================= */
@@ -441,5 +581,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     }
+}
 
 });

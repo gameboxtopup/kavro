@@ -26,6 +26,32 @@
 
 <link rel="stylesheet" href="style.css">
 
+<style>
+.success-review-box {
+    margin-top: 24px;
+    padding: 20px;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    background: rgba(37, 99, 235, 0.08);
+    text-align: center;
+}
+
+.success-review-box h3 {
+    margin: 0 0 8px;
+}
+
+.success-review-box p {
+    color: #94a3b8;
+    margin: 0 0 16px;
+}
+
+.success-review-box .btn-primary {
+    display: inline-block;
+    text-decoration: none;
+}
+</style>
+
+
 </head>
 
 <body>
@@ -114,6 +140,23 @@ View My Orders
 
 </div>
 
+<div class="success-review-box">
+
+    <h3>Enjoyed your Kavro service?</h3>
+
+    <p>
+        After your order is marked Completed, you can leave a verified rating and review.
+    </p>
+
+    <a
+        href="dashboard.html#reviewPanel"
+        class="btn-primary"
+    >
+        Review My Completed Order
+    </a>
+
+</div>
+
 </div>
 
 </div>
@@ -138,7 +181,7 @@ document.getElementById("successPrice").textContent =
 savedOrder?.price || params.get("price") || "-";
 
 </script>
-
+<script src="script.js"></script>
 </body>
 
 </html>
