@@ -353,7 +353,7 @@ transform:translateY(-2px);
 
 .sub-grid{
 
-grid-template-columns:1fr;
+grid-template-columns:2fr;
 
 text-align:center;
 
