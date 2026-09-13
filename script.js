@@ -205,26 +205,26 @@ if (reviewToken) {
     .catch(error => {
         console.error("Review popup error:", error);
     });
-    /* =========================
-       MOBILE NAVIGATION
-    ========================= */
+/* =========================
+   MOBILE NAVIGATION
+========================= */
 
-    const menu = document.querySelector(".menu-btn");
-    const nav = document.querySelector(".nav-links");
+const menu = document.querySelector(".menu-btn");
+const nav = document.querySelector(".nav-links");
 
-    if (menu && nav) {
+if (menu && nav) {
+    menu.addEventListener("click", () => {
+        const isOpen = nav.classList.toggle("active");
+        menu.setAttribute("aria-expanded", String(isOpen));
+    });
 
-        menu.addEventListener("click", () => {
-            nav.classList.toggle("open");
+    nav.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+            nav.classList.remove("active");
+            menu.setAttribute("aria-expanded", "false");
         });
-
-        nav.querySelectorAll("a").forEach(link => {
-            link.addEventListener("click", () => {
-                nav.classList.remove("open");
-            });
-        });
-
-    }
+    });
+}
 
 
     /* =========================
