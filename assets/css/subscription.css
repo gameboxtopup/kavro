@@ -227,7 +227,7 @@ display:grid;
 
 grid-template-columns:
 
-repeat(auto-fit,minmax(240px,2fr));
+repeat(auto-fit,minmax(240px,1fr));
 
 gap:20px;
 
@@ -353,7 +353,7 @@ transform:translateY(-2px);
 
 .sub-grid{
 
-grid-template-columns:2fr;
+grid-template-columns:1fr;
 
 text-align:center;
 
