@@ -59,8 +59,11 @@ console.log("GET /api/products called");
 
     try {
 
+        // Keep products marked as featured at the front of storefront lists.
+        // Newer products come first within the featured and non-featured groups.
         const products = await Product.find().sort({
 
+            featured: -1,
             createdAt: -1
 
         });
