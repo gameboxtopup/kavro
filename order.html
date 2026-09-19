@@ -24,7 +24,7 @@
 
 <title>Complete Order | Kavro</title>
 
-<meta name="description" content="Complete your gaming topup order securely with eSewa or Bank Transfer on Kavro Nepal.">
+<meta name="description" content="Complete your gaming topup order securely with eSewa on Kavro Nepal.">
 
 <link rel="icon" type="image/png" href="assets/images/logo.png">
 
@@ -220,7 +220,7 @@ value="success.html">
 
 <div id="smmFields" style="display:none;">
 <div class="form-group">
-<label for="smmTarget">VIDEO/POST/REELS LINK</label>
+<label for="smmTarget">Instagram post/profile link</label>
 <input id="smmTarget" type="url" placeholder="https://instagram.com/...">
 </div>
 <div class="form-group">
@@ -335,17 +335,17 @@ The UniPin redeem code will be delivered to this email address. You can change i
 
 </label>
 
-<label class="pay-option">
+<label class="pay-option" id="kavroCreditsOption" style="display:none;">
 
     <input type="radio"
            name="Payment Method"
-           value="Bank Transfer">
+           value="Kavro Credits">
 
-    <img src="assets/images/bank.png" alt="Bank">
+    <span aria-hidden="true" style="font-size:28px;">💳</span>
 
     <div class="pay-info">
-        <strong>Bank Transfer</strong>
-        <small>Direct Deposit</small>
+        <strong>Kavro Credits</strong>
+        <small id="kavroCreditsBalance">Loading balance...</small>
     </div>
 
 </label>
@@ -354,7 +354,7 @@ The UniPin redeem code will be delivered to this email address. You can change i
 
 </div>
 
-<div class="form-group">
+<div class="form-group" id="remarksGroup">
 
 <label>Remarks</label>
 
@@ -362,11 +362,12 @@ The UniPin redeem code will be delivered to this email address. You can change i
 type="text"
 id="transaction"
 name="transaction"
-placeholder="Optional message or payment remark">
+placeholder="Optional message or payment remark"
+>
 
 </div>
 
-<div class="form-group">
+<div class="form-group" id="screenshotGroup">
 
 <label>Payment Screenshot</label>
 
@@ -608,7 +609,7 @@ Choose your preferred package from the previous page.
 <h3>Make Payment</h3>
 
 <p>
-Pay using eSewa or Bank Transfer.
+Pay using eSewa.
 </p>
 
 </div>
@@ -620,7 +621,7 @@ Pay using eSewa or Bank Transfer.
 <h3>Fill Details</h3>
 
 <p>
-Enter your details and any optional remarks carefully.
+Enter your UID and payment remarks carefully.
 </p>
 
 </div>
@@ -674,16 +675,6 @@ Choose any payment method below.
 <h3>eSewa</h3>
 
 <p>Fast & Secure</p>
-
-</div>
-
-<div class="payment-card">
-
-<img src="assets/images/bank.png" alt="Bank">
-
-<h3>Bank Transfer</h3>
-
-<p>Direct Deposit</p>
 
 </div>
 
@@ -771,7 +762,7 @@ This page is only for Garena Free Fire Bangladesh Server.
 <h3>Which payment methods do you accept?</h3>
 
 <p>
-We accept only eSewa and Bank Transfer for now.
+We currently accept eSewa for payments.
 </p>
 
 </div>
@@ -864,7 +855,6 @@ const quantity = Math.max(1, Number.parseInt(params.get("quantity") || "1", 10) 
 const unitPrice = params.get("unitPrice") || "";
 const productItemId = params.get("item") || "";
 const smmServiceId = params.get("serviceId") || "";
-const smmTargetFromUrl = params.get("targetUrl") || "";
 const isSmmOrder = params.get("type") === "smm" || /instagram|tiktok|facebook|youtube|followers|likes|views|comments/i.test(product || "");
 
 // Repair checkout links created by the older UniPin page.
@@ -878,11 +868,6 @@ if(product){
 
 if (isSmmOrder) {
     document.getElementById("smmFields").style.display = "block";
-        const smmTargetInput = document.getElementById("smmTarget");
-
-    if (smmTargetInput && smmTargetFromUrl) {
-        smmTargetInput.value = smmTargetFromUrl;
-    }
 
     document.getElementById("uidLabel").style.display = "none";
     document.getElementById("uidRow").style.display = "none";
@@ -919,6 +904,31 @@ const uidVerificationResult = document.getElementById("uidVerificationResult");
 const uidVerificationToken = document.getElementById("uidVerificationToken");
 const checkoutToken = localStorage.getItem("kavroToken");
 const checkoutAccountNote = document.getElementById("checkoutAccountNote");
+const kavroCreditsOption = document.getElementById("kavroCreditsOption");
+const kavroCreditsBalance = document.getElementById("kavroCreditsBalance");
+const remarksGroup = document.getElementById("remarksGroup");
+const screenshotGroup = document.getElementById("screenshotGroup");
+const paymentScreenshotInput = document.getElementById("paymentScreenshot");
+
+function updatePubgPaymentFields(method) {
+    const isCredits = product === "PUBG Mobile" && method === "Kavro Credits";
+
+    if (remarksGroup) remarksGroup.style.display = isCredits ? "none" : "block";
+    if (screenshotGroup) screenshotGroup.style.display = isCredits ? "none" : "block";
+    if (paymentScreenshotInput) paymentScreenshotInput.required = !isCredits;
+    if (isCredits) {
+        document.getElementById("paymentCard").style.display = "none";
+    }
+}
+
+if (product === "PUBG Mobile") {
+    if (kavroCreditsOption) kavroCreditsOption.style.display = "flex";
+
+    document.querySelectorAll('input[name="Payment Method"]').forEach(option => {
+        option.addEventListener("change", () => updatePubgPaymentFields(option.value));
+    });
+}
+
 let freeFireVerificationRequired = false;
 let freeFireVerificationReady = product !== "Free Fire";
 
@@ -1112,6 +1122,9 @@ if (checkoutToken) {
             if (!response.ok || !data.success) throw new Error("Session expired");
             const emailInput = document.getElementById("email");
             emailInput.value = data.user.email || "";
+            if (product === "PUBG Mobile" && kavroCreditsBalance) {
+                kavroCreditsBalance.textContent = `Balance: NPR ${Number(data.user.kavroCredits || 0).toLocaleString()}`;
+            }
             checkoutAccountNote.textContent =
                 product === "UniPin BD Voucher"
                     ? "✓ Signed in — you may change the email below for redeem-code delivery."
@@ -1145,27 +1158,12 @@ const submitBtn = document.getElementById("submitBtn");
 const btnText = document.getElementById("btnText");
 const btnLoader = document.getElementById("btnLoader");
 
-const uid =
-    document.getElementById("uid")?.value.trim() || "";
-
-const smmTarget =
-    document.getElementById("smmTarget")?.value.trim() ||
-    smmTargetFromUrl;
-
-const smmQuantity =
-    Number.parseInt(
-        document.getElementById("smmQuantity")?.value || quantity,
-        10
-    ) || quantity;
-
-const email =
-    document.getElementById("email")?.value.trim() || "";
-
-const whatsapp =
-    document.getElementById("whatsapp")?.value.trim() || "";
-
-const zoneId =
-    document.getElementById("zoneId")?.value.trim() || "";
+const uid = document.getElementById("uid").value.trim();
+const smmTarget = document.getElementById("smmTarget")?.value.trim() || "";
+const smmQuantity = Number.parseInt(document.getElementById("smmQuantity")?.value || quantity, 10) || quantity;
+const email = document.getElementById("email").value.trim();
+const whatsapp = document.getElementById("whatsapp").value.trim();
+const zoneId = document.getElementById("zoneId").value.trim();
 const payment = document.querySelector(
 'input[name="Payment Method"]:checked'
 )?.value;
@@ -1175,11 +1173,6 @@ const screenshot = document.getElementById("paymentScreenshot").files;
 // Validation
 if(uid === "" && !["Roblox", "Steam Gift Card Global"].includes(product)){
     if (isSmmOrder) {
-        const smmTargetInput = document.getElementById("smmTarget");
-
-            if (smmTargetInput && smmTargetFromUrl) {
-                smmTargetInput.value = smmTargetFromUrl;
-            }
         if (!smmTarget) { alert("Please enter your Instagram link."); return; }
     } else {
     alert("Please enter your UID or Username.");
@@ -1219,8 +1212,14 @@ if(!payment){
     return;
 }
 
+const usingKavroCredits = product === "PUBG Mobile" && payment === "Kavro Credits";
 
-if(screenshot.length === 0){
+if (usingKavroCredits && product !== "PUBG Mobile") {
+    alert("Kavro Credits are currently available only for PUBG Mobile.");
+    return;
+}
+
+if(!usingKavroCredits && screenshot.length === 0){
     alert("Please upload your payment screenshot.");
     return;
 }
@@ -1230,43 +1229,31 @@ submitBtn.disabled = true;
 btnText.style.display = "none";
 btnLoader.style.display = "inline";
 
-const screenshotFile =
-document.getElementById("paymentScreenshot").files[0];
+let screenshotURL = "";
 
-const uploadData = new FormData();
+if (!usingKavroCredits) {
+    const screenshotFile = document.getElementById("paymentScreenshot").files[0];
+    const uploadData = new FormData();
+    uploadData.append("file", screenshotFile);
+    uploadData.append("upload_preset", UPLOAD_PRESET);
 
-uploadData.append("file", screenshotFile);
-uploadData.append("upload_preset", UPLOAD_PRESET);
+    const uploadResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/f0rpqupr/image/upload",
+        { method: "POST", body: uploadData }
+    );
 
-console.log(CLOUD_NAME);
-console.log(UPLOAD_PRESET);
+    const uploadResult = await uploadResponse.json();
 
-for (const pair of uploadData.entries()) {
-    console.log(pair[0], pair[1]);
+    if (!uploadResult.secure_url) {
+        submitBtn.disabled = false;
+        btnText.style.display = "inline";
+        btnLoader.style.display = "none";
+        alert(uploadResult.error?.message || "Payment screenshot upload failed.");
+        return;
+    }
+
+    screenshotURL = uploadResult.secure_url;
 }
-
-const uploadResponse = await fetch(
-"https://api.cloudinary.com/v1_1/f0rpqupr/image/upload",
-{
-    method: "POST",
-    body: uploadData
-});
-
-const uploadResult = await uploadResponse.json();
-
-console.log("Cloudinary Response:", uploadResult);
-
-if (!uploadResult.secure_url) {
-
-    submitBtn.disabled = false;
-    btnText.style.display = "inline";
-    btnLoader.style.display = "none";
-
-    alert(uploadResult.error.message);
-    return;
-}
-
-const screenshotURL = uploadResult.secure_url;
 
 try {
 
@@ -1379,18 +1366,6 @@ const paymentData = {
 
     },
 
-    "Bank Transfer": {
-
-        qr: "assets/images/qrcode.jpeg",
-
-        number: "9708567948",
-
-        account: "Nirmal Kathayat",
-
-        bank: "Agricultural Development Bank (ADBL)"
-
-    }
-
 };
 
 document.querySelectorAll('input[name="Payment Method"]').forEach(option => {
@@ -1398,6 +1373,12 @@ document.querySelectorAll('input[name="Payment Method"]').forEach(option => {
     option.addEventListener("change", function () {
 
         const data = paymentData[this.value];
+
+        if (!data) {
+            updatePubgPaymentFields(this.value);
+            document.getElementById("paymentCard").style.display = "none";
+            return;
+        }
 
         document.getElementById("paymentQR").src = data.qr;
         document.getElementById("paymentMethodName").textContent = this.value;
@@ -1424,6 +1405,11 @@ document.querySelectorAll('input[name="Payment Method"]').forEach(option=>{
 option.addEventListener("change",function(){
 
 const data=paymentData[this.value];
+if (!data) {
+    updatePubgPaymentFields(this.value);
+    document.getElementById("paymentCard").style.display = "none";
+    return;
+}
 document.getElementById("paymentCard").style.display = "block";
 
 // Open QR popup automatically
