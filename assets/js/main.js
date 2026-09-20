@@ -1,6 +1,9 @@
 /* Kavro lightweight UI interactions */
 
 document.addEventListener("DOMContentLoaded", () => {
+    const shopHours = document.createElement("script");
+shopHours.src = "/assets/js/shop-hours.js?v=1";
+document.head.appendChild(shopHours);
     const menuBtn = document.getElementById("menuBtn");
     const navLinks = document.getElementById("navLinks");
 
