@@ -160,8 +160,8 @@
                     <div class="kavro-gate-unit"><strong id="kavroGateMinutes">00</strong><span>Minutes</span></div>
                     <div class="kavro-gate-unit"><strong id="kavroGateSeconds">00</strong><span>Seconds</span></div>
                 </div>
-                <a class="kavro-gate-help" href="https://www.facebook.com/profile.php?id=61574738600137" target="_blank" rel="noopener">💬 Contact Kavro Nepal for argent topups</a>
-                
+                <a class="kavro-gate-help" href="https://www.facebook.com/profile.php?id=61574738600137" target="_blank" rel="noopener">ðŸ’¬ Contact Kavro Nepal</a>
+                <p class="kavro-gate-footer">SHOP OPEN FROM 11 AM TO 11 PM</p>
             </section>
         `;
         document.body.appendChild(gate);
