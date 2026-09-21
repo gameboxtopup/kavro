@@ -1,5 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+(function loadKavroShopHours() {
+    if (document.querySelector('script[data-kavro-shop-hours]')) return;
+
+    const shopHours = document.createElement("script");
+    shopHours.src = "/assets/js/shop-hours.js?v=2";
+    shopHours.dataset.kavroShopHours = "true";
+    document.head.appendChild(shopHours);
+})();
 
 const reviewToken = localStorage.getItem("kavroToken");
 
