@@ -75,20 +75,22 @@ async function lookupFreeFirePlayer(uid) {
     ).toUpperCase();
 
     if (!apiKey || !apiUrl) {
-        const error = new Error("Free Fire UID verification is not configured.");
+        const error = new Error(
+            "Free Fire UID verification is not configured."
+        );
         error.code = "LOOKUP_NOT_CONFIGURED";
         throw error;
     }
 
     const response = await axios.get(apiUrl, {
         params: {
-    uid: normalizedUid,
-    region: requestedRegion,
-    key: apiKey
-},
-headers: {
-    Accept: "application/json"
-},
+            uid: normalizedUid,
+            region: requestedRegion,
+            key: apiKey
+        },
+        headers: {
+            Accept: "application/json"
+        },
         timeout: 10000,
         maxRedirects: 2
     });
@@ -128,5 +130,6 @@ module.exports = {
     isValidFreeFireUid,
     lookupFreeFirePlayer,
     normalizeUid,
-    parsePlayer
+    parsePlayer,
+    parseAccountId
 };
