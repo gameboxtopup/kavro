@@ -82,13 +82,13 @@ async function lookupFreeFirePlayer(uid) {
 
     const response = await axios.get(apiUrl, {
         params: {
-            uid: normalizedUid,
-            region: requestedRegion,
-            key: apiKey
-        },
-        headers: {
-            Accept: "application/json"
-        },
+    uid: normalizedUid,
+    region: requestedRegion,
+    key: apiKey
+},
+headers: {
+    Accept: "application/json"
+},
         timeout: 10000,
         maxRedirects: 2
     });
