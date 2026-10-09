@@ -1,7 +1,5 @@
 const axios = require("axios");
 
-const DEFAULT_LOOKUP_URL = "https://api.gameskinbo.com/ff-info/get";
-
 function normalizeUid(value) {
     return String(value || "").trim();
 }
@@ -10,36 +8,55 @@ function isValidFreeFireUid(value) {
     return /^\d{6,12}$/.test(normalizeUid(value));
 }
 
-function parsePlayer(data) {
-    const account =
+function getAccount(data) {
+    return (
+        data?.basicInfo ||
         data?.AccountInfo ||
         data?.accountInfo ||
         data?.account ||
         data?.player ||
+        data?.data?.basicInfo ||
         data?.data?.AccountInfo ||
         data?.data?.accountInfo ||
         data?.data?.account ||
         data?.data?.player ||
         data?.data ||
-        data;
+        data
+    );
+}
+
+function parsePlayer(data) {
+    const account = getAccount(data);
 
     const name = String(
+        account?.nickname ||
         account?.AccountName ||
         account?.accountName ||
-        account?.nickname ||
         account?.name ||
         account?.playerName ||
         ""
     ).trim();
 
     const region = String(
+        account?.region ||
         account?.AccountRegion ||
         account?.accountRegion ||
-        account?.region ||
         ""
     ).trim().toUpperCase();
 
     return name ? { name, region } : null;
+}
+
+function parseAccountId(data) {
+    const account = getAccount(data);
+
+    return String(
+        account?.accountId ||
+        account?.AccountId ||
+        account?.accountID ||
+        account?.id ||
+        ""
+    ).trim();
 }
 
 async function lookupFreeFirePlayer(uid) {
@@ -52,21 +69,26 @@ async function lookupFreeFirePlayer(uid) {
     }
 
     const apiKey = process.env.FF_LOOKUP_API_KEY;
+    const apiUrl = process.env.FF_LOOKUP_API_URL;
+    const requestedRegion = String(
+        process.env.FF_LOOKUP_REGION || "BD"
+    ).toUpperCase();
 
-    if (!apiKey) {
+    if (!apiKey || !apiUrl) {
         const error = new Error("Free Fire UID verification is not configured.");
         error.code = "LOOKUP_NOT_CONFIGURED";
         throw error;
     }
 
-    const apiUrl = process.env.FF_LOOKUP_API_URL || DEFAULT_LOOKUP_URL;
-    const requestedRegion = String(
-        process.env.FF_LOOKUP_REGION || "BD"
-    ).toUpperCase();
-
     const response = await axios.get(apiUrl, {
-        params: { uid: normalizedUid, region: requestedRegion },
-        headers: { "x-api-key": apiKey, Accept: "application/json" },
+        params: {
+            uid: normalizedUid,
+            region: requestedRegion,
+            key: apiKey
+        },
+        headers: {
+            Accept: "application/json"
+        },
         timeout: 10000,
         maxRedirects: 2
     });
@@ -76,6 +98,14 @@ async function lookupFreeFirePlayer(uid) {
     if (!player) {
         const error = new Error("Player not found.");
         error.code = "PLAYER_NOT_FOUND";
+        throw error;
+    }
+
+    const returnedUid = parseAccountId(response.data);
+
+    if (returnedUid && returnedUid !== normalizedUid) {
+        const error = new Error("The API returned a different UID.");
+        error.code = "UID_MISMATCH";
         throw error;
     }
 
