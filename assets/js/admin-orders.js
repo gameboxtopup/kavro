@@ -238,7 +238,8 @@ function viewOrder(id){
 
     document.getElementById("mPayment").textContent = order.paymentMethod;
 
-    document.getElementById("mTransaction").textContent = order.transactionId;
+    document.getElementById("mTransaction").textContent =
+        order.remarks || order.note || "—";
 
     document.getElementById("mPrice").textContent = order.price;
 
