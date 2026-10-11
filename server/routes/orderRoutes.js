@@ -83,8 +83,7 @@ router.post("/", async (req, res) => {
             return res.status(400).json({ success: false, message: "Enter either a WhatsApp number or delivery email." });
         }
 
-        const transactionId =
-            (req.body.transactionId || "").trim();
+        const remarks = String(req.body.remarks || "").trim();
 
         let orderProduct = String(req.body.product || "").trim();
         let orderPackage = String(req.body.package || "").trim();
@@ -333,8 +332,7 @@ router.post("/", async (req, res) => {
                     req.body.payment ||
                     "",
 
-                transactionId:
-                    transactionId,
+                remarks: remarks,
 
                 screenshot:
                     req.body.screenshot || "",

@@ -93,10 +93,10 @@ const orderSchema = new mongoose.Schema({
         default: ""
     },
 
-    transactionId: {
-        type: String,
-        default: ""
-    },
+    remarks: {
+    type: String,
+    default: ""
+},
 
     screenshot: {
         type: String,

@@ -356,14 +356,13 @@ The UniPin redeem code will be delivered to this email address. You can change i
 
 <div class="form-group" id="remarksGroup">
 
-<label>Remarks</label>
-
+<label for="remarks">Remarks</label>
 <input
-type="text"
-id="transaction"
-name="transaction"
-placeholder="Optional message or payment remark"
->
+    type="text"
+    id="remarks"
+    name="remarks"
+    placeholder="Enter payment remark"
+    required>
 
 </div>
 
@@ -1167,7 +1166,7 @@ const zoneId = document.getElementById("zoneId").value.trim();
 const payment = document.querySelector(
 'input[name="Payment Method"]:checked'
 )?.value;
-const txn = document.getElementById("transaction").value.trim();
+const remarks = document.getElementById("remarks").value.trim();
 const screenshot = document.getElementById("paymentScreenshot").files;
 
 // Validation
@@ -1301,7 +1300,7 @@ try {
 
             paymentMethod: payment,
 
-            transactionId: txn,
+            remarks: remarks,
 
             screenshot: screenshotURL,
 
