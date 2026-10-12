@@ -1,3 +1,4 @@
+const helmet = require("helmet");
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -17,6 +18,13 @@ const rechargeWebhookRoutes = require("./routes/rechargeWebhookRoutes");
 const { startRechargeReconciler } = require("./services/rechargeReconciler");
 
 const app = express();
+
+app.disable("x-powered-by");
+
+// Safe for the current Kavro frontend
+app.use(helmet({
+    contentSecurityPolicy: false
+}));
 
 app.use(cors({
     origin: [
