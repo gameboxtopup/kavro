@@ -53,13 +53,17 @@
             padding: 8px;
         }
 
+        .coin-payment-card .payment-qr {
+            cursor: zoom-in;
+        }
+
         .coin-submit-spinner {
             display: none;
             width: 17px;
             height: 17px;
             margin-left: 8px;
             vertical-align: -3px;
-            border: 2px solid rgba(255, 255, 255, .35);
+            border: 2px solid rgba(255,255,255,.35);
             border-top-color: #fff;
             border-radius: 50%;
             animation: coinSubmitSpin .75s linear infinite;
@@ -83,288 +87,425 @@
 </head>
 
 <body>
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <a href="index.html" class="logo">
-                    <img src="assets/images/logo.png" alt="Kavro">
-                    <span>Kavro</span>
-                </a>
 
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Products</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
+<header class="header">
+    <div class="container">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="Kavro">
+                <span>Kavro</span>
+            </a>
 
-                <a href="dashboard.html" class="btn-primary">Dashboard</a>
-            </nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+
+            <a href="dashboard.html" class="btn-primary">Dashboard</a>
+        </nav>
+    </div>
+</header>
+
+<section class="order-hero">
+    <div class="container">
+        <div class="order-hero-content">
+            <span class="order-badge">🪙 Kavro Wallet</span>
+            <h1>Buy Kavro Coins</h1>
+            <p>
+                1 Kavro Coin = NPR 1. Submit your eSewa payment proof
+                and coins will be added after manual verification.
+            </p>
         </div>
-    </header>
+    </div>
+</section>
 
-    <section class="order-hero">
-        <div class="container">
-            <div class="order-hero-content">
-                <span class="order-badge">🪙 Kavro Wallet</span>
-                <h1>Buy Kavro Coins</h1>
-                <p>
-                    1 Kavro Coin = NPR 1. Submit your eSewa payment proof
-                    and coins will be added after manual verification.
-                </p>
-            </div>
-        </div>
-    </section>
+<section class="order-section">
+    <div class="container">
+        <div class="checkout-grid">
 
-    <section class="order-section">
-        <div class="container">
-            <div class="checkout-grid">
+            <div class="checkout-left">
+                <div class="order-card">
 
-                <div class="checkout-left">
-                    <div class="order-card">
-                        <div class="card-title">
-                            <h2>Coin Order Details</h2>
-                            <p>Enter the quantity you want to add to your Kavro wallet.</p>
-                        </div>
-
-                        <div class="summary-card">
-                            <div class="summary-row">
-                                <span>🪙 Coin quantity</span>
-                                <strong id="coinSummary">0</strong>
-                            </div>
-
-                            <div class="summary-row total">
-                                <span>Total to pay</span>
-                                <strong class="coin-total" id="coinTotal">NPR 0</strong>
-                            </div>
-                        </div>
-
-                        <form id="coinOrderForm" class="order-form">
-
-                            <div class="form-group">
-                                <label for="coinQuantity">Coin quantity</label>
-
-                                <input
-                                    id="coinQuantity"
-                                    type="number"
-                                    min="10"
-                                    max="100000"
-                                    step="1"
-                                    value="100"
-                                    required
-                                >
-
-                                <small>
-                                    Minimum 10 coins. 1 coin = NPR 1.
-                                </small>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="coinEmail">Gmail / Email</label>
-
-                                <input
-                                    id="coinEmail"
-                                    type="email"
-                                    placeholder="your@gmail.com"
-                                    required
-                                >
-
-                                <small id="coinAccountNote" class="coin-account">
-                                    Checking your Kavro account...
-                                </small>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Payment method</label>
-
-                                <label class="pay-option">
-                                    <input
-                                        type="radio"
-                                        name="coinPaymentMethod"
-                                        value="eSewa"
-                                        checked
-                                    >
-
-                                    <img
-                                        src="assets/images/esewa.png"
-                                        alt="eSewa"
-                                    >
-
-                                    <span class="pay-info">
-                                        <strong>eSewa</strong>
-                                        <small>Manual verification</small>
-                                    </span>
-                                </label>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="coinScreenshot">
-                                    Payment screenshot
-                                </label>
-
-                                <input
-                                    id="coinScreenshot"
-                                    type="file"
-                                    accept="image/*"
-                                    required
-                                >
-
-                                <small id="coinFileName">
-                                    No file selected
-                                </small>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="coinRemarks">Remarks</label>
-
-                                <textarea
-                                    id="coinRemarks"
-                                    rows="4"
-                                    maxlength="500"
-                                    placeholder="Payment reference or any message"
-                                ></textarea>
-                            </div>
-
-                            <button
-                                type="submit"
-                                class="btn-primary"
-                                id="coinSubmit"
-                            >
-                                <span id="coinSubmitText">
-                                    Submit Coin Order
-                                </span>
-
-                                <span
-                                    class="coin-submit-spinner"
-                                    aria-hidden="true"
-                                ></span>
-                            </button>
-
-                            <small
-                                id="coinStatus"
-                                class="coin-status"
-                                aria-live="polite"
-                            ></small>
-                        </form>
+                    <div class="card-title">
+                        <h2>Coin Order Details</h2>
+                        <p>Enter the quantity you want to add to your Kavro wallet.</p>
                     </div>
+
+                    <div class="summary-card">
+                        <div class="summary-row">
+                            <span>🪙 Coin quantity</span>
+                            <strong id="coinSummary">0</strong>
+                        </div>
+
+                        <div class="summary-row total">
+                            <span>Total to pay</span>
+                            <strong class="coin-total" id="coinTotal">
+                                NPR 0
+                            </strong>
+                        </div>
+                    </div>
+
+                    <form id="coinOrderForm" class="order-form">
+
+                        <div class="form-group">
+                            <label for="coinQuantity">Coin quantity</label>
+
+                            <input
+                                id="coinQuantity"
+                                type="number"
+                                min="10"
+                                max="100000"
+                                step="1"
+                                value="100"
+                                required
+                            >
+
+                            <small>
+                                Minimum 10 coins. 1 coin = NPR 1.
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="coinEmail">Gmail / Email</label>
+
+                            <input
+                                id="coinEmail"
+                                type="email"
+                                placeholder="your@gmail.com"
+                                required
+                            >
+
+                            <small id="coinAccountNote" class="coin-account">
+                                Checking your Kavro account...
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Payment method</label>
+
+                            <label class="pay-option">
+                                <input
+                                    type="radio"
+                                    name="coinPaymentMethod"
+                                    value="eSewa"
+                                    required
+                                >
+
+                                <img
+                                    src="assets/images/esewa.png"
+                                    alt="eSewa"
+                                >
+
+                                <span class="pay-info">
+                                    <strong>eSewa</strong>
+                                    <small>Manual verification</small>
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="coinScreenshot">
+                                Payment screenshot
+                            </label>
+
+                            <input
+                                id="coinScreenshot"
+                                type="file"
+                                accept="image/*"
+                                required
+                            >
+
+                            <small id="coinFileName">
+                                No file selected
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="coinRemarks">Remarks</label>
+
+                            <textarea
+                                id="coinRemarks"
+                                rows="4"
+                                maxlength="500"
+                                placeholder="Payment reference or any message"
+                            ></textarea>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                            id="coinSubmit"
+                        >
+                            <span id="coinSubmitText">
+                                Submit Coin Order
+                            </span>
+
+                            <span
+                                class="coin-submit-spinner"
+                                aria-hidden="true"
+                            ></span>
+                        </button>
+
+                        <small
+                            id="coinStatus"
+                            class="coin-status"
+                            aria-live="polite"
+                        ></small>
+
+                    </form>
+                </div>
+            </div>
+
+            <aside class="checkout-right">
+
+                <div
+                    class="payment-card coin-payment-card"
+                    id="coinPaymentCard"
+                    style="display:none;"
+                >
+                    <h3>Pay with eSewa</h3>
+
+                    <p>
+                        Pay the exact total, then upload the screenshot.
+                    </p>
+
+                    <p>
+                        <small>Click the QR to enlarge it.</small>
+                    </p>
+
+                    <img
+                        id="coinPaymentQR"
+                        class="payment-qr"
+                        src="assets/images/qrcode.jpeg"
+                        alt="Kavro eSewa QR"
+                    >
+
+                    <button
+                        type="button"
+                        id="coinDownloadQR"
+                        class="btn-primary"
+                        style="width:100%;margin-top:15px;"
+                    >
+                        Download eSewa QR
+                    </button>
+
+                    <p>
+                        <strong>eSewa:</strong> 9747687660
+                    </p>
+
+                    <p>
+                        <strong>Account:</strong> Nirmala Kathayat
+                    </p>
                 </div>
 
-                <aside class="checkout-right">
+                <div class="trust-card">
+                    <h3>How it works</h3>
 
-                    <div class="payment-card coin-payment-card">
-                        <h3>Pay with eSewa</h3>
+                    <ul>
+                        <li>Choose coin quantity</li>
+                        <li>Pay the exact NPR amount</li>
+                        <li>Upload payment screenshot</li>
+                        <li>Admin verifies and adds coins</li>
+                    </ul>
+                </div>
 
-                        <p>
-                            Pay the exact total, then upload the screenshot.
-                        </p>
-
-                        <img
-                            src="assets/images/qrcode.jpeg"
-                            alt="Kavro eSewa QR"
-                        >
-
-                        <p>
-                            <strong>eSewa:</strong> 9747687660
-                        </p>
-
-                        <p>
-                            <strong>Account:</strong> Nirmala Kathayat
-                        </p>
-                    </div>
-
-                    <div class="trust-card">
-                        <h3>How it works</h3>
-
-                        <ul>
-                            <li>Choose coin quantity</li>
-                            <li>Pay the exact NPR amount</li>
-                            <li>Upload payment screenshot</li>
-                            <li>Admin verifies and adds coins</li>
-                        </ul>
-                    </div>
-                </aside>
-            </div>
+            </aside>
         </div>
-    </section>
+    </div>
+</section>
 
-    <script>
-        const API = "https://kavro-api.onrender.com";
-        const CLOUD_UPLOAD =
-            "https://api.cloudinary.com/v1_1/f0rpqupr/image/upload";
-        const UPLOAD_PRESET = "kavro_upload";
-        const token = localStorage.getItem("kavroToken");
+<div
+    id="coinQRModal"
+    class="qr-modal"
+    aria-hidden="true"
+>
+    <div class="qr-modal-content">
 
-        const quantityInput = document.getElementById("coinQuantity");
-        const summary = document.getElementById("coinSummary");
-        const total = document.getElementById("coinTotal");
-        const status = document.getElementById("coinStatus");
-        const screenshotInput =
-            document.getElementById("coinScreenshot");
-        const fileName = document.getElementById("coinFileName");
-        const submitButton = document.getElementById("coinSubmit");
-        const submitText = document.getElementById("coinSubmitText");
-        const coinForm = document.getElementById("coinOrderForm");
+        <button
+            type="button"
+            id="coinCloseQR"
+            class="close-btn"
+            aria-label="Close QR"
+        >
+            ✕
+        </button>
 
-        let redirecting = false;
+        <img
+            id="coinPopupQR"
+            src="assets/images/qrcode.jpeg"
+            alt="Kavro eSewa QR"
+        >
 
-        if (!token) {
-            sessionStorage.setItem(
-                "kavroCheckoutReturn",
-                window.location.href
-            );
+        <button
+            type="button"
+            id="coinDownloadPopupQR"
+            class="download-popup-btn"
+        >
+            ⬇ Download QR
+        </button>
+    </div>
+</div>
 
-            window.location.replace("login.html");
-        }
+<script>
+    const API = "https://kavro-api.onrender.com";
+    const CLOUD_UPLOAD =
+        "https://api.cloudinary.com/v1_1/f0rpqupr/image/upload";
+    const UPLOAD_PRESET = "kavro_upload";
+    const token = localStorage.getItem("kavroToken");
 
-        function updateTotal() {
-            const amount = Math.max(
-                0,
-                Math.floor(Number(quantityInput.value) || 0)
-            );
+    const quantityInput =
+        document.getElementById("coinQuantity");
 
-            summary.textContent = amount.toLocaleString();
-            total.textContent = `NPR ${amount.toLocaleString()}`;
-        }
+    const summary =
+        document.getElementById("coinSummary");
 
-        quantityInput.addEventListener("input", updateTotal);
-        updateTotal();
+    const total =
+        document.getElementById("coinTotal");
 
-        fetch(`${API}/api/auth/me`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-            .then(response =>
-                response.json().then(data => ({
-                    response,
-                    data
-                }))
-            )
-            .then(({ response, data }) => {
-                if (!response.ok || !data.success) {
-                    throw new Error("Session expired");
-                }
+    const status =
+        document.getElementById("coinStatus");
 
-                document.getElementById("coinEmail").value =
-                    data.user.email || "";
+    const screenshotInput =
+        document.getElementById("coinScreenshot");
 
-                document.getElementById("coinAccountNote").textContent =
-                    `Signed in as ${
-                        data.user.email || "your Kavro account"
-                    }`;
-            })
-            .catch(() => {
-                localStorage.removeItem("kavroToken");
-                window.location.replace("login.html");
+    const fileName =
+        document.getElementById("coinFileName");
+
+    const submitButton =
+        document.getElementById("coinSubmit");
+
+    const submitText =
+        document.getElementById("coinSubmitText");
+
+    const coinPaymentCard =
+        document.getElementById("coinPaymentCard");
+
+    const coinPaymentQR =
+        document.getElementById("coinPaymentQR");
+
+    const coinQRModal =
+        document.getElementById("coinQRModal");
+
+    const coinPopupQR =
+        document.getElementById("coinPopupQR");
+
+    let redirecting = false;
+
+    if (!token) {
+        sessionStorage.setItem(
+            "kavroCheckoutReturn",
+            window.location.href
+        );
+
+        window.location.replace("login.html");
+    }
+
+    function updateTotal() {
+        const amount = Math.max(
+            0,
+            Math.floor(Number(quantityInput.value) || 0)
+        );
+
+        summary.textContent = amount.toLocaleString();
+        total.textContent = `NPR ${amount.toLocaleString()}`;
+    }
+
+    quantityInput.addEventListener("input", updateTotal);
+    updateTotal();
+
+    function openCoinQR() {
+        coinPopupQR.src = coinPaymentQR.src;
+        coinQRModal.classList.add("active");
+        coinQRModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeCoinQR() {
+        coinQRModal.classList.remove("active");
+        coinQRModal.setAttribute("aria-hidden", "true");
+    }
+
+    function downloadCoinQR() {
+        const link = document.createElement("a");
+
+        link.href = coinPaymentQR.src;
+        link.download = "Kavro-eSewa-QR.jpeg";
+
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    }
+
+    document
+        .querySelectorAll('input[name="coinPaymentMethod"]')
+        .forEach(option => {
+            option.addEventListener("change", () => {
+                if (option.value !== "eSewa") return;
+
+                coinPaymentCard.style.display = "block";
+                openCoinQR();
             });
-
-        screenshotInput.addEventListener("change", () => {
-            fileName.textContent = screenshotInput.files[0]
-                ? `Selected: ${screenshotInput.files[0].name}`
-                : "No file selected";
         });
 
-        coinForm.addEventListener("submit", async event => {
+    coinPaymentQR.addEventListener("click", openCoinQR);
+
+    document
+        .getElementById("coinDownloadQR")
+        .addEventListener("click", downloadCoinQR);
+
+    document
+        .getElementById("coinDownloadPopupQR")
+        .addEventListener("click", downloadCoinQR);
+
+    document
+        .getElementById("coinCloseQR")
+        .addEventListener("click", closeCoinQR);
+
+    coinQRModal.addEventListener("click", event => {
+        if (event.target === coinQRModal) {
+            closeCoinQR();
+        }
+    });
+
+    fetch(`${API}/api/auth/me`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+        .then(response =>
+            response.json().then(data => ({
+                response,
+                data
+            }))
+        )
+        .then(({ response, data }) => {
+            if (!response.ok || !data.success) {
+                throw new Error("Session expired");
+            }
+
+            document.getElementById("coinEmail").value =
+                data.user.email || "";
+
+            document.getElementById("coinAccountNote").textContent =
+                `Signed in as ${
+                    data.user.email || "your Kavro account"
+                }`;
+        })
+        .catch(() => {
+            localStorage.removeItem("kavroToken");
+            window.location.replace("login.html");
+        });
+
+    screenshotInput.addEventListener("change", () => {
+        fileName.textContent = screenshotInput.files[0]
+            ? `Selected: ${screenshotInput.files[0].name}`
+            : "No file selected";
+    });
+
+    document
+        .getElementById("coinOrderForm")
+        .addEventListener("submit", async event => {
             event.preventDefault();
 
             if (redirecting || submitButton.disabled) {
@@ -419,14 +560,18 @@
                 const uploadData = new FormData();
 
                 uploadData.append("file", file);
-                uploadData.append("upload_preset", UPLOAD_PRESET);
+                uploadData.append(
+                    "upload_preset",
+                    UPLOAD_PRESET
+                );
 
                 const uploadResponse = await fetch(CLOUD_UPLOAD, {
                     method: "POST",
                     body: uploadData
                 });
 
-                const uploadResult = await uploadResponse.json();
+                const uploadResult =
+                    await uploadResponse.json();
 
                 if (!uploadResult.secure_url) {
                     throw new Error(
@@ -434,7 +579,8 @@
                     );
                 }
 
-                status.textContent = "Submitting coin order...";
+                status.textContent =
+                    "Submitting coin order...";
 
                 const response = await fetch(
                     `${API}/api/credits/topups`,
@@ -448,7 +594,8 @@
                             amount,
                             email,
                             paymentMethod: "eSewa",
-                            screenshot: uploadResult.secure_url,
+                            screenshot:
+                                uploadResult.secure_url,
                             remarks
                         })
                     }
@@ -490,16 +637,19 @@
                 status.textContent =
                     error.message ||
                     "Something went wrong. Please try again.";
+
             } finally {
                 if (!redirecting) {
                     submitButton.disabled = false;
                     submitButton.classList.remove("is-loading");
-                    submitText.textContent = "Submit Coin Order";
+                    submitText.textContent =
+                        "Submit Coin Order";
                 }
             }
         });
-    </script>
+</script>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
+
 </body>
 </html>
