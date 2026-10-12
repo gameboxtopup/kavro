@@ -152,17 +152,6 @@
             <div class="kavro-gate-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
             <section class="kavro-gate-card">
                 <img class="kavro-gate-logo" src="/assets/images/logo.png" alt="Kavro Nepal">
-                <p class="kavro-gate-kicker">Kavro Nepal · Official Store</p>
-                <h1 class="kavro-gate-title" id="kavroGateTitle">Maintenance</h1>
-                <p class="kavro-gate-copy" id="kavroGateCopy">Our shop opens at <strong>11:00 AM Nepal time</strong>. Your order window is reserved—please stay on this page.</p>
-                /*<div class="kavro-gate-status"><b></b><span id="kavroGateStatus">Preparing today’s order window</span></div>
-                <div class="kavro-gate-countdown" aria-live="polite" aria-label="Time until Kavro opens">
-                    <div class="kavro-gate-unit"><strong id="kavroGateHours">00</strong><span>Hours</span></div>
-                    <div class="kavro-gate-unit"><strong id="kavroGateMinutes">00</strong><span>Minutes</span></div>
-                    <div class="kavro-gate-unit"><strong id="kavroGateSeconds">00</strong><span>Seconds</span></div>
-                </div>
-                <a class="kavro-gate-help" href="https://www.facebook.com/profile.php?id=61574738600137" target="_blank" rel="noopener">💬 Contact Kavro Nepal</a>
-                <p class="kavro-gate-footer">Open Monday–Friday · 11:00 AM–11:40 PM · Nepal time</p>*/
             </section>
         `;
         document.body.appendChild(gate);
