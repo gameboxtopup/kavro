@@ -111,29 +111,6 @@
 
         </div>
 
-        <div class="credits-panel" id="creditsPanel">
-            <div class="review-panel-heading">
-                <div>
-                    <h3>🪙 Kavro Wallet</h3>
-                    <p>1 coin = NPR 1. Add coins through eSewa; admin verifies the screenshot manually.</p>
-                </div>
-                <strong id="creditsBalance">NPR 0</strong>
-            </div>
-            <form id="creditTopupForm" class="review-form">
-                <label for="creditAmount">Amount (NPR)</label>
-                <input id="creditAmount" type="number" min="10" max="100000" required placeholder="Example: 500">
-                <label for="creditPaymentMethod">Payment method</label>
-                <select id="creditPaymentMethod" required>
-                    <option value="eSewa">eSewa</option>
-                </select>
-                <label for="creditScreenshot">Payment screenshot</label>
-                <input id="creditScreenshot" type="file" accept="image/*" required>
-                <label for="creditRemarks">Remarks</label>
-                <textarea id="creditRemarks" maxlength="500" placeholder="Payment reference or note"></textarea>
-                <button type="submit">Submit wallet top-up</button>
-                <small id="creditTopupStatus"></small>
-            </form>
-        </div>
 
         <div id="reviewPanel" class="review-panel" hidden>
             <div class="review-panel-heading">
