@@ -158,9 +158,7 @@
         document.body.classList.add("kavro-shop-closed");
 
         if (afterClosing) {
-            gate.querySelector("#kavroGateTitle").textContent = "Kavro is closed for today";
-            gate.querySelector("#kavroGateCopy").innerHTML = "We’ve safely closed today’s order window. We’ll reopen on the next working day at <strong>11:00 AM Nepal time</strong>.";
-            gate.querySelector("#kavroGateStatus").textContent = "Next opening time is being counted down";
+            gate.querySelector("#kavroGateTitle").textContent = "MAINTANENCE COME BACK at night";
         }
 
         function tick() {
