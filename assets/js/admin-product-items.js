@@ -111,6 +111,9 @@ form.addEventListener("submit", async (e) => {
 
         discountPrice: Number(document.getElementById("discountPrice").value) || 0,
         serviceId: document.getElementById("serviceId").value.trim(),
+        providerCategoryId: document.getElementById("providerCategoryId").value.trim(),
+        providerOfferId: document.getElementById("providerOfferId").value.trim(),
+        providerProductKey: document.getElementById("providerProductKey").value.trim(),
 
         description: document.getElementById("description").value,
 
@@ -187,6 +190,9 @@ async function editItem(id) {
     document.getElementById("discountPrice").value =
     item.discountPrice || "";
     document.getElementById("serviceId").value = item.serviceId || "";
+    document.getElementById("providerCategoryId").value = item.providerCategoryId || "";
+    document.getElementById("providerOfferId").value = item.providerOfferId || "";
+    document.getElementById("providerProductKey").value = item.providerProductKey || "";
 
     document.getElementById("description").value =
     item.description || "";

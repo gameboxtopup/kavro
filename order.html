@@ -258,6 +258,10 @@ Verify UID
 
 </div>
 
+<small id="uidVerificationHelp" style="display:none; margin-top:8px; color:#93c5fd;">
+Enter your UID and Kavro will show the in-game username for confirmation.
+</small>
+
 <input
 type="hidden"
 id="uidVerificationToken"
@@ -335,17 +339,17 @@ The UniPin redeem code will be delivered to this email address. You can change i
 
 </label>
 
-<label class="pay-option" id="kavroCreditsOption" style="display:none;">
+<label class="pay-option" id="kavroWalletOption">
 
     <input type="radio"
            name="Payment Method"
-           value="Kavro Credits">
+           value="Kavro Wallet">
 
     <span aria-hidden="true" style="font-size:28px;">💳</span>
 
     <div class="pay-info">
-        <strong>Kavro Credits</strong>
-        <small id="kavroCreditsBalance">Loading balance...</small>
+        <strong>Kavro Wallet</strong>
+        <small id="kavroWalletBalance">Loading balance...</small>
     </div>
 
 </label>
@@ -356,13 +360,14 @@ The UniPin redeem code will be delivered to this email address. You can change i
 
 <div class="form-group" id="remarksGroup">
 
-<label for="remarks">Remarks</label>
+<label>Remarks</label>
+
 <input
-    type="text"
-    id="remarks"
-    name="remarks"
-    placeholder="Enter payment remark"
-    required>
+type="text"
+id="remarks"
+name="transaction"
+placeholder="Optional message or payment remark"
+>
 
 </div>
 
@@ -901,35 +906,37 @@ const uidInput = document.getElementById("uid");
 const verifyUidBtn = document.getElementById("verifyUidBtn");
 const uidVerificationResult = document.getElementById("uidVerificationResult");
 const uidVerificationToken = document.getElementById("uidVerificationToken");
+const uidVerificationHelp = document.getElementById("uidVerificationHelp");
 const checkoutToken = localStorage.getItem("kavroToken");
 const checkoutAccountNote = document.getElementById("checkoutAccountNote");
-const kavroCreditsOption = document.getElementById("kavroCreditsOption");
-const kavroCreditsBalance = document.getElementById("kavroCreditsBalance");
+const kavroWalletOption = document.getElementById("kavroWalletOption");
+const kavroWalletBalance = document.getElementById("kavroWalletBalance");
 const remarksGroup = document.getElementById("remarksGroup");
+const remarksInput = document.getElementById("remarks");
 const screenshotGroup = document.getElementById("screenshotGroup");
 const paymentScreenshotInput = document.getElementById("paymentScreenshot");
 
-function updatePubgPaymentFields(method) {
-    const isCredits = product === "PUBG Mobile" && method === "Kavro Credits";
+function updatePaymentFields(method) {
+    const isWallet = method === "Kavro Wallet";
 
-    if (remarksGroup) remarksGroup.style.display = isCredits ? "none" : "block";
-    if (screenshotGroup) screenshotGroup.style.display = isCredits ? "none" : "block";
-    if (paymentScreenshotInput) paymentScreenshotInput.required = !isCredits;
-    if (isCredits) {
+    if (remarksGroup) remarksGroup.style.display = isWallet ? "none" : "block";
+    if (remarksInput) remarksInput.required = !isWallet;
+    if (screenshotGroup) screenshotGroup.style.display = isWallet ? "none" : "block";
+    if (paymentScreenshotInput) paymentScreenshotInput.required = !isWallet;
+    if (isWallet) {
         document.getElementById("paymentCard").style.display = "none";
     }
 }
 
-if (product === "PUBG Mobile") {
-    if (kavroCreditsOption) kavroCreditsOption.style.display = "flex";
-
-    document.querySelectorAll('input[name="Payment Method"]').forEach(option => {
-        option.addEventListener("change", () => updatePubgPaymentFields(option.value));
-    });
-}
+if (kavroWalletOption) kavroWalletOption.style.display = "flex";
+document.querySelectorAll('input[name="Payment Method"]').forEach(option => {
+    option.addEventListener("change", () => updatePaymentFields(option.value));
+});
 
 let freeFireVerificationRequired = false;
 let freeFireVerificationReady = product !== "Free Fire";
+let uidLookupTimer = null;
+let uidLookupRequestId = 0;
 
 if (!checkoutToken) {
     sessionStorage.setItem("kavroCheckoutReturn", window.location.href);
@@ -966,6 +973,7 @@ if(product === "Free Fire"){
     uidInput.inputMode = "numeric";
     uidInput.pattern = "[0-9]{6,12}";
     verifyUidBtn.style.display = "inline-flex";
+    uidVerificationHelp.style.display = "block";
     verifyUidBtn.disabled = true;
     verifyUidBtn.textContent = "Loading...";
 
@@ -978,6 +986,7 @@ if(product === "Free Fire"){
             if (freeFireVerificationRequired) {
                 verifyUidBtn.disabled = false;
                 verifyUidBtn.textContent = "Verify UID";
+                scheduleFreeFireUidLookup();
                 return;
             }
 
@@ -1055,12 +1064,9 @@ else{
 
 }
 
-if (uidInput) {
-    uidInput.addEventListener("input", resetUidVerification);
-}
-
-verifyUidBtn.addEventListener("click", async function () {
+async function verifyFreeFireUid() {
     const uid = uidInput.value.trim();
+    const requestId = ++uidLookupRequestId;
 
     if (!/^\d{6,12}$/.test(uid)) {
         uidVerificationResult.style.display = "block";
@@ -1088,6 +1094,11 @@ verifyUidBtn.addEventListener("click", async function () {
 
         const result = await response.json();
 
+        // Ignore a response for an older UID if the customer edited the field.
+        if (requestId !== uidLookupRequestId || uidInput.value.trim() !== uid) {
+            return;
+        }
+
         if (!response.ok || !result.success) {
             throw new Error(result.message || "UID verification failed.");
         }
@@ -1100,17 +1111,48 @@ verifyUidBtn.addEventListener("click", async function () {
         uidVerificationToken.value = result.verificationToken;
         uidVerificationResult.className = "uid-verification-result success";
         uidVerificationResult.textContent =
-            `✓ ${result.playerName} • ${result.playerRegion} Server`;
+            `✓ Username: ${result.playerName} • ${result.playerRegion} Server`;
         verifyUidBtn.textContent = "Verified ✓";
     } catch (error) {
+        if (requestId !== uidLookupRequestId) {
+            return;
+        }
         uidVerificationToken.value = "";
         uidVerificationResult.className = "uid-verification-result error";
         uidVerificationResult.textContent = error.message;
         verifyUidBtn.textContent = "Try Again";
     } finally {
-        verifyUidBtn.disabled = false;
+        if (requestId === uidLookupRequestId) {
+            verifyUidBtn.disabled = false;
+        }
     }
-});
+}
+
+function scheduleFreeFireUidLookup() {
+    clearTimeout(uidLookupTimer);
+
+    if (
+        product !== "Free Fire" ||
+        !freeFireVerificationReady ||
+        !freeFireVerificationRequired ||
+        !/^\d{6,12}$/.test(uidInput.value.trim())
+    ) {
+        return;
+    }
+
+    uidLookupTimer = setTimeout(() => {
+        verifyFreeFireUid();
+    }, 650);
+}
+
+if (uidInput) {
+    uidInput.addEventListener("input", () => {
+        resetUidVerification();
+        scheduleFreeFireUidLookup();
+    });
+}
+
+verifyUidBtn.addEventListener("click", verifyFreeFireUid);
 
 if (checkoutToken) {
     fetch("https://kavro-api.onrender.com/api/auth/me", {
@@ -1121,8 +1163,8 @@ if (checkoutToken) {
             if (!response.ok || !data.success) throw new Error("Session expired");
             const emailInput = document.getElementById("email");
             emailInput.value = data.user.email || "";
-            if (product === "PUBG Mobile" && kavroCreditsBalance) {
-                kavroCreditsBalance.textContent = `Balance: NPR ${Number(data.user.kavroCredits || 0).toLocaleString()}`;
+            if (kavroWalletBalance) {
+                kavroWalletBalance.textContent = `Balance: NPR ${Number(data.user.kavroCredits || 0).toLocaleString()}`;
             }
             checkoutAccountNote.textContent =
                 product === "UniPin BD Voucher"
@@ -1211,14 +1253,9 @@ if(!payment){
     return;
 }
 
-const usingKavroCredits = product === "PUBG Mobile" && payment === "Kavro Credits";
+const usingKavroWallet = payment === "Kavro Wallet";
 
-if (usingKavroCredits && product !== "PUBG Mobile") {
-    alert("Kavro Credits are currently available only for PUBG Mobile.");
-    return;
-}
-
-if(!usingKavroCredits && screenshot.length === 0){
+if(!usingKavroWallet && screenshot.length === 0){
     alert("Please upload your payment screenshot.");
     return;
 }
@@ -1230,7 +1267,7 @@ btnLoader.style.display = "inline";
 
 let screenshotURL = "";
 
-if (!usingKavroCredits) {
+if (!usingKavroWallet) {
     const screenshotFile = document.getElementById("paymentScreenshot").files[0];
     const uploadData = new FormData();
     uploadData.append("file", screenshotFile);
@@ -1374,7 +1411,7 @@ document.querySelectorAll('input[name="Payment Method"]').forEach(option => {
         const data = paymentData[this.value];
 
         if (!data) {
-            updatePubgPaymentFields(this.value);
+            updatePaymentFields(this.value);
             document.getElementById("paymentCard").style.display = "none";
             return;
         }
@@ -1405,7 +1442,7 @@ option.addEventListener("change",function(){
 
 const data=paymentData[this.value];
 if (!data) {
-    updatePubgPaymentFields(this.value);
+    updatePaymentFields(this.value);
     document.getElementById("paymentCard").style.display = "none";
     return;
 }

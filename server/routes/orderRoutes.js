@@ -9,15 +9,21 @@ const { addOrder: addSmmOrder } = require("../services/smmNepali");
 const User = require("../models/User");
 const ProductItem = require("../models/ProductItem");
 const { requireAdmin } = require("../middleware/auth");
+const {
+    createPubgTopup,
+    isCompleted,
+    isFailed
+} = require("../services/fazerCards");
+const { createRechargeOrder } = require("../services/rechargeGames");
 
 
 // =====================================================
 // RESEND EMAIL
 // =====================================================
 
-const resend = new Resend(
-    process.env.RESEND_API_KEY
-);
+const resend = process.env.RESEND_API_KEY
+    ? new Resend(process.env.RESEND_API_KEY)
+    : null;
 
 const EMAIL_FROM =
     process.env.RESEND_FROM_EMAIL ||
@@ -26,6 +32,112 @@ const EMAIL_FROM =
 // Email is handled manually by the Kavro admin.
 // Keep automated admin/customer messages disabled.
 const AUTOMATIC_ORDER_EMAILS_ENABLED = false;
+
+function isPubgProduct(product) {
+    return String(product || "").trim().toLowerCase() === "pubg mobile";
+}
+
+function parseAmount(value) {
+    const amount = Number(String(value || "").replace(/[^0-9.]/g, ""));
+    return Number.isFinite(amount) ? amount : 0;
+}
+
+function isCreditPayment(paymentMethod) {
+    const normalized = String(paymentMethod || "").trim().toLowerCase();
+    return normalized === "kavro credits" || normalized === "kavro wallet";
+}
+
+function isFreeFireProduct(product) {
+    return String(product || "").trim().toLowerCase() === "free fire";
+}
+
+async function submitFreeFireOrder(order) {
+    if (!isFreeFireProduct(order.product) || order.providerOrderId) return order;
+    const item = await ProductItem.findById(order.productItemId).populate("product", "name slug");
+    const productKey = String(item?.providerProductKey || "").trim();
+    if (!productKey) throw new Error("This Free Fire package has no RechargeGames product key configured.");
+    const provider = await createRechargeOrder({
+        productKey,
+        playerId: order.uid,
+        buyerRef: `KAVRO-${order._id}`,
+        region: process.env.RECHARGE_FREE_FIRE_REGION || order.playerRegion || "Bangladesh",
+        note: order.remarks || order.note || ""
+    });
+    order.providerOrderId = String(provider.order_id || provider.id || "");
+    order.providerStatus = String(provider.status || "pending");
+    if (provider.status === "delivered") {
+        order.status = "Completed";
+        order.completedAt = new Date();
+    } else if (provider.status === "failed") {
+        order.status = order.creditsDebited > 0 ? "Refunded" : "Refund Required";
+    } else {
+        order.status = "Processing";
+        order.processingStartedAt = new Date();
+    }
+    await order.save();
+    return order;
+}
+
+async function refundCreditsIfNeeded(order, reason) {
+    if (!order || !order.userId || !order.creditsDebited || order.creditsRefunded) {
+        return;
+    }
+
+    const updated = await Order.findOneAndUpdate(
+        { _id: order._id, creditsRefunded: false },
+        {
+            $set: {
+                creditsRefunded: true,
+                providerStatus: reason || order.providerStatus || "refunded"
+            }
+        },
+        { new: true }
+    );
+
+    if (updated) {
+        await User.findByIdAndUpdate(order.userId, {
+            $inc: { kavroCredits: Number(order.creditsDebited) }
+        });
+    }
+}
+
+async function submitPubgOrder(order) {
+    if (!isPubgProduct(order.product)) {
+        return order;
+    }
+
+    if (order.providerOrderId) {
+        return order;
+    }
+
+    const provider = await createPubgTopup({
+        categoryId: order.providerCategoryId || process.env.FAZER_PUBG_CATEGORY_ID,
+        offerId: order.providerOfferId,
+        playerId: order.uid,
+        idempotencyKey: `kavro-${order._id}`
+    });
+
+    if (!provider.id) {
+        throw new Error("FazerCards response did not include an order ID.");
+    }
+
+    order.providerOrderId = provider.id;
+    order.providerStatus = provider.status || "submitted";
+
+    if (isCompleted(provider.status)) {
+        order.status = "Completed";
+        order.completedAt = new Date();
+    } else if (isFailed(provider.status)) {
+        order.status = "Refund Required";
+        await refundCreditsIfNeeded(order, provider.status);
+    } else {
+        order.status = "Processing";
+        order.processingStartedAt = new Date();
+    }
+
+    await order.save();
+    return order;
+}
 
 
 // =====================================================
@@ -40,6 +152,7 @@ router.post("/", async (req, res) => {
             req.body.type || "game";
 
         let linkedUser = null;
+        let debitedCredits = 0;
         const authHeader = req.headers.authorization || "";
         const bearerToken = authHeader.startsWith("Bearer ")
             ? authHeader.slice(7)
@@ -69,6 +182,11 @@ router.post("/", async (req, res) => {
 
         const whatsapp = String(req.body.whatsapp || "").trim();
         const requestedProduct = String(req.body.product || "").trim();
+        const paymentMethod = String(
+            req.body.paymentMethod || req.body.payment || ""
+        ).trim();
+        const pubgOrder = isPubgProduct(requestedProduct);
+        const creditPayment = isCreditPayment(paymentMethod);
 
         const digitalCodeProduct = ["Roblox", "Steam Gift Card Global"].includes(requestedProduct);
 
@@ -83,7 +201,8 @@ router.post("/", async (req, res) => {
             return res.status(400).json({ success: false, message: "Enter either a WhatsApp number or delivery email." });
         }
 
-        const remarks = String(req.body.remarks || "").trim();
+        const transactionId =
+            (req.body.transactionId || "").trim();
 
         let orderProduct = String(req.body.product || "").trim();
         let orderPackage = String(req.body.package || "").trim();
@@ -96,19 +215,20 @@ router.post("/", async (req, res) => {
 
         const managedProductSlugs = {
             "UniPin BD Voucher": "unipin",
-            "Mobile Legends": "mlbb"
+            "Mobile Legends": "mlbb",
+            "PUBG Mobile": "pubg",
+            "Free Fire": "ff"
         };
 
         const managedProductSlug = managedProductSlugs[orderProduct];
+        let selectedProductItem = null;
+
+        if (req.body.item) {
+            selectedProductItem = await ProductItem.findById(req.body.item).populate("product", "name slug");
+        }
 
         if (managedProductSlug) {
-            let productItem = null;
-
-            if (req.body.item) {
-                productItem = await ProductItem
-                    .findById(req.body.item)
-                    .populate("product", "name slug");
-            }
+            let productItem = selectedProductItem;
 
             // Support checkout links created before item IDs were added.
             if (!productItem) {
@@ -142,6 +262,8 @@ router.post("/", async (req, res) => {
                     message: "This package is not available."
                 });
             }
+
+            selectedProductItem = productItem;
 
             if (
                 !productItem.product ||
@@ -197,8 +319,111 @@ router.post("/", async (req, res) => {
             orderPackage = productItem.title;
             unitPrice = `Rs. ${finalUnitPrice}`;
             orderPrice = `Rs. ${finalUnitPrice * quantity}`;
+        } else if (selectedProductItem && orderType !== "smm") {
+            if (!selectedProductItem.active || !selectedProductItem.product) {
+                return res.status(400).json({ success: false, message: "This package is not available." });
+            }
+            if (selectedProductItem.product.name !== orderProduct && selectedProductItem.product.slug !== String(req.body.productSlug || "")) {
+                return res.status(400).json({ success: false, message: "The selected package does not match this product." });
+            }
+            if (quantity > selectedProductItem.stock) {
+                return res.status(400).json({ success: false, message: `Only ${selectedProductItem.stock} package(s) are currently available.` });
+            }
+            const finalUnitPrice = selectedProductItem.discountPrice > 0 && selectedProductItem.discountPrice < selectedProductItem.price
+                ? selectedProductItem.discountPrice
+                : selectedProductItem.price;
+            orderPackage = selectedProductItem.title;
+            unitPrice = `Rs. ${finalUnitPrice}`;
+            orderPrice = `Rs. ${finalUnitPrice * quantity}`;
         } else if (orderType !== "smm") {
             quantity = 1;
+        }
+
+        if (orderType === "smm") {
+            const smmItem = await ProductItem.findOne({ serviceId: String(req.body.serviceId || ""), active: true });
+            if (!smmItem) return res.status(400).json({ success: false, message: "SMM service is unavailable." });
+            const min = Number(smmItem.minQuantity || 10);
+            const max = Number(smmItem.maxQuantity || 1000000);
+            if (quantity < min || quantity > max) return res.status(400).json({ success: false, message: `Quantity must be between ${min} and ${max}.` });
+            const rate = Number(smmItem.price) || 0;
+            unitPrice = `Rs. ${rate} per 1000`;
+            orderPrice = `NPR ${Math.ceil((quantity / 1000) * rate)}`;
+            orderPackage = `${quantity} ${orderProduct}`;
+        }
+
+        if (pubgOrder && !/^\d{4,20}$/.test(String(req.body.uid || "").trim())) {
+            return res.status(400).json({
+                success: false,
+                message: "Please enter a valid PUBG Player ID."
+            });
+        }
+
+        if (pubgOrder && !["eSewa", "Bank Transfer", "Kavro Credits", "Kavro Wallet"].includes(paymentMethod)) {
+            return res.status(400).json({
+                success: false,
+                message: "Choose eSewa, Bank Transfer, or Kavro Credits for PUBG."
+            });
+        }
+
+        if (pubgOrder && !creditPayment && !String(req.body.screenshot || "").trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Upload your payment screenshot before placing the PUBG order."
+            });
+        }
+
+        if (isFreeFireProduct(orderProduct) && !creditPayment && !String(req.body.screenshot || "").trim()) {
+            return res.status(400).json({ success: false, message: "Upload your eSewa payment screenshot before placing the Free Fire order." });
+        }
+
+        if (pubgOrder && (!selectedProductItem || !selectedProductItem.providerOfferId)) {
+            return res.status(503).json({
+                success: false,
+                message: "This PUBG package is not connected to FazerCards yet. Please contact Kavro support."
+            });
+        }
+
+        if (isFreeFireProduct(orderProduct) && creditPayment && (!selectedProductItem || !String(selectedProductItem.providerProductKey || "").trim())) {
+            return res.status(503).json({
+                success: false,
+                message: "This Free Fire package is not connected to RechargeGames yet. Please contact Kavro support."
+            });
+        }
+
+        if (isFreeFireProduct(orderProduct) && !["eSewa", "Kavro Credits", "Kavro Wallet"].includes(paymentMethod)) {
+            return res.status(400).json({ success: false, message: "Choose eSewa or Kavro Wallet for Free Fire." });
+        }
+
+        // Kavro Credits are internal balance. Debit them atomically before
+        // creating a PUBG order so two simultaneous checkouts cannot spend
+        // the same balance. The catch block refunds them if order creation
+        // fails afterward.
+        if (creditPayment) {
+            const orderTotal = parseAmount(orderPrice);
+            if (!orderTotal) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Could not calculate the PUBG order total."
+                });
+            }
+
+            const updatedUser = await User.findOneAndUpdate(
+                {
+                    _id: linkedUser._id,
+                    kavroCredits: { $gte: orderTotal }
+                },
+                { $inc: { kavroCredits: -orderTotal } },
+                { new: true }
+            );
+
+            if (!updatedUser) {
+                return res.status(402).json({
+                    success: false,
+                    message: "Not enough Kavro Credits. Please load credits first."
+                });
+            }
+
+            debitedCredits = orderTotal;
         }
 
         const uid =
@@ -258,7 +483,9 @@ router.post("/", async (req, res) => {
         // DUPLICATE TRANSACTION CHECK
         // =================================================
 
-        if (transactionId !== "") {
+        // PUBG uses this field as optional remarks, not a payment transaction
+        // identifier. Keep the legacy duplicate check for the other products.
+        if (transactionId !== "" && !pubgOrder) {
 
             const existingOrder =
                 await Order.findOne({
@@ -327,12 +554,12 @@ router.post("/", async (req, res) => {
 
                 whatsapp,
 
-                paymentMethod:
-                    req.body.paymentMethod ||
-                    req.body.payment ||
-                    "",
+                paymentMethod,
 
-                remarks: remarks,
+                transactionId:
+                    transactionId,
+
+                remarks: String(req.body.remarks || req.body.transaction || "").trim(),
 
                 screenshot:
                     req.body.screenshot || "",
@@ -344,7 +571,13 @@ router.post("/", async (req, res) => {
                     orderType,
 
                 serviceId: String(req.body.serviceId || "").trim(),
-                targetUrl: String(req.body.targetUrl || "").trim()
+                targetUrl: String(req.body.targetUrl || "").trim(),
+                productItemId: selectedProductItem?._id ? String(selectedProductItem._id) : "",
+                providerCategoryId: selectedProductItem?.providerCategoryId || process.env.FAZER_PUBG_CATEGORY_ID || "",
+                providerOfferId: selectedProductItem?.providerOfferId || "",
+                creditsDebited: debitedCredits,
+                status: creditPayment ? "Payment Verified" : "Pending",
+                paymentVerifiedAt: creditPayment ? new Date() : null
 
             });
 
@@ -354,6 +587,22 @@ router.post("/", async (req, res) => {
         // =================================================
 
         await order.save();
+
+        // Wallet purchases are automatically delivered only for Free Fire.
+        // Other wallet orders are recorded as payment-verified for admin handling.
+        if (creditPayment && isFreeFireProduct(order.product)) {
+            try {
+                await submitFreeFireOrder(order);
+            } catch (providerError) {
+                order.providerStatus = `error: ${providerError.message}`;
+                order.status = "Refund Required";
+                await order.save();
+                await refundCreditsIfNeeded(order, "provider_error");
+                order.status = "Refunded";
+                await order.save();
+                return res.status(502).json({ success: false, message: "Coins were returned because RechargeGames could not accept the order." });
+            }
+        }
 
 
         // =================================================
@@ -378,7 +627,7 @@ router.post("/", async (req, res) => {
         // NEW ORDER EMAIL TO ADMIN
         // =================================================
 
-        if (AUTOMATIC_ORDER_EMAILS_ENABLED) resend.emails.send({
+if (AUTOMATIC_ORDER_EMAILS_ENABLED && resend) resend.emails.send({
 
             from:
                 EMAIL_FROM,
@@ -642,7 +891,7 @@ router.post("/", async (req, res) => {
                                 "
                             >
                                 <strong>
-                                    Transaction ID
+                                    Remarks
                                 </strong>
                             </td>
 
@@ -651,7 +900,7 @@ router.post("/", async (req, res) => {
                                     padding:8px 0;
                                 "
                             >
-                                ${order.transactionId || "N/A"}
+                                ${order.remarks || "N/A"}
                             </td>
 
                         </tr>
@@ -766,6 +1015,12 @@ router.post("/", async (req, res) => {
 
 
     catch (err) {
+
+        if (debitedCredits && linkedUser?._id) {
+            await User.findByIdAndUpdate(linkedUser._id, {
+                $inc: { kavroCredits: debitedCredits }
+            }).catch(() => {});
+        }
 
         console.error(
             "ORDER SAVE ERROR:",
@@ -1014,7 +1269,8 @@ router.patch("/:id", requireAdmin, async (req, res) => {
             "Processing",
             "Completed",
             "Rejected",
-            "Refund Required"
+            "Refund Required",
+            "Refunded"
         ];
 
         const requestedStatus = String(req.body.status || "").trim();
@@ -1118,15 +1374,44 @@ router.patch("/:id", requireAdmin, async (req, res) => {
                 order.processingStartedAt = new Date();
                 await order.save();
             } catch (providerError) {
-                console.error("SMM PROVIDER ERROR:", providerError);
-
                 order.providerStatus = `error: ${providerError.message}`;
                 await order.save();
+                return res.status(502).json({ success: false, message: "Payment verified, but provider order could not be submitted." });
+            }
+        }
 
+        // PUBG manual payments are released only after an admin verifies the
+        // screenshot. The provider webhook will move the order to Completed.
+        if (requestedStatus === "Payment Verified" && isPubgProduct(order.product)) {
+            if (!["eSewa", "Bank Transfer"].includes(order.paymentMethod)) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Only eSewa or Bank Transfer PUBG orders need manual verification."
+                });
+            }
+
+            try {
+                await submitPubgOrder(order);
+            } catch (providerError) {
+                order.providerStatus = `error: ${providerError.message}`;
+                order.status = "Refund Required";
+                await order.save();
                 return res.status(502).json({
                     success: false,
-                    message: `SMM provider error: ${providerError.message}`
+                    message: "Payment verified, but FazerCards could not accept this PUBG order."
                 });
+            }
+        }
+
+        // Free Fire eSewa orders are sent to RechargeGames after admin verification.
+        if (requestedStatus === "Payment Verified" && isFreeFireProduct(order.product) && !order.providerOrderId) {
+            try {
+                await submitFreeFireOrder(order);
+            } catch (providerError) {
+                order.providerStatus = `error: ${providerError.message}`;
+                order.status = "Refund Required";
+                await order.save();
+                return res.status(502).json({ success: false, message: "Payment verified, but RechargeGames could not accept this Free Fire order." });
             }
         }
 
@@ -1137,6 +1422,7 @@ router.patch("/:id", requireAdmin, async (req, res) => {
 
         if (
             AUTOMATIC_ORDER_EMAILS_ENABLED &&
+            resend &&
             requestedStatus === "Completed" &&
             order.email
         ) {

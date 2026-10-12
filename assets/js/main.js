@@ -1,9 +1,15 @@
+/* Load the public shop-hours gate on pages using the lightweight shared script. */
+(function loadKavroShopHours() {
+    if (document.querySelector('script[data-kavro-shop-hours]')) return;
+    const gateScript = document.createElement("script");
+    gateScript.src = "assets/js/shop-hours.js";
+    gateScript.dataset.kavroShopHours = "true";
+    document.head.appendChild(gateScript);
+})();
+
 /* Kavro lightweight UI interactions */
 
 document.addEventListener("DOMContentLoaded", () => {
-    const shopHours = document.createElement("script");
-shopHours.src = "/assets/js/shop-hours.js?v=1";
-document.head.appendChild(shopHours);
     const menuBtn = document.getElementById("menuBtn");
     const navLinks = document.getElementById("navLinks");
 

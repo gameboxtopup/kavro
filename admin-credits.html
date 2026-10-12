@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Kavro Admin | Wallet Requests</title>
+    <link rel="stylesheet" href="assets/css/admin-panels.css">
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo"><h2>KAVRO</h2><span>ADMIN PANEL</span></div>
+        <ul>
+            <li onclick="location.href='admin-dashboard.html'">📊 Dashboard</li>
+            <li onclick="location.href='admin-products.html'">📦 Products</li>
+            <li onclick="location.href='admin-product-items.html'">📋 Product Items</li>
+            <li onclick="location.href='admin-orders.html'">🛒 Orders</li>
+            <li class="active">🪙 Wallet Requests</li>
+            <li onclick="location.href='admin-chat.html'">💬 Customer Chat</li>
+        </ul>
+    </aside>
+    <main class="content">
+        <div class="topbar"><h1>Kavro Wallet Requests</h1><button id="refreshCredits">↻ Refresh</button></div>
+        <div class="productTable">
+            <table>
+                <thead><tr><th>User</th><th>Amount</th><th>Payment</th><th>Remarks</th><th>Proof</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody id="creditRequests"><tr><td colspan="7">Loading...</td></tr></tbody>
+            </table>
+        </div>
+    </main>
+</div>
+<script src="assets/js/admin-credits.js"></script>
+</body>
+</html>

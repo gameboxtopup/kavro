@@ -11,6 +11,10 @@ const authRoutes = require("./routes/authRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const gameAccountRoutes = require("./routes/gameAccountRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const fazerCardsWebhookRoutes = require("./routes/fazerCardsWebhookRoutes");
+const creditRoutes = require("./routes/creditRoutes");
+const rechargeWebhookRoutes = require("./routes/rechargeWebhookRoutes");
+const { startRechargeReconciler } = require("./services/rechargeReconciler");
 
 const app = express();
 
@@ -35,9 +39,21 @@ app.use(cors({
     ]
 }));
 
+// FazerCards signs the raw request body. Mount this before express.json()
+// so the webhook can verify the signature safely.
+app.use(
+    "/api/webhooks/fazercards",
+    express.raw({ type: "application/json", limit: "1mb" }),
+    fazerCardsWebhookRoutes
+);
+
+// RechargeGames signs the raw body; mount before express.json().
+app.use("/api/recharge", rechargeWebhookRoutes);
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api/orders", orderRoutes);
+app.use("/api/credits", creditRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/products", productRoutes);
@@ -51,6 +67,7 @@ app.use("/api/reviews", reviewRoutes);
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => {
     console.log("✅ MongoDB Connected");
+    startRechargeReconciler();
 })
 .catch((err) => {
     console.error("❌ MongoDB Connection Error:");

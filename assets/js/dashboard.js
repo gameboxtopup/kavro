@@ -39,6 +39,9 @@ const reviewForm = document.getElementById("reviewForm");
 const reviewOrder = document.getElementById("reviewOrder");
 const reviewRating = document.getElementById("reviewRating");
 const reviewComment = document.getElementById("reviewComment");
+const creditsBalance = document.getElementById("creditsBalance");
+const creditTopupForm = document.getElementById("creditTopupForm");
+const creditTopupStatus = document.getElementById("creditTopupStatus");
 
 
 // =========================================
@@ -77,6 +80,10 @@ async function loadUser() {
         if (userEmail) {
             userEmail.textContent =
                 user.email || "";
+        }
+
+        if (creditsBalance) {
+            creditsBalance.textContent = `NPR ${Number(user.kavroCredits || 0).toLocaleString()}`;
         }
 
         // Save user ID for chat
@@ -237,7 +244,7 @@ async function loadOrders() {
                         <p>
                             Transaction ID:
                             ${escapeHtml(
-                                order.transactionId ||
+                                order.remarks ||
                                 "—"
                             )}
                         </p>
@@ -541,6 +548,64 @@ if (typeof io === "function") {
 
         }
     );
+}
+
+async function submitCreditTopup(event) {
+    event.preventDefault();
+    if (!creditTopupForm || !creditTopupStatus) return;
+
+    const button = creditTopupForm.querySelector("button[type=submit]");
+    const file = document.getElementById("creditScreenshot").files[0];
+    const amount = Number(document.getElementById("creditAmount").value);
+    const paymentMethod = document.getElementById("creditPaymentMethod").value;
+    const remarks = document.getElementById("creditRemarks").value.trim();
+
+    if (!file) {
+        creditTopupStatus.textContent = "Choose the payment screenshot first.";
+        return;
+    }
+
+    button.disabled = true;
+    creditTopupStatus.textContent = "Uploading screenshot...";
+
+    try {
+        const uploadData = new FormData();
+        uploadData.append("file", file);
+        uploadData.append("upload_preset", "kavro_upload");
+        const uploadResponse = await fetch(
+            "https://api.cloudinary.com/v1_1/f0rpqupr/image/upload",
+            { method: "POST", body: uploadData }
+        );
+        const uploadResult = await uploadResponse.json();
+        if (!uploadResult.secure_url) throw new Error("Screenshot upload failed.");
+
+        creditTopupStatus.textContent = "Submitting request...";
+        const response = await fetch(`${API_URL}/api/credits/topups`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                amount,
+                paymentMethod,
+                screenshot: uploadResult.secure_url,
+                remarks
+            })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error(data.message || "Could not submit credit request.");
+        creditTopupStatus.textContent = "Request sent. Coins will be added after admin verifies your eSewa payment.";
+        creditTopupForm.reset();
+    } catch (error) {
+        creditTopupStatus.textContent = error.message;
+    } finally {
+        button.disabled = false;
+    }
+}
+
+if (creditTopupForm) {
+    creditTopupForm.addEventListener("submit", submitCreditTopup);
 }
 
 
@@ -856,4 +921,12 @@ if (changePasswordForm) {
     await loadOrders();
     await loadChat();
 
+})();
+/* Load the public shop-hours gate on the customer dashboard too. */
+(function loadKavroShopHours() {
+    if (document.querySelector('script[data-kavro-shop-hours]')) return;
+    const gateScript = document.createElement("script");
+    gateScript.src = "assets/js/shop-hours.js";
+    gateScript.dataset.kavroShopHours = "true";
+    document.head.appendChild(gateScript);
 })();

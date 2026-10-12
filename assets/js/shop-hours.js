@@ -6,8 +6,9 @@
     "use strict";
 
     const TIME_ZONE = "Asia/Kathmandu";
-    const OPEN_HOUR = 11;
-    const CLOSE_HOUR = 23;
+    const OPEN_HOUR = 23;
+    const CLOSE_HOUR = 6;
+    const CLOSE_MINUTE = 10;
     const NEPAL_OFFSET_MS = (5 * 60 + 45) * 60 * 1000;
 
     const formatParts = new Intl.DateTimeFormat("en-US", {
@@ -152,16 +153,16 @@
             <section class="kavro-gate-card">
                 <img class="kavro-gate-logo" src="/assets/images/logo.png" alt="Kavro Nepal">
                 <p class="kavro-gate-kicker">Kavro Nepal · Official Store</p>
-                <h1 class="kavro-gate-title" id="kavroGateTitle">We WIll be open soon</h1>
-                <p class="kavro-gate-copy" id="kavroGateCopy">Our shop opens at <strong>11:00 AM Nepal time</strong>. Your order window is reserved please stay on this page.</p>
-                <div class="kavro-gate-status"><b></b><span id="kavroGateStatus">Please wait for shop opens</span></div>
-                <div class="kavro-gate-countdown" aria-live="polite" aria-label="Time until Kavro opens">
-                    <div class="kavro-gate-unit"><strong id="kavroGateHours">00</strong><span>Hours</span></div>
-                    <div class="kavro-gate-unit"><strong id="kavroGateMinutes">00</strong><span>Minutes</span></div>
-                    <div class="kavro-gate-unit"><strong id="kavroGateSeconds">00</strong><span>Seconds</span></div>
-                </div>
-                <a class="kavro-gate-help" href="https://www.facebook.com/profile.php?id=61574738600137" target="_blank" rel="noopener">Contact Kavro Nepal For Argent Topups</a>
-                <p class="kavro-gate-footer">SHOP OPEN FROM 11 AM TO 11 PM</p>
+                // <h1 class="kavro-gate-title" id="kavroGateTitle">Maintenance</h1>
+                // <p class="kavro-gate-copy" id="kavroGateCopy">Our shop opens at <strong>11:00 AM Nepal time</strong>. Your order window is reserved—please stay on this page.</p>
+                // <div class="kavro-gate-status"><b></b><span id="kavroGateStatus">Preparing today’s order window</span></div>
+                // <div class="kavro-gate-countdown" aria-live="polite" aria-label="Time until Kavro opens">
+                //     <div class="kavro-gate-unit"><strong id="kavroGateHours">00</strong><span>Hours</span></div>
+                //     <div class="kavro-gate-unit"><strong id="kavroGateMinutes">00</strong><span>Minutes</span></div>
+                //     <div class="kavro-gate-unit"><strong id="kavroGateSeconds">00</strong><span>Seconds</span></div>
+                // </div>
+                // <a class="kavro-gate-help" href="https://www.facebook.com/profile.php?id=61574738600137" target="_blank" rel="noopener">💬 Contact Kavro Nepal</a>
+                // <p class="kavro-gate-footer">Open Monday–Friday · 11:00 AM–11:40 PM · Nepal time</p>
             </section>
         `;
         document.body.appendChild(gate);
@@ -169,7 +170,7 @@
 
         if (afterClosing) {
             gate.querySelector("#kavroGateTitle").textContent = "Kavro is closed for today";
-            gate.querySelector("#kavroGateCopy").innerHTML = "Weâ€™ve safely closed todayâ€™s order window. Weâ€™ll reopen on the next working day at <strong>11:00 AM Nepal time</strong>.";
+            gate.querySelector("#kavroGateCopy").innerHTML = "We’ve safely closed today’s order window. We’ll reopen on the next working day at <strong>11:00 AM Nepal time</strong>.";
             gate.querySelector("#kavroGateStatus").textContent = "Next opening time is being counted down";
         }
 

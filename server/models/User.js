@@ -31,6 +31,14 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
+        // Internal Kavro Credits balance. Credits can only be spent on
+        // eligible Kavro orders; they are not cash and cannot be withdrawn.
+        kavroCredits: {
+            type: Number,
+            default: 0,
+            min: 0
+        },
+
         resetPasswordToken: {
             type: String,
             default: ""

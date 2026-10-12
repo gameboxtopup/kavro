@@ -41,9 +41,13 @@
 📋 Product Items
 </li>
 
-<li class="active">
-🛒 Orders
-</li>
+            <li class="active">
+                🛒 Orders
+            </li>
+
+            <li onclick="location.href='admin-credits.html'">
+                💳 Credit Requests
+            </li>
 
 <li onclick="location.href='admin-chat.html'">
 💬 Customer Chat
@@ -88,6 +92,7 @@ placeholder="Search Orders...">
 <option>Completed</option>
 <option>Rejected</option>
 <option>Refund Required</option>
+<option>Refunded</option>
 </select>
 
 </div>
@@ -176,6 +181,10 @@ Loading...
                 <button type="button" class="copy-btn" data-copy="mTransaction">Copy</button>
             </p>
 
+            <p><strong>FazerCards Order:</strong> <span id="mProviderOrder">—</span></p>
+
+            <p><strong>Provider Status:</strong> <span id="mProviderStatus">—</span></p>
+
             <p><strong>Total:</strong> <span id="mPrice"></span></p>
 
             <p><strong>Status:</strong> <span id="mStatus"></span></p>
@@ -208,6 +217,7 @@ Loading...
                 <option>Completed</option>
                 <option>Rejected</option>
                 <option>Refund Required</option>
+                <option>Refunded</option>
             </select>
 
             <button id="updateStatusBtn" type="button" class="action-btn">

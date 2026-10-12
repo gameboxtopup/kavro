@@ -560,3 +560,11 @@ if (paymentSelect) {
     updatePaymentDetails();
 
 }
+/* Load the public shop-hours gate on subscription checkout. */
+(function loadKavroShopHours() {
+    if (document.querySelector('script[data-kavro-shop-hours]')) return;
+    const gateScript = document.createElement("script");
+    gateScript.src = "assets/js/shop-hours.js";
+    gateScript.dataset.kavroShopHours = "true";
+    document.head.appendChild(gateScript);
+})();

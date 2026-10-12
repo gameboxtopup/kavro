@@ -99,3 +99,11 @@ if (form) {
     });
 
 }
+/* Load the public shop-hours gate on password recovery. */
+(function loadKavroShopHours() {
+    if (document.querySelector('script[data-kavro-shop-hours]')) return;
+    const gateScript = document.createElement("script");
+    gateScript.src = "assets/js/shop-hours.js";
+    gateScript.dataset.kavroShopHours = "true";
+    document.head.appendChild(gateScript);
+})();

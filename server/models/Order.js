@@ -93,10 +93,15 @@ const orderSchema = new mongoose.Schema({
         default: ""
     },
 
+    transactionId: {
+        type: String,
+        default: ""
+    },
+
     remarks: {
-    type: String,
-    default: ""
-},
+        type: String,
+        default: ""
+    },
 
     screenshot: {
         type: String,
@@ -113,25 +118,16 @@ const orderSchema = new mongoose.Schema({
         default: "game"
     },
 
-    serviceId: {
-    type: String,
-    default: ""
-    },
-
-    targetUrl: {
-    type: String,
-    default: ""
-    },
-
-    providerOrderId: {
-    type: String,
-    default: ""
-    },
-
-    providerStatus: {
-    type: String,
-    default: ""
-    },
+    // SMM orders (submitted first, delivered only after payment verification)
+    serviceId: { type: String, default: "" },
+    targetUrl: { type: String, default: "" },
+    providerOrderId: { type: String, default: "" },
+    providerStatus: { type: String, default: "" },
+    providerCategoryId: { type: String, default: "" },
+    providerOfferId: { type: String, default: "" },
+    productItemId: { type: String, default: "" },
+    creditsDebited: { type: Number, default: 0, min: 0 },
+    creditsRefunded: { type: Boolean, default: false },
 
     status: {
         type: String,

@@ -238,8 +238,12 @@ function viewOrder(id){
 
     document.getElementById("mPayment").textContent = order.paymentMethod;
 
-    document.getElementById("mTransaction").textContent =
-        order.remarks || order.note || "—";
+    document.getElementById("mTransaction").textContent = order.remarks || order.note || "—";
+
+    const providerOrder = document.getElementById("mProviderOrder");
+    const providerStatus = document.getElementById("mProviderStatus");
+    if (providerOrder) providerOrder.textContent = order.providerOrderId || "—";
+    if (providerStatus) providerStatus.textContent = order.providerStatus || "—";
 
     document.getElementById("mPrice").textContent = order.price;
 
@@ -288,7 +292,7 @@ function applyFilters(){
 
             o.paymentMethod.toLowerCase().includes(keyword) ||
 
-            (o.transactionId || "").toLowerCase().includes(keyword)
+            (o.remarks || o.note || "").toLowerCase().includes(keyword)
 
         ).filter(o => !statusFilter.value || o.status === statusFilter.value)
 

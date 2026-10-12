@@ -1,238 +1,101 @@
-document.addEventListener("DOMContentLoaded", () => {
-
+/* Load the public shop-hours gate on every storefront page using this shared script. */
 (function loadKavroShopHours() {
     if (document.querySelector('script[data-kavro-shop-hours]')) return;
-
-    const shopHours = document.createElement("script");
-    shopHours.src = "/assets/js/shop-hours.js?v=2";
-    shopHours.dataset.kavroShopHours = "true";
-    document.head.appendChild(shopHours);
+    const gateScript = document.createElement("script");
+    gateScript.src = "assets/js/shop-hours.js";
+    gateScript.dataset.kavroShopHours = "true";
+    document.head.appendChild(gateScript);
 })();
 
-const reviewToken = localStorage.getItem("kavroToken");
+(function loadKavroWallet() {
+    if (document.querySelector('script[data-kavro-wallet]')) return;
+    const walletScript = document.createElement("script");
+    walletScript.src = "assets/js/kavro-wallet.js";
+    walletScript.dataset.kavroWallet = "true";
+    document.head.appendChild(walletScript);
+})();
 
-if (reviewToken) {
-    const reviewStyle = document.createElement("style");
+document.addEventListener("DOMContentLoaded", () => {
 
-    reviewStyle.textContent = `
-        @keyframes reviewPopupIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, 30px) scale(.9);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, 0) scale(1);
-            }
-        }
-
-        .kavro-review-popup {
-            position: fixed;
-            z-index: 99999;
-            left: 50%;
-            bottom: 22px;
-            width: min(420px, calc(100% - 28px));
-            padding: 20px;
-            border-radius: 18px;
-            background: #101d35;
-            color: white;
-            border: 1px solid #60a5fa;
-            box-shadow: 0 20px 60px #0009;
-            animation: reviewPopupIn .35s ease;
-        }
-
-        .kavro-review-popup h3 {
-            margin: 0 0 8px;
-        }
-
-        .kavro-review-popup p {
-            color: #cbd5e1;
-            line-height: 1.5;
-        }
-
-        .kavro-review-popup select,
-        .kavro-review-popup textarea {
-            width: 100%;
-            margin: 7px 0;
-            padding: 11px;
-            border-radius: 8px;
-            border: 1px solid #475569;
-            background: #081225;
-            color: white;
-        }
-
-        .review-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .review-buttons button {
-            flex: 1;
-            padding: 11px;
-            border: 0;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        #submitKavroReview {
-            background: #2563eb;
-            color: white;
-        }
-
-        #laterKavroReview {
-            background: #263754;
-            color: white;
-        }
-    `;
-
-    document.head.appendChild(reviewStyle);
-
-    fetch("https://kavro-api.onrender.com/api/orders/my-orders", {
-        headers: {
-            Authorization: `Bearer ${reviewToken}`
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        const orders = data.orders || data.data || [];
-
-        const completedOrder = orders.find(order =>
-            ["completed", "delivered"].includes(
-                String(order.status || "").toLowerCase()
-            ) &&
-            !localStorage.getItem(
-                `reviewPromptShown-${order._id}`
-            )
-        );
-
-        if (!completedOrder) return;
-
-        const popup = document.createElement("div");
-
-        popup.className = "kavro-review-popup";
-
-        popup.innerHTML = `
-            <h3>🎉 Order Completed!</h3>
-
-            <p>
-                Your ${completedOrder.product || "Kavro"} order
-                has been delivered. Please leave us a review.
-            </p>
-
-            <select id="kavroReviewRating">
-                <option value="5">★★★★★ Excellent</option>
-                <option value="4">★★★★ Very good</option>
-                <option value="3">★★★ Good</option>
-                <option value="2">★★ Needs improvement</option>
-                <option value="1">★ Poor</option>
-            </select>
-
-            <textarea
-                id="kavroReviewComment"
-                rows="3"
-                placeholder="Write your review..."
-            ></textarea>
-
-            <div class="review-buttons">
-                <button id="submitKavroReview">
-                    Submit Review
-                </button>
-
-                <button id="laterKavroReview">
-                    Later
-                </button>
-            </div>
+    // Show a one-time animated review prompt when a customer's order is completed.
+    const reviewToken = localStorage.getItem("kavroToken");
+    if (reviewToken && !document.getElementById("kavroReviewPopup")) {
+        const style = document.createElement("style");
+        style.textContent = `
+            @keyframes kavroReviewPop { from { opacity:0; transform:translate(-50%,20px) scale(.92); } to { opacity:1; transform:translate(-50%,0) scale(1); } }
+            .kavro-review-popup { position:fixed; z-index:99999; left:50%; bottom:24px; width:min(420px,calc(100% - 28px)); padding:22px; border:1px solid #60a5fa; border-radius:18px; background:#101d35; color:#f8fafc; box-shadow:0 20px 60px #0009; animation:kavroReviewPop .35s ease-out; }
+            .kavro-review-popup h3 { margin:0 0 8px; font-size:20px; }
+            .kavro-review-popup p { margin:0 0 16px; color:#cbd5e1; line-height:1.5; }
+            .kavro-review-actions { display:flex; gap:10px; }
+            .kavro-review-popup textarea,.kavro-review-popup select { width:100%; margin:8px 0; padding:10px; border:1px solid #475569; border-radius:8px; background:#081225; color:#fff; }
+            .kavro-review-actions button { flex:1; border:0; border-radius:9px; padding:11px; font-weight:700; cursor:pointer; }
+            .kavro-review-actions button:first-child { background:#2563eb; color:#fff; }
+            .kavro-review-actions button:last-child { background:#263754; color:#cbd5e1; }
         `;
+        document.head.appendChild(style);
 
-        document.body.appendChild(popup);
-
-        document.getElementById("submitKavroReview").onclick =
-            async () => {
-                const rating =
-                    Number(
-                        document.getElementById(
-                            "kavroReviewRating"
-                        ).value
-                    );
-
-                const comment =
-                    document.getElementById(
-                        "kavroReviewComment"
-                    ).value.trim();
-
-                if (comment.length < 3) {
-                    alert("Please write a short review.");
-                    return;
-                }
-
-                const response = await fetch(
-                    "https://kavro-api.onrender.com/api/reviews",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${reviewToken}`
-                        },
-                        body: JSON.stringify({
-                            orderId: completedOrder._id,
-                            rating,
-                            comment
-                        })
-                    }
+        fetch("https://kavro-api.onrender.com/api/orders/my-orders", {
+            headers: { Authorization: `Bearer ${reviewToken}` }
+        })
+            .then(response => response.ok ? response.json() : null)
+            .then(data => {
+                const orders = data?.orders || data?.data || [];
+                const completed = orders.find(order =>
+                    ["completed", "delivered"].includes(String(order.status || "").toLowerCase()) &&
+                    !localStorage.getItem(`kavroReviewedPrompt:${order._id}`)
                 );
+                if (!completed) return;
 
-                const result = await response.json();
+                const popup = document.createElement("div");
+                popup.id = "kavroReviewPopup";
+                popup.className = "kavro-review-popup";
+                popup.innerHTML = `
+                    <h3>🎉 Your order is complete!</h3>
+                    <p>Your ${completed.product || "Kavro"} order has been delivered. Please share your experience with us.</p>
+                    <select id="kavroReviewRating"><option value="5">★★★★★ Excellent</option><option value="4">★★★★ Very good</option><option value="3">★★★ Good</option><option value="2">★★ Needs improvement</option><option value="1">★ Poor</option></select>
+                    <textarea id="kavroReviewComment" rows="3" placeholder="Write your review..."></textarea>
+                    <div class="kavro-review-actions">
+                        <button type="button" id="submitKavroReview">Submit Review</button>
+                        <button type="button">Later</button>
+                    </div>
+                `;
+                document.body.appendChild(popup);
+                popup.querySelector("#submitKavroReview").onclick = async () => {
+                    const comment = popup.querySelector("#kavroReviewComment").value.trim();
+                    if (comment.length < 3) { alert("Please write a short review first."); return; }
+                    const response = await fetch("https://kavro-api.onrender.com/api/reviews", { method:"POST", headers:{"Content-Type":"application/json", Authorization:`Bearer ${reviewToken}`}, body:JSON.stringify({ orderId:completed._id, rating:Number(popup.querySelector("#kavroReviewRating").value), comment }) });
+                    const result = await response.json();
+                    if (!response.ok || !result.success) { alert(result.message || "Could not submit review."); return; }
+                    localStorage.setItem(`kavroReviewedPrompt:${completed._id}`, "1");
+                    popup.remove();
+                };
+                popup.querySelector(".kavro-review-actions button:last-child").onclick = () => {
+                    localStorage.setItem(`kavroReviewedPrompt:${completed._id}`, "1");
+                };
+            })
+            .catch(() => {});
+    }
 
-                if (!response.ok || !result.success) {
-                    alert(result.message || "Review failed.");
-                    return;
-                }
+    /* =========================
+       MOBILE NAVIGATION
+    ========================= */
 
-                localStorage.setItem(
-                    `reviewPromptShown-${completedOrder._id}`,
-                    "1"
-                );
+    const menu = document.querySelector(".menu-btn");
+    const nav = document.querySelector(".nav-links");
 
-                popup.remove();
+    if (menu && nav) {
 
-                alert("Thank you for your review!");
-            };
-
-        document.getElementById("laterKavroReview").onclick =
-            () => {
-                localStorage.setItem(
-                    `reviewPromptShown-${completedOrder._id}`,
-                    "1"
-                );
-
-                popup.remove();
-            };
-    })
-    .catch(error => {
-        console.error("Review popup error:", error);
-    });
-/* =========================
-   MOBILE NAVIGATION
-========================= */
-
-const menu = document.querySelector(".menu-btn");
-const nav = document.querySelector(".nav-links");
-
-if (menu && nav) {
-    menu.addEventListener("click", () => {
-        const isOpen = nav.classList.toggle("active");
-        menu.setAttribute("aria-expanded", String(isOpen));
-    });
-
-    nav.querySelectorAll("a").forEach(link => {
-        link.addEventListener("click", () => {
-            nav.classList.remove("active");
-            menu.setAttribute("aria-expanded", "false");
+        menu.addEventListener("click", () => {
+            nav.classList.toggle("open");
         });
-    });
-}
+
+        nav.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                nav.classList.remove("open");
+            });
+        });
+
+    }
 
 
     /* =========================
@@ -654,6 +517,5 @@ if (menu && nav) {
         });
 
     }
-}
 
 });

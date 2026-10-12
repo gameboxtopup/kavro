@@ -18,6 +18,12 @@ const productItemSchema = new mongoose.Schema({
         required: true
     },
     serviceId: { type: String, default: "" },
+    // FazerCards mapping used for PUBG Mobile top-ups.
+    providerCategoryId: { type: String, default: "" },
+    providerOfferId: { type: String, default: "" },
+    providerProductKey: { type: String, default: "" },
+    minQuantity: { type: Number, default: 10 },
+    maxQuantity: { type: Number, default: 1000000 },
 
     discountPrice: {
         type: Number,

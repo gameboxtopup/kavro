@@ -490,12 +490,13 @@ function selectPackage(
     // ==========================================
 
     if (buyButton) {
-        if (["ff", "unipin", "mlbb", "roblox"].includes(PRODUCT_SLUG)) {
+        if (["ff", "unipin", "mlbb", "roblox", "pubg"].includes(PRODUCT_SLUG)) {
             const checkoutProduct = {
                 ff: "Free Fire",
                 unipin: "UniPin BD Voucher",
                 mlbb: "Mobile Legends",
-                roblox: "Roblox"
+                roblox: "Roblox",
+                pubg: "PUBG Mobile"
             }[PRODUCT_SLUG];
             const params = new URLSearchParams({
                 product: checkoutProduct,

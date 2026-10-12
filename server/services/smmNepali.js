@@ -1,4 +1,4 @@
-const ENDPOINT = process.env.SMM_PROVIDER_URL || "https://smmmatrixs.com/api/v2";
+const ENDPOINT = process.env.SMM_PROVIDER_URL || "https://smmnepali.com/api/v2";
 
 async function callSmm(payload) {
   if (!process.env.SMMNEPALI_API_KEY) throw new Error("SMMNEPALI_API_KEY is not configured");
