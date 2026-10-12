@@ -1,4 +1,5 @@
 let editingItemId = null;
+const adminToken = localStorage.getItem("adminToken");
 
 const modal = document.getElementById("productModal");
 const addBtn = document.getElementById("addProduct");
@@ -142,7 +143,8 @@ form.addEventListener("submit", async (e) => {
         method,
 
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${adminToken}`
         },
 
         body: JSON.stringify(item)
@@ -166,7 +168,10 @@ async function deleteItem(id) {
 
     await fetch(`https://kavro-api.onrender.com/api/product-items/${id}`, {
 
-        method: "DELETE"
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${adminToken}`
+        }
 
     });
 

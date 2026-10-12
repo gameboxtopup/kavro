@@ -57,7 +57,8 @@ async function loadSubscription() {
             planContainer.innerHTML += `
                 <div class="plan-card"
                      data-title="${item.title}"
-                     data-price="NPR ${item.price}">
+                     data-price="NPR ${item.price}"
+                     data-item-id="${item._id}">
 
                     <div class="plan-title">
                         ${item.title}
@@ -156,7 +157,10 @@ function initializePlans() {
                     activePlan.dataset.title,
 
                 price:
-                    activePlan.dataset.price
+                    activePlan.dataset.price,
+
+                item:
+                    activePlan.dataset.itemId
 
             })
         );

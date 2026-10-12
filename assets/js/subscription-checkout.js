@@ -220,6 +220,8 @@ document
 
                 price: item.price,
 
+                item: item.item || "",
+
                 email:
                     document
                         .getElementById("email")
