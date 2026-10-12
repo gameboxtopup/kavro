@@ -38,7 +38,15 @@ function isPubgProduct(product) {
 }
 
 function parseAmount(value) {
-    const amount = Number(String(value || "").replace(/[^0-9.]/g, ""));
+    if (typeof value === "number") {
+        return Number.isFinite(value) ? value : 0;
+    }
+
+    const match = String(value ?? "")
+        .replace(/,/g, "")
+        .match(/-?\d+(?:\.\d+)?/);
+
+    const amount = match ? Number(match[0]) : 0;
     return Number.isFinite(amount) ? amount : 0;
 }
 
