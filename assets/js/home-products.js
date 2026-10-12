@@ -35,7 +35,11 @@ async function loadHomeProducts() {
     if (!response.ok) throw new Error("Unable to load products");
 
     const products = await response.json();
-    const activeProducts = products.filter(product => product.active);
+    const activeProducts = products
+        .filter(product => product.active)
+        .sort((a, b) =>
+            Number(Boolean(b.featured)) - Number(Boolean(a.featured))
+        );
 
     if (!activeProducts.length) {
         homeProductGrid.innerHTML = `<div class="home-products-loading">No products are available right now.</div>`;

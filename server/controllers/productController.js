@@ -60,10 +60,9 @@ console.log("GET /api/products called");
     try {
 
         const products = await Product.find().sort({
-
-            createdAt: -1
-
-        });
+        featured: -1,
+        createdAt: -1
+    });
 
         res.json(products);
 

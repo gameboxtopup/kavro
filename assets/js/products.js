@@ -31,6 +31,9 @@ function renderProducts() {
         const categoryMatches = activeCategory === "all" || category.includes(activeCategory) || searchable.includes(activeCategory);
         return product.active && categoryMatches && (!search || searchable.includes(search));
     });
+    filtered.sort((a, b) =>
+    Number(Boolean(b.featured)) - Number(Boolean(a.featured))
+);
 
     if (!filtered.length) {
         grid.innerHTML = `<div class="store-empty"><span>⌕</span><strong>No products found</strong><p>Try another search or category.</p></div>`;

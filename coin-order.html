@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Buy Kavro Coins | Kavro Nepal</title>
+    <link rel="icon" href="assets/images/logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="order.css">
+    <style>
+        .coin-order-note { color:#bfdbfe; line-height:1.6; margin:12px 0 22px; }
+        .coin-total { color:#60a5fa; font-size:22px; font-weight:800; }
+        .coin-account { color:#86efac; font-size:13px; margin-top:6px; }
+        .coin-status { display:block; margin-top:14px; color:#bfdbfe; line-height:1.5; }
+        .coin-status.error { color:#fca5a5; }
+        .coin-status.success { color:#86efac; }
+        .coin-payment-card { text-align:center; }
+        .coin-payment-card img { width:min(280px,100%); border-radius:14px; background:#fff; padding:8px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo"><img src="assets/images/logo.png" alt="Kavro"><span>Kavro</span></a>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <a href="dashboard.html" class="btn-primary">Dashboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="order-hero">
+        <div class="container">
+            <div class="order-hero-content">
+                <span class="order-badge">🪙 Kavro Wallet</span>
+                <h1>Buy Kavro Coins</h1>
+                <p>1 Kavro Coin = NPR 1. Submit your eSewa payment proof and coins will be added after manual verification.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="order-section">
+        <div class="container">
+            <div class="checkout-grid">
+                <div class="checkout-left">
+                    <div class="order-card">
+                        <div class="card-title">
+                            <h2>Coin Order Details</h2>
+                            <p>Enter the quantity you want to add to your Kavro wallet.</p>
+                        </div>
+
+                        <div class="summary-card">
+                            <div class="summary-row"><span>🪙 Coin quantity</span><strong id="coinSummary">0</strong></div>
+                            <div class="summary-row total"><span>Total to pay</span><strong class="coin-total" id="coinTotal">NPR 0</strong></div>
+                        </div>
+
+                        <form id="coinOrderForm" class="order-form">
+                            <div class="form-group">
+                                <label for="coinQuantity">Coin quantity</label>
+                                <input id="coinQuantity" type="number" min="10" max="100000" step="1" value="100" required>
+                                <small>Minimum 10 coins. 1 coin = NPR 1.</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="coinEmail">Gmail / Email</label>
+                                <input id="coinEmail" type="email" placeholder="your@gmail.com" required>
+                                <small id="coinAccountNote" class="coin-account">Checking your Kavro account...</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Payment method</label>
+                                <label class="pay-option">
+                                    <input type="radio" name="coinPaymentMethod" value="eSewa" checked>
+                                    <img src="assets/images/esewa.png" alt="eSewa">
+                                    <span class="pay-info"><strong>eSewa</strong><small>Manual verification</small></span>
+                                </label>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="coinScreenshot">Payment screenshot</label>
+                                <input id="coinScreenshot" type="file" accept="image/*" required>
+                                <small id="coinFileName">No file selected</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="coinRemarks">Remarks</label>
+                                <textarea id="coinRemarks" rows="4" maxlength="500" placeholder="Payment reference or any message"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn-primary" id="coinSubmit">Submit Coin Order</button>
+                            <small id="coinStatus" class="coin-status" aria-live="polite"></small>
+                        </form>
+                    </div>
+                </div>
+
+                <aside class="checkout-right">
+                    <div class="payment-card coin-payment-card">
+                        <h3>Pay with eSewa</h3>
+                        <p>Pay the exact total, then upload the screenshot.</p>
+                        <img src="assets/images/qrcode.jpeg" alt="Kavro eSewa QR">
+                        <p><strong>eSewa:</strong> 9747687660</p>
+                        <p><strong>Account:</strong> Nirmala Kathayat</p>
+                    </div>
+                    <div class="trust-card">
+                        <h3>How it works</h3>
+                        <ul>
+                            <li>Choose coin quantity</li>
+                            <li>Pay the exact NPR amount</li>
+                            <li>Upload payment screenshot</li>
+                            <li>Admin verifies and adds coins</li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const API = "https://kavro-api.onrender.com";
+        const CLOUD_UPLOAD = "https://api.cloudinary.com/v1_1/f0rpqupr/image/upload";
+        const UPLOAD_PRESET = "kavro_upload";
+        const token = localStorage.getItem("kavroToken");
+        const quantityInput = document.getElementById("coinQuantity");
+        const summary = document.getElementById("coinSummary");
+        const total = document.getElementById("coinTotal");
+        const status = document.getElementById("coinStatus");
+        const screenshotInput = document.getElementById("coinScreenshot");
+        const fileName = document.getElementById("coinFileName");
+
+        if (!token) {
+            sessionStorage.setItem("kavroCheckoutReturn", window.location.href);
+            window.location.replace("login.html");
+        }
+
+        function updateTotal() {
+            const amount = Math.max(0, Math.floor(Number(quantityInput.value) || 0));
+            summary.textContent = amount.toLocaleString();
+            total.textContent = `NPR ${amount.toLocaleString()}`;
+        }
+
+        quantityInput.addEventListener("input", updateTotal);
+        updateTotal();
+
+        fetch(`${API}/api/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
+            .then(response => response.json().then(data => ({ response, data })))
+            .then(({ response, data }) => {
+                if (!response.ok || !data.success) throw new Error("Session expired");
+                document.getElementById("coinEmail").value = data.user.email || "";
+                document.getElementById("coinAccountNote").textContent = `Signed in as ${data.user.email || "your Kavro account"}`;
+            })
+            .catch(() => {
+                localStorage.removeItem("kavroToken");
+                window.location.replace("login.html");
+            });
+
+        screenshotInput.addEventListener("change", () => {
+            fileName.textContent = screenshotInput.files[0]
+                ? `Selected: ${screenshotInput.files[0].name}`
+                : "No file selected";
+        });
+
+        document.getElementById("coinOrderForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const amount = Math.floor(Number(quantityInput.value) || 0);
+            const email = document.getElementById("coinEmail").value.trim();
+            const remarks = document.getElementById("coinRemarks").value.trim();
+            const file = screenshotInput.files[0];
+
+            if (amount < 10 || amount > 100000) {
+                status.className = "coin-status error";
+                status.textContent = "Enter between 10 and 100,000 coins.";
+                return;
+            }
+            if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+                status.className = "coin-status error";
+                status.textContent = "Enter a valid Gmail or email address.";
+                return;
+            }
+            if (!file) {
+                status.className = "coin-status error";
+                status.textContent = "Upload your payment screenshot first.";
+                return;
+            }
+
+            const button = document.getElementById("coinSubmit");
+            button.disabled = true;
+            status.className = "coin-status";
+            status.textContent = "Uploading payment proof...";
+
+            try {
+                const uploadData = new FormData();
+                uploadData.append("file", file);
+                uploadData.append("upload_preset", UPLOAD_PRESET);
+                const uploadResponse = await fetch(CLOUD_UPLOAD, { method: "POST", body: uploadData });
+                const uploadResult = await uploadResponse.json();
+                if (!uploadResult.secure_url) throw new Error("Payment screenshot upload failed.");
+
+                status.textContent = "Submitting coin order...";
+                const response = await fetch(`${API}/api/credits/topups`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                    body: JSON.stringify({
+                        amount,
+                        email,
+                        paymentMethod: "eSewa",
+                        screenshot: uploadResult.secure_url,
+                        remarks
+                    })
+                });
+                const result = await response.json();
+                if (!response.ok || !result.success) throw new Error(result.message || "Could not submit coin order.");
+
+                status.className = "coin-status success";
+                status.textContent = "Coin order submitted. Admin will verify your payment and add the coins.";
+                document.getElementById("coinOrderForm").reset();
+                quantityInput.value = 100;
+                updateTotal();
+            } catch (error) {
+                status.className = "coin-status error";
+                status.textContent = error.message;
+            } finally {
+                button.disabled = false;
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
